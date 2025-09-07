@@ -1,0 +1,186 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Course: UI Automation with Selenium & Java – Testaurant</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="styles.css" />
+  <style>
+    .container { max-width: 980px; margin: 0 auto; padding: 20px; }
+    .card { padding:16px; border:1px solid #e5e7eb; border-radius:10px; background:#fff; margin-bottom:14px; }
+    pre { background:#0f172a; color:#e5e7eb; padding:12px; border-radius:8px; overflow:auto; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>🧭 Course: UI Automation with Selenium & Java</h1>
+    <p>Build a clean Selenium test framework for the Testaurant web app: page objects, waits, fixtures, parallel runs, and reporting.</p>
+
+    <section class="card">
+      <h2>Prerequisites</h2>
+      <ul>
+        <li>JDK 17+, Maven 3.8+</li>
+        <li>Chrome/Firefox + matching WebDriver (or use WebDriverManager)</li>
+        <li>IDE: IntelliJ IDEA recommended</li>
+      </ul>
+    </section>
+
+    <section class="card">
+      <h2>Project Structure</h2>
+<pre><code>.
+├─ pom.xml
+├─ src/test/java/qa/testaurant/ui
+│  ├─ BaseUiTest.java
+│  ├─ pages/
+│  │  ├─ HomePage.java
+│  │  ├─ MenuPage.java
+│  │  ├─ CartPanel.java
+│  │  └─ CheckoutPage.java
+│  └─ tests/
+│     ├─ SmokeTests.java
+│     └─ CartCheckoutTests.java
+└─ src/test/resources/config.properties
+</code></pre>
+    </section>
+
+    <section class="card">
+      <h2>Maven <code>pom.xml</code></h2>
+<pre><code class="language-xml">&lt;project xmlns="http://maven.apache.org/POM/4.0.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
+  http://maven.apache.org/xsd/maven-4.0.0.xsd"&gt;
+  &lt;modelVersion&gt;4.0.0&lt;/modelVersion&gt;
+  &lt;groupId&gt;qa.testaurant&lt;/groupId&gt;
+  &lt;artifactId&gt;ui-automation&lt;/artifactId&gt;
+  &lt;version&gt;1.0.0&lt;/version&gt;
+
+  &lt;properties&gt;
+    &lt;maven.compiler.source&gt;17&lt;/maven.compiler.source&gt;
+    &lt;maven.compiler.target&gt;17&lt;/maven.compiler.target&gt;
+    &lt;selenium.version&gt;4.22.0&lt;/selenium.version&gt;
+    &lt;junit.jupiter.version&gt;5.10.2&lt;/junit.jupiter.version&gt;
+    &lt;wdm.version&gt;5.9.2&lt;/wdm.version&gt;
+  &lt;/properties&gt;
+
+  &lt;dependencies&gt;
+    &lt;dependency&gt;
+      &lt;groupId&gt;org.seleniumhq.selenium&lt;/groupId&gt;
+      &lt;artifactId&gt;selenium-java&lt;/artifactId&gt;
+      &lt;version&gt;${selenium.version}&lt;/version&gt;
+      &lt;scope&gt;test&lt;/scope&gt;
+    &lt;/dependency&gt;
+    &lt;dependency&gt;
+      &lt;groupId&gt;io.github.bonigarcia&lt;/groupId&gt;
+      &lt;artifactId&gt;webdrivermanager&lt;/artifactId&gt;
+      &lt;version&gt;${wdm.version}&lt;/version&gt;
+      &lt;scope&gt;test&lt;/scope&gt;
+    &lt;/dependency&gt;
+    &lt;dependency&gt;
+      &lt;groupId&gt;org.junit.jupiter&lt;/groupId&gt;
+      &lt;artifactId&gt;junit-jupiter&lt;/artifactId&gt;
+      &lt;version&gt;${junit.jupiter.version}&lt;/version&gt;
+      &lt;scope&gt;test&lt;/scope&gt;
+    &lt;/dependency&gt;
+  &lt;/dependencies&gt;
+
+  &lt;build&gt;
+    &lt;plugins&gt;
+      &lt;plugin&gt;
+        &lt;groupId&gt;org.apache.maven.plugins&lt;/groupId&gt;
+        &lt;artifactId&gt;maven-surefire-plugin&lt;/artifactId&gt;
+        &lt;version&gt;3.2.5&lt;/version&gt;
+      &lt;/plugin&gt;
+    &lt;/plugins&gt;
+  &lt;/build&gt;
+&lt;/project&gt;
+</code></pre>
+    </section>
+
+    <section class="card">
+      <h2>Base & Page Objects</h2>
+<pre><code class="language-java">package qa.testaurant.ui;
+
+import io.github.bonigarcia.wdm.WebDriverManager;
+import org.junit.jupiter.api.*;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.chrome.ChromeDriver;
+
+public class BaseUiTest {
+  protected static String BASE_URL = System.getProperty("baseUrl",
+      "https://apps.qualiadept.eu/testaurant/frontend/index.html");
+  protected WebDriver driver;
+
+  @BeforeAll
+  static void setupClass() { WebDriverManager.chromedriver().setup(); }
+
+  @BeforeEach
+  void open() { driver = new ChromeDriver(); driver.get(BASE_URL); }
+
+  @AfterEach
+  void cleanup() { if (driver != null) driver.quit(); }
+}
+</code></pre>
+
+<pre><code class="language-java">package qa.testaurant.ui.pages;
+
+import org.openqa.selenium.*;
+import org.openqa.selenium.support.ui.*;
+
+public class MenuPage {
+  private final WebDriver driver;
+  public MenuPage(WebDriver d){ this.driver=d; }
+
+  public void addFirstItemToCart(){
+    var wait = new WebDriverWait(driver, java.time.Duration.ofSeconds(5));
+    var addBtns = wait.until(d -&gt; d.findElements(By.cssSelector("[data-test='add-to-cart']")));
+    addBtns.get(0).click();
+  }
+
+  public void openCart(){
+    driver.findElement(By.cssSelector("[data-test='open-cart']")).click();
+  }
+}
+</code></pre>
+    </section>
+
+    <section class="card">
+      <h2>Example UI Test</h2>
+<pre><code class="language-java">package qa.testaurant.ui.tests;
+
+import org.junit.jupiter.api.Test;
+import qa.testaurant.ui.BaseUiTest;
+import qa.testaurant.ui.pages.MenuPage;
+import static org.junit.jupiter.api.Assertions.*;
+
+public class SmokeTests extends BaseUiTest {
+  @Test
+  void add_to_cart_and_checkout_button_visible() {
+    MenuPage menu = new MenuPage(driver);
+    menu.addFirstItemToCart();
+    menu.openCart();
+    var checkout = driver.findElement(org.openqa.selenium.By.cssSelector("[data-test='checkout']"));
+    assertTrue(checkout.isDisplayed());
+  }
+}
+</code></pre>
+    </section>
+
+    <section class="card">
+      <h2>Suggested Scenarios</h2>
+      <ul>
+        <li>Add/remove items, verify totals & VAT in the cart.</li>
+        <li>Apply coupon → totals change as expected.</li>
+        <li>Switch currency (header) → UI totals update.</li>
+        <li>Stock boundary: set stock=1 (admin), order twice → second should fail gracefully.</li>
+        <li>Visual checks: images render; fallback when missing.</li>
+        <li>Responsiveness: narrow viewport → cards wrap and actions remain visible.</li>
+      </ul>
+    </section>
+
+    <section class="card">
+      <h2>Run</h2>
+      <pre><code>mvn -DbaseUrl="https://apps.qualiadept.eu/testaurant/frontend/index.html" test</code></pre>
+    </section>
+  </div>
+</body>
+</html>

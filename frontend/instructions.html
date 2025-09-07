@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Testaurant – Instructions & Test Ideas</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="styles.css" />
+  <style>
+    .container { max-width: 960px; margin: 0 auto; padding: 20px; }
+    h1,h2,h3 { margin: 10px 0; }
+    .note { background: #f0f7ff; border-left: 4px solid #3b82f6; padding: 12px; border-radius: 6px; }
+    table { width:100%; border-collapse: collapse; margin: 10px 0; }
+    th, td { border:1px solid #e5e7eb; padding:8px; text-align:left; }
+    .ok { color:#059669; font-weight:700; }
+    .bad { color:#dc2626; font-weight:700; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>📋 Instructions & Test Ideas</h1>
+    <p class="note">Base URL (prod): <code>https://apps.qualiadept.eu/testaurant</code>.  
+      API base: <code>/api</code> (e.g., <code>/api/health</code>).
+    </p>
+
+    <h2>Quick Smoke Suite (API)</h2>
+    <ol>
+      <li><b>Health</b> – <code>GET /api/health</code> → expect <code>200</code> and <code>{"ok":true}</code>.</li>
+      <li><b>Categories</b> – <code>GET /api/categories</code> → list not empty.</li>
+      <li><b>Menu</b> – <code>GET /api/menu?page=1&limit=8</code> → items array, pagination keys.</li>
+      <li><b>Coupons</b> – <code>GET /api/coupons/validate?code=SUMMER10</code> → <code>valid</code> boolean.</li>
+      <li><b>Cart price</b> – <code>POST /api/cart/price</code> with 1–2 items → totals computed, no stock error.</li>
+      <li><b>Checkout</b> – <code>POST /api/checkout</code> → returns <code>orderId</code>, payment info. Repeat with same <code>Idempotency-Key</code> to verify idempotency.</li>
+    </ol>
+
+    <h2>Functional Test Ideas (API)</h2>
+    <table>
+      <thead><tr><th>Area</th><th>Scenario</th><th>Expectation</th></tr></thead>
+      <tbody>
+        <tr><td>Menu Search</td><td><code>?q=pizza</code> filters</td><td>Only pizza items returned</td></tr>
+        <tr><td>Pagination</td><td><code>?page=2&limit=1</code></td><td>Exactly 1 item returned; page=2 reflected</td></tr>
+        <tr><td>Currency</td><td><code>?currency=EUR</code> on menu/orders/stats</td><td>Display fields (e.g., <code>price_converted</code>, <code>displayTotal</code>) present</td></tr>
+        <tr><td>Coupons</td><td>Below <code>minSubtotal</code></td><td class="bad">422 validation error</td></tr>
+        <tr><td>Stock</td><td>Order > available stock</td><td class="bad">409 conflict “Insufficient stock”</td></tr>
+        <tr><td>Idempotency</td><td>Repeat checkout with same key</td><td class="ok">Returns same <code>orderId</code>, no double stock decrement</td></tr>
+        <tr><td>Chaos hooks</td><td><code>?slow=1000</code> or <code>?chaos=1</code></td><td>Retry/backoff strategies validated</td></tr>
+      </tbody>
+    </table>
+
+    <h2>Admin/Backoffice Test Ideas (API)</h2>
+    <ul>
+      <li><b>Inventory</b> – <code>GET /api/inventory</code> with <code>X-API-Key</code>.</li>
+      <li><b>Stock set</b> – <code>PUT /api/menuitems/{id}/stock</code> → then get inventory; stock exact value.</li>
+      <li><b>Restock</b> – <code>POST /api/menuitems/{id}/restock</code> with <code>delta</code> ± → inventory reflects delta.</li>
+      <li><b>Rates</b> – <code>POST /api/rates</code> (EUR/USD) → <code>GET /api/menu?currency=EUR</code> shows converted prices.</li>
+      <li><b>Stats</b> – <code>GET /api/stats?from=YYYY-MM-DD&to=YYYY-MM-DD&currency=EUR</code> → by_day/top_items present.</li>
+    </ul>
+
+    <h2>Web/UI Test Ideas</h2>
+    <ul>
+      <li>Load menu cards, add to cart, apply coupon, change delivery/pickup, place order, see toast confirmations.</li>
+      <li>Switch currency (header) → cart/order totals update accordingly.</li>
+      <li>Admin panel (Inventory/Orders/Stats buttons) visible and functional when API key is set in the UI (if implemented).</li>
+      <li>Images load for menu items (broken images show fallback).</li>
+      <li>Responsive layout – grid collapses on mobile widths & actions remain usable.</li>
+    </ul>
+
+    <h2>Data Reset / Seeding</h2>
+    <p>Use <code>api/seed.sql</code> to re-seed locally. On prod, modify carefully.</p>
+
+    <p>Ready to go deeper? Check the full courses:</p>
+    <p>
+      <a class="btn" href="course-api-java.html">API Automation – Java & RestAssured</a>
+      <a class="btn" href="course-ui-selenium.html">UI Automation – Selenium & Java</a>
+    </p>
+  </div>
+</body>
+</html>

@@ -1,0 +1,219 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Course: API Automation with Java & RestAssured – Testaurant</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="styles.css" />
+  <style>
+    .container { max-width: 980px; margin: 0 auto; padding: 20px; }
+    h1,h2,h3 { margin: 10px 0; }
+    .grid { display:grid; gap:14px; grid-template-columns: 1fr; }
+    .card { padding:16px; border:1px solid #e5e7eb; border-radius:10px; background:#fff; }
+    pre { background:#0f172a; color:#e5e7eb; padding:12px; border-radius:8px; overflow:auto; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>🧪 Course: API Automation with Java & RestAssured</h1>
+    <p>End-to-end training to master API testing using RestAssured, TestNG/JUnit, and Maven. You’ll build a maintainable suite against the Testaurant API.</p>
+
+    <div class="grid">
+      <section class="card">
+        <h2>Prerequisites</h2>
+        <ul>
+          <li>JDK 17+</li>
+          <li>Maven 3.8+</li>
+          <li>IDE: IntelliJ IDEA or VS Code + Java</li>
+          <li>Postman (optional) to explore endpoints</li>
+        </ul>
+      </section>
+
+      <section class="card">
+        <h2>Project Structure</h2>
+<pre><code>.
+├─ pom.xml
+├─ src
+│  ├─ test
+│  │  ├─ java
+│  │  │  └─ qa.testaurant.api
+│  │  │     ├─ BaseTest.java
+│  │  │     ├─ HealthTests.java
+│  │  │     ├─ MenuTests.java
+│  │  │     ├─ CartPriceTests.java
+│  │  │     ├─ CheckoutTests.java
+│  │  │     ├─ OrdersAdminTests.java
+│  │  │     └─ TestData.java
+│  │  └─ resources
+│  │     └─ config.properties
+└─ README.md
+</code></pre>
+      </section>
+
+      <section class="card">
+        <h2>Maven <code>pom.xml</code></h2>
+<pre><code class="language-xml">&lt;project xmlns="http://maven.apache.org/POM/4.0.0" 
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 
+  http://maven.apache.org/xsd/maven-4.0.0.xsd"&gt;
+  &lt;modelVersion&gt;4.0.0&lt;/modelVersion&gt;
+  &lt;groupId&gt;qa.testaurant&lt;/groupId&gt;
+  &lt;artifactId&gt;api-automation&lt;/artifactId&gt;
+  &lt;version&gt;1.0.0&lt;/version&gt;
+
+  &lt;properties&gt;
+    &lt;maven.compiler.source&gt;17&lt;/maven.compiler.source&gt;
+    &lt;maven.compiler.target&gt;17&lt;/maven.compiler.target&gt;
+    &lt;junit.jupiter.version&gt;5.10.2&lt;/junit.jupiter.version&gt;
+    &lt;restassured.version&gt;5.4.0&lt;/restassured.version&gt;
+  &lt;/properties&gt;
+
+  &lt;dependencies&gt;
+    &lt;dependency&gt;
+      &lt;groupId&gt;io.rest-assured&lt;/groupId&gt;
+      &lt;artifactId&gt;rest-assured&lt;/artifactId&gt;
+      &lt;version&gt;${restassured.version}&lt;/version&gt;
+      &lt;scope&gt;test&lt;/scope&gt;
+    &lt;/dependency&gt;
+    &lt;dependency&gt;
+      &lt;groupId&gt;org.junit.jupiter&lt;/groupId&gt;
+      &lt;artifactId&gt;junit-jupiter&lt;/artifactId&gt;
+      &lt;version&gt;${junit.jupiter.version}&lt;/version&gt;
+      &lt;scope&gt;test&lt;/scope&gt;
+    &lt;/dependency&gt;
+    &lt;dependency&gt;
+      &lt;groupId&gt;com.fasterxml.jackson.core&lt;/groupId&gt;
+      &lt;artifactId&gt;jackson-databind&lt;/artifactId&gt;
+      &lt;version&gt;2.17.1&lt;/version&gt;
+      &lt;scope&gt;test&lt;/scope&gt;
+    &lt;/dependency&gt;
+  &lt;/dependencies&gt;
+
+  &lt;build&gt;
+    &lt;plugins&gt;
+      &lt;plugin&gt;
+        &lt;groupId&gt;org.apache.maven.plugins&lt;/groupId&gt;
+        &lt;artifactId&gt;maven-surefire-plugin&lt;/artifactId&gt;
+        &lt;version&gt;3.2.5&lt;/version&gt;
+      &lt;/plugin&gt;
+    &lt;/plugins&gt;
+  &lt;/build&gt;
+&lt;/project&gt;
+</code></pre>
+      </section>
+
+      <section class="card">
+        <h2>BaseTest</h2>
+<pre><code class="language-java">package qa.testaurant.api;
+
+import io.restassured.RestAssured;
+import org.junit.jupiter.api.BeforeAll;
+
+public class BaseTest {
+  protected static String BASE_URL = System.getProperty("baseUrl",
+      "https://apps.qualiadept.eu/testaurant");
+  protected static String ADMIN_KEY = System.getProperty("adminKey", "changeme-admin-key");
+
+  @BeforeAll
+  static void setup() {
+    RestAssured.baseURI = BASE_URL;
+  }
+}
+</code></pre>
+      </section>
+
+      <section class="card">
+        <h2>Sample tests</h2>
+<pre><code class="language-java">package qa.testaurant.api;
+
+import org.junit.jupiter.api.Test;
+import static io.restassured.RestAssured.given;
+import static org.hamcrest.Matchers.*;
+
+public class HealthTests extends BaseTest {
+  @Test
+  void health_ok() {
+    given()
+      .when().get("/api/health")
+      .then().statusCode(200)
+             .body("ok", equalTo(true));
+  }
+}
+
+class MenuTests extends BaseTest {
+  @Test
+  void menu_pagination_and_currency() {
+    given()
+      .queryParam("page", 1)
+      .queryParam("limit", 5)
+      .queryParam("currency", "EUR")
+      .when().get("/api/menu")
+      .then().statusCode(200)
+             .body("items.size()", greaterThan(0))
+             .body("items[0].price_converted", notNullValue());
+  }
+}
+
+class CheckoutTests extends BaseTest {
+  @Test
+  void checkout_idempotent() {
+    String idem = "demo-" + System.currentTimeMillis();
+    var body = """
+      {"customerName":"Jane QA","customerPhone":"+40123456789",
+       "items":[{"id":1,"qty":1}],
+       "paymentMethod":"card","deliveryMethod":"pickup"}""";
+
+    var first = given()
+      .header("Idempotency-Key", idem)
+      .contentType("application/json")
+      .body(body)
+      .when().post("/api/checkout")
+      .then().statusCode(200)
+             .extract().path("orderId");
+
+    var second = given()
+      .header("Idempotency-Key", idem)
+      .contentType("application/json")
+      .body(body)
+      .when().post("/api/checkout")
+      .then().statusCode(200)
+             .extract().path("orderId");
+
+    org.junit.jupiter.api.Assertions.assertEquals(first, second);
+  }
+}
+</code></pre>
+      </section>
+
+      <section class="card">
+        <h2>Admin examples</h2>
+<pre><code class="language-java">package qa.testaurant.api;
+
+import org.junit.jupiter.api.Test;
+import static io.restassured.RestAssured.given;
+import static org.hamcrest.Matchers.*;
+
+public class OrdersAdminTests extends BaseTest {
+  @Test
+  void list_orders_admin() {
+    given()
+      .header("X-API-Key", ADMIN_KEY)
+      .queryParam("page", 1)
+      .queryParam("limit", 10)
+      .when().get("/api/orders")
+      .then().statusCode(200)
+             .body("orders", notNullValue());
+  }
+}
+</code></pre>
+      </section>
+
+      <section class="card">
+        <h2>How to run</h2>
+        <p>From project root:</p>
+        <pre><code>mvn -DbaseUrl=https://apps.qualiadept.eu/testaurant -DadminKey=YOUR_KEY test</code></pre>
+      </section>
+    </div>
+  </div>
+</body>
+</html>
