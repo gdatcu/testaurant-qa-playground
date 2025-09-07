@@ -6,8 +6,7 @@
     "description": "API for the Testaurant QA Automation Playground. Features: menu, coupons, cart pricing, checkout with idempotency, inventory & stock, orders, exchange rates, stats, images (via image_url), chaos hooks."
   },
   "servers": [
-    { "url": "https://apps.qualiadept.eu/testaurant", "description": "Production" },
-    { "url": "{baseUrl}", "description": "Custom (variable)", "variables": { "baseUrl": { "default": "https://apps.qualiadept.eu/testaurant", "description": "Base URL of the API (no trailing slash)" } } }
+    { "url": "https://apps.qualiadept.eu/testaurant", "description": "Production" }
   ],
   "tags": [
     { "name": "Health" },
@@ -22,22 +21,66 @@
   ],
   "components": {
     "securitySchemes": {
-      "AdminApiKey": { "type": "apiKey", "in": "header", "name": "X-API-Key", "description": "Admin API key from config.php" }
+      "AdminApiKey": { "type": "apiKey", "in": "header", "name": "X-API-Key" }
     },
     "parameters": {
-      "CurrencyParam": { "name": "currency", "in": "query", "required": false, "schema": { "type": "string", "enum": ["RON","EUR","USD"] }, "description": "Display currency (conversion done from base RON)" },
-      "PageParam": { "name": "page", "in": "query", "schema": { "type": "integer", "minimum": 1, "default": 1 } },
-      "LimitParam": { "name": "limit", "in": "query", "schema": { "type": "integer", "minimum": 1, "maximum": 100, "default": 20 } },
-      "ChaosParam": { "name": "chaos", "in": "query", "schema": { "type": "string" }, "description": "Enable chaos mode (random latency and occasional 503)" },
-      "SlowParam": { "name": "slow", "in": "query", "schema": { "type": "integer", "minimum": 0 }, "description": "Add artificial delay in milliseconds" }
+      "CurrencyParam": {
+        "name": "currency",
+        "in": "query",
+        "required": false,
+        "schema": { "type": "string", "enum": ["RON", "EUR", "USD"] },
+        "description": "Display currency (conversion from base RON)."
+      },
+      "PageParam": {
+        "name": "page",
+        "in": "query",
+        "schema": { "type": "integer", "minimum": 1, "default": 1 }
+      },
+      "LimitParam": {
+        "name": "limit",
+        "in": "query",
+        "schema": { "type": "integer", "minimum": 1, "maximum": 100, "default": 20 }
+      },
+      "ChaosParam": {
+        "name": "chaos",
+        "in": "query",
+        "schema": { "type": "string" },
+        "description": "Random latency and occasional 503 for chaos testing."
+      },
+      "SlowParam": {
+        "name": "slow",
+        "in": "query",
+        "schema": { "type": "integer", "minimum": 0 },
+        "description": "Artificial delay in milliseconds."
+      }
     },
     "headers": {
-      "IdempotencyKey": { "description": "Idempotency key for checkout. If a request with the same key is replayed, the same orderId is returned.", "schema": { "type": "string" } }
+      "IdempotencyKey": {
+        "description": "Idempotency key for checkout. If the same key is replayed, the same orderId is returned.",
+        "schema": { "type": "string" }
+      }
     },
     "schemas": {
-      "Error": { "type": "object", "properties": { "error": { "type": "string" }, "details": { "type": "string", "nullable": true } } },
-      "Health": { "type": "object", "properties": { "ok": { "type": "boolean", "example": true }, "time": { "type": "string", "format": "date-time" } } },
-      "CategoryList": { "type": "object", "properties": { "categories": { "type": "array", "items": { "type": "string" } } } },
+      "Error": {
+        "type": "object",
+        "properties": {
+          "error": { "type": "string" },
+          "details": { "type": "string", "nullable": true }
+        }
+      },
+      "Health": {
+        "type": "object",
+        "properties": {
+          "ok": { "type": "boolean", "example": true },
+          "time": { "type": "string", "format": "date-time" }
+        }
+      },
+      "CategoryList": {
+        "type": "object",
+        "properties": {
+          "categories": { "type": "array", "items": { "type": "string" } }
+        }
+      },
       "MenuItem": {
         "type": "object",
         "properties": {
@@ -59,12 +102,12 @@
           "items": { "type": "array", "items": { "$ref": "#/components/schemas/MenuItem" } },
           "page": { "type": "integer" },
           "limit": { "type": "integer" },
-          "currency": { "type": "string", "enum": ["RON","EUR","USD"], "nullable": true }
+          "currency": { "type": "string", "enum": ["RON", "EUR", "USD"], "nullable": true }
         }
       },
       "MenuCreate": {
         "type": "object",
-        "required": ["name","price","vat_rate","stock"],
+        "required": ["name", "price", "vat_rate", "stock"],
         "properties": {
           "name": { "type": "string" },
           "description": { "type": "string", "nullable": true },
@@ -84,22 +127,29 @@
             "nullable": true,
             "properties": {
               "code": { "type": "string" },
-              "type": { "type": "string", "enum": ["percent","amount"] },
+              "type": { "type": "string", "enum": ["percent", "amount"] },
               "value": { "type": "number", "format": "float" },
               "minSubtotal": { "type": "number", "format": "float" }
             }
           }
         }
       },
-      "CartItemIn": { "type": "object", "required": ["id","qty"], "properties": { "id": { "type": "integer" }, "qty": { "type": "integer", "minimum": 1 } } },
+      "CartItemIn": {
+        "type": "object",
+        "required": ["id", "qty"],
+        "properties": {
+          "id": { "type": "integer" },
+          "qty": { "type": "integer", "minimum": 1 }
+        }
+      },
       "CartPriceRequest": {
         "type": "object",
         "required": ["items"],
         "properties": {
           "items": { "type": "array", "items": { "$ref": "#/components/schemas/CartItemIn" } },
-          "deliveryMethod": { "type": "string", "enum": ["pickup","delivery"], "default": "pickup" },
+          "deliveryMethod": { "type": "string", "enum": ["pickup", "delivery"], "default": "pickup" },
           "couponCode": { "type": "string", "nullable": true },
-          "currency": { "type": "string", "enum": ["RON","EUR","USD"], "nullable": true }
+          "currency": { "type": "string", "enum": ["RON", "EUR", "USD"], "nullable": true }
         }
       },
       "CartPriceResponse": {
@@ -121,7 +171,7 @@
       },
       "CheckoutRequest": {
         "type": "object",
-        "required": ["customerName","customerPhone","items","paymentMethod","deliveryMethod"],
+        "required": ["customerName", "customerPhone", "items", "paymentMethod", "deliveryMethod"],
         "properties": {
           "customerName": { "type": "string" },
           "customerPhone": { "type": "string" },
@@ -129,20 +179,26 @@
           "city": { "type": "string", "nullable": true },
           "postalCode": { "type": "string", "nullable": true },
           "items": { "type": "array", "items": { "$ref": "#/components/schemas/CartItemIn" } },
-          "paymentMethod": { "type": "string", "enum": ["cash","card"] },
-          "deliveryMethod": { "type": "string", "enum": ["pickup","delivery"] },
+          "paymentMethod": { "type": "string", "enum": ["cash", "card"] },
+          "deliveryMethod": { "type": "string", "enum": ["pickup", "delivery"] },
           "couponCode": { "type": "string", "nullable": true },
-          "currency": { "type": "string", "enum": ["RON","EUR","USD"], "nullable": true }
+          "currency": { "type": "string", "enum": ["RON", "EUR", "USD"], "nullable": true }
         }
       },
-      "PaymentInfo": { "type": "object", "properties": { "status": { "type": "string", "example": "captured" }, "transactionId": { "type": "string" } } },
+      "PaymentInfo": {
+        "type": "object",
+        "properties": {
+          "status": { "type": "string", "example": "captured" },
+          "transactionId": { "type": "string" }
+        }
+      },
       "CheckoutResponse": {
         "type": "object",
         "properties": {
           "orderId": { "type": "integer" },
           "status": { "type": "string", "example": "created" },
           "total": { "type": "number", "format": "float", "description": "Base currency (RON)" },
-          "currency": { "type": "string", "enum": ["RON","EUR","USD"] },
+          "currency": { "type": "string", "enum": ["RON", "EUR", "USD"] },
           "displayTotal": { "type": "number", "format": "float" },
           "payment": { "$ref": "#/components/schemas/PaymentInfo" }
         }
@@ -180,7 +236,7 @@
           "address_line1": { "type": "string", "nullable": true },
           "city": { "type": "string", "nullable": true },
           "postal_code": { "type": "string", "nullable": true },
-          "delivery_method": { "type": "string", "enum": ["pickup","delivery"] },
+          "delivery_method": { "type": "string", "enum": ["pickup", "delivery"] },
           "subtotal": { "type": "number", "format": "float" },
           "discount": { "type": "number", "format": "float" },
           "vat_amount": { "type": "number", "format": "float" },
@@ -194,7 +250,7 @@
             "type": "object",
             "nullable": true,
             "properties": {
-              "method": { "type": "string", "enum": ["cash","card"] },
+              "method": { "type": "string", "enum": ["cash", "card"] },
               "status": { "type": "string" },
               "transaction_id": { "type": "string" },
               "created_at": { "type": "string", "format": "date-time" }
@@ -208,7 +264,7 @@
           "orders": { "type": "array", "items": { "$ref": "#/components/schemas/OrderSummary" } },
           "page": { "type": "integer" },
           "limit": { "type": "integer" },
-          "currency": { "type": "string", "enum": ["RON","EUR","USD"] }
+          "currency": { "type": "string", "enum": ["RON", "EUR", "USD"] }
         }
       },
       "OrderHistory": {
@@ -216,7 +272,14 @@
         "properties": {
           "history": {
             "type": "array",
-            "items": { "type": "object", "properties": { "status": { "type": "string" }, "note": { "type": "string", "nullable": true }, "created_at": { "type": "string", "format": "date-time" } } }
+            "items": {
+              "type": "object",
+              "properties": {
+                "status": { "type": "string" },
+                "note": { "type": "string", "nullable": true },
+                "created_at": { "type": "string", "format": "date-time" }
+              }
+            }
           }
         }
       },
@@ -225,22 +288,51 @@
         "properties": {
           "from": { "type": "string", "format": "date" },
           "to": { "type": "string", "format": "date" },
-          "currency": { "type": "string", "enum": ["RON","EUR","USD"] },
+          "currency": { "type": "string", "enum": ["RON", "EUR", "USD"] },
           "orders_count": { "type": "integer" },
           "revenue_sum": { "type": "number", "format": "float", "description": "Base currency" },
           "revenue_display": { "type": "number", "format": "float" },
           "by_day": {
             "type": "array",
-            "items": { "type": "object", "properties": { "d": { "type": "string", "format": "date" }, "c": { "type": "integer", "description": "orders" }, "s": { "type": "number", "format": "float", "description": "revenue base" }, "s_display": { "type": "number", "format": "float", "nullable": true } } }
+            "items": {
+              "type": "object",
+              "properties": {
+                "d": { "type": "string", "format": "date" },
+                "c": { "type": "integer", "description": "orders" },
+                "s": { "type": "number", "format": "float", "description": "revenue base" },
+                "s_display": { "type": "number", "format": "float", "nullable": true }
+              }
+            }
           },
           "top_items": {
             "type": "array",
-            "items": { "type": "object", "properties": { "name": { "type": "string" }, "qty": { "type": "integer" }, "revenue": { "type": "number", "format": "float" }, "revenue_display": { "type": "number", "format": "float", "nullable": true } } }
+            "items": {
+              "type": "object",
+              "properties": {
+                "name": { "type": "string" },
+                "qty": { "type": "integer" },
+                "revenue": { "type": "number", "format": "float" },
+                "revenue_display": { "type": "number", "format": "float", "nullable": true }
+              }
+            }
           }
         }
       },
-      "ExchangeRate": { "type": "object", "properties": { "base_currency": { "type": "string", "example": "RON" }, "currency": { "type": "string", "example": "EUR" }, "rate": { "type": "number", "format": "float", "example": 0.2 } } },
-      "ExchangeRateList": { "type": "object", "properties": { "base": { "type": "string" }, "rates": { "type": "array", "items": { "$ref": "#/components/schemas/ExchangeRate" } } } }
+      "ExchangeRate": {
+        "type": "object",
+        "properties": {
+          "base_currency": { "type": "string", "example": "RON" },
+          "currency": { "type": "string", "example": "EUR" },
+          "rate": { "type": "number", "format": "float", "example": 0.2 }
+        }
+      },
+      "ExchangeRateList": {
+        "type": "object",
+        "properties": {
+          "base": { "type": "string" },
+          "rates": { "type": "array", "items": { "$ref": "#/components/schemas/ExchangeRate" } }
+        }
+      }
     }
   },
   "paths": {
@@ -248,15 +340,22 @@
       "get": {
         "tags": ["Health"],
         "summary": "Health check",
-        "parameters": [ { "$ref": "#/components/parameters/ChaosParam" }, { "$ref": "#/components/parameters/SlowParam" } ],
-        "responses": { "200": { "description": "OK", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Health" } } } } }
+        "parameters": [
+          { "$ref": "#/components/parameters/ChaosParam" },
+          { "$ref": "#/components/parameters/SlowParam" }
+        ],
+        "responses": {
+          "200": { "description": "OK", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Health" } } } }
+        }
       }
     },
     "/api/categories": {
       "get": {
         "tags": ["Catalog"],
         "summary": "List categories",
-        "responses": { "200": { "description": "OK", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/CategoryList" } } } } }
+        "responses": {
+          "200": { "description": "OK", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/CategoryList" } } } }
+        }
       }
     },
     "/api/menu": {
@@ -270,12 +369,14 @@
           { "name": "q", "in": "query", "schema": { "type": "string" } },
           { "name": "category", "in": "query", "schema": { "type": "string" } }
         ],
-        "responses": { "200": { "description": "OK", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/MenuQuery" } } } } }
+        "responses": {
+          "200": { "description": "OK", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/MenuQuery" } } } }
+        }
       },
       "post": {
         "tags": ["Catalog"],
         "summary": "Create menu item (admin)",
-        "security": [ { "AdminApiKey": [] } ],
+        "security": [{ "AdminApiKey": [] }],
         "requestBody": { "required": true, "content": { "application/json": { "schema": { "$ref": "#/components/schemas/MenuCreate" } } } },
         "responses": {
           "201": { "description": "Created", "content": { "application/json": { "schema": { "type": "object", "properties": { "ok": { "type": "boolean" }, "id": { "type": "integer" } } } } } },
@@ -287,15 +388,17 @@
       "get": {
         "tags": ["Coupons"],
         "summary": "Validate coupon code",
-        "parameters": [ { "name": "code", "in": "query", "required": true, "schema": { "type": "string" } } ],
-        "responses": { "200": { "description": "Coupon validation", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/CouponValidation" } } } } }
+        "parameters": [{ "name": "code", "in": "query", "required": true, "schema": { "type": "string" } }],
+        "responses": {
+          "200": { "description": "Coupon validation", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/CouponValidation" } } } }
+        }
       }
     },
     "/api/cart/price": {
       "post": {
         "tags": ["Cart & Checkout"],
         "summary": "Calculate cart totals",
-        "parameters": [ { "$ref": "#/components/parameters/CurrencyParam" } ],
+        "parameters": [{ "$ref": "#/components/parameters/CurrencyParam" }],
         "requestBody": { "required": true, "content": { "application/json": { "schema": { "$ref": "#/components/schemas/CartPriceRequest" } } } },
         "responses": {
           "200": { "description": "OK", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/CartPriceResponse" } } } },
@@ -308,7 +411,7 @@
       "post": {
         "tags": ["Cart & Checkout"],
         "summary": "Create order (checkout)",
-        "parameters": [ { "$ref": "#/components/parameters/CurrencyParam" } ],
+        "parameters": [{ "$ref": "#/components/parameters/CurrencyParam" }],
         "requestBody": { "required": true, "content": { "application/json": { "schema": { "$ref": "#/components/schemas/CheckoutRequest" } } } },
         "responses": {
           "200": { "description": "Created", "headers": { "Idempotency-Key": { "$ref": "#/components/headers/IdempotencyKey" } }, "content": { "application/json": { "schema": { "$ref": "#/components/schemas/CheckoutResponse" } } } },
@@ -320,52 +423,115 @@
       "get": {
         "tags": ["Orders"],
         "summary": "List orders (admin)",
-        "security": [ { "AdminApiKey": [] } ],
-        "parameters": [ { "$ref": "#/components/parameters/PageParam" }, { "$ref": "#/components/parameters/LimitParam" }, { "$ref": "#/components/parameters/CurrencyParam" } ],
-        "responses": { "200": { "description": "OK", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/OrderList" } } } }, "403": { "description": "Forbidden", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Error" } } } } }
+        "security": [{ "AdminApiKey": [] }],
+        "parameters": [
+          { "$ref": "#/components/parameters/PageParam" },
+          { "$ref": "#/components/parameters/LimitParam" },
+          { "$ref": "#/components/parameters/CurrencyParam" }
+        ],
+        "responses": {
+          "200": { "description": "OK", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/OrderList" } } } },
+          "403": { "description": "Forbidden", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Error" } } } }
+        }
       }
     },
     "/api/orders/{id}": {
       "get": {
         "tags": ["Orders"],
         "summary": "Get order details (admin)",
-        "security": [ { "AdminApiKey": [] } ],
-        "parameters": [ { "name": "id", "in": "path", "required": true, "schema": { "type": "integer" } }, { "$ref": "#/components/parameters/CurrencyParam" } ],
-        "responses": { "200": { "description": "OK", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/OrderDetail" } } } }, "404": { "description": "Not Found", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Error" } } } } }
+        "security": [{ "AdminApiKey": [] }],
+        "parameters": [
+          { "name": "id", "in": "path", "required": true, "schema": { "type": "integer" } },
+          { "$ref": "#/components/parameters/CurrencyParam" }
+        ],
+        "responses": {
+          "200": { "description": "OK", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/OrderDetail" } } } },
+          "404": { "description": "Not Found", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Error" } } } }
+        }
       },
       "post": {
         "tags": ["Orders"],
         "summary": "Update order status (admin)",
-        "security": [ { "AdminApiKey": [] } ],
-        "parameters": [ { "name": "id", "in": "path", "required": true, "schema": { "type": "integer" } } ],
-        "requestBody": { "required": true, "content": { "application/json": { "schema": { "type": "object", "required": ["status"], "properties": { "status": { "type": "string", "enum": ["created","preparing","ready","delivered","cancelled"] }, "note": { "type": "string", "nullable": true } } } } } },
-        "responses": { "200": { "description": "OK" }, "422": { "description": "Invalid status", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Error" } } } } }
+        "security": [{ "AdminApiKey": [] }],
+        "parameters": [{ "name": "id", "in": "path", "required": true, "schema": { "type": "integer" } }],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["status"],
+                "properties": {
+                  "status": { "type": "string", "enum": ["created", "preparing", "ready", "delivered", "cancelled"] },
+                  "note": { "type": "string", "nullable": true }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "OK" },
+          "422": { "description": "Invalid status", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Error" } } } }
+        }
       }
     },
     "/api/orders/{id}/history": {
       "get": {
         "tags": ["Orders"],
         "summary": "Order status history (admin)",
-        "security": [ { "AdminApiKey": [] } ],
-        "parameters": [ { "name": "id", "in": "path", "required": true, "schema": { "type": "integer" } } ],
-        "responses": { "200": { "description": "OK", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/OrderHistory" } } } } }
+        "security": [{ "AdminApiKey": [] }],
+        "parameters": [{ "name": "id", "in": "path", "required": true, "schema": { "type": "integer" } }],
+        "responses": {
+          "200": { "description": "OK", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/OrderHistory" } } } }
+        }
       }
     },
     "/api/inventory": {
       "get": {
         "tags": ["Inventory (Admin)"],
         "summary": "List inventory view (admin)",
-        "security": [ { "AdminApiKey": [] } ],
-        "responses": { "200": { "description": "OK", "content": { "application/json": { "schema": { "type": "object", "properties": { "items": { "type": "array", "items": { "type": "object", "properties": { "id": { "type": "integer" }, "name": { "type": "string" }, "category": { "type": "string", "nullable": true }, "price": { "type": "number", "format": "float" }, "vat_rate": { "type": "number", "format": "float" }, "stock": { "type": "integer" }, "available": { "type": "integer" } } } } } } } } } }
+        "security": [{ "AdminApiKey": [] }],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "items": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": { "type": "integer" },
+                          "name": { "type": "string" },
+                          "category": { "type": "string", "nullable": true },
+                          "price": { "type": "number", "format": "float" },
+                          "vat_rate": { "type": "number", "format": "float" },
+                          "stock": { "type": "integer" },
+                          "available": { "type": "integer" }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
       }
     },
     "/api/menuitems/{id}/stock": {
       "put": {
         "tags": ["Inventory (Admin)"],
         "summary": "Set absolute stock for a menu item",
-        "security": [ { "AdminApiKey": [] } ],
-        "parameters": [ { "name": "id", "in": "path", "required": true, "schema": { "type": "integer" } } ],
-        "requestBody": { "required": true, "content": { "application/json": { "schema": { "type": "object", "required": ["stock"], "properties": { "stock": { "type": "integer", "minimum": 0 } } } } } },
+        "security": [{ "AdminApiKey": [] }],
+        "parameters": [{ "name": "id", "in": "path", "required": true, "schema": { "type": "integer" } }],
+        "requestBody": {
+          "required": true,
+          "content": { "application/json": { "schema": { "type": "object", "required": ["stock"], "properties": { "stock": { "type": "integer", "minimum": 0 } } } } }
+        },
         "responses": { "200": { "description": "OK" } }
       }
     },
@@ -373,9 +539,12 @@
       "post": {
         "tags": ["Inventory (Admin)"],
         "summary": "Increment/decrement stock by delta",
-        "security": [ { "AdminApiKey": [] } ],
-        "parameters": [ { "name": "id", "in": "path", "required": true, "schema": { "type": "integer" } } ],
-        "requestBody": { "required": true, "content": { "application/json": { "schema": { "type": "object", "required": ["delta"], "properties": { "delta": { "type": "integer" } } } } } },
+        "security": [{ "AdminApiKey": [] }],
+        "parameters": [{ "name": "id", "in": "path", "required": true, "schema": { "type": "integer" } }],
+        "requestBody": {
+          "required": true,
+          "content": { "application/json": { "schema": { "type": "object", "required": ["delta"], "properties": { "delta": { "type": "integer" } } } } }
+        },
         "responses": { "200": { "description": "OK" } }
       }
     },
@@ -383,9 +552,12 @@
       "post": {
         "tags": ["Inventory (Admin)"],
         "summary": "Set availability flag (0/1)",
-        "security": [ { "AdminApiKey": [] } ],
-        "parameters": [ { "name": "id", "in": "path", "required": true, "schema": { "type": "integer" } } ],
-        "requestBody": { "required": true, "content": { "application/json": { "schema": { "type": "object", "required": ["available"], "properties": { "available": { "type": "integer", "enum": [0,1] } } } } } },
+        "security": [{ "AdminApiKey": [] }],
+        "parameters": [{ "name": "id", "in": "path", "required": true, "schema": { "type": "integer" } }],
+        "requestBody": {
+          "required": true,
+          "content": { "application/json": { "schema": { "type": "object", "required": ["available"], "properties": { "available": { "type": "integer", "enum": [0, 1] } } } } }
+        },
         "responses": { "200": { "description": "OK" } }
       }
     },
@@ -393,14 +565,19 @@
       "get": {
         "tags": ["Rates (Admin)"],
         "summary": "List exchange rates",
-        "security": [ { "AdminApiKey": [] } ],
-        "responses": { "200": { "description": "OK", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ExchangeRateList" } } } } }
+        "security": [{ "AdminApiKey": [] }],
+        "responses": {
+          "200": { "description": "OK", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ExchangeRateList" } } } }
+        }
       },
       "post": {
         "tags": ["Rates (Admin)"],
         "summary": "Upsert exchange rate",
-        "security": [ { "AdminApiKey": [] } ],
-        "requestBody": { "required": true, "content": { "application/json": { "schema": { "type": "object", "required": ["currency","rate"], "properties": { "currency": { "type": "string", "enum": ["RON","EUR","USD"] }, "rate": { "type": "number", "format": "float", "minimum": 0 } } } } } },
+        "security": [{ "AdminApiKey": [] }],
+        "requestBody": {
+          "required": true,
+          "content": { "application/json": { "schema": { "type": "object", "required": ["currency", "rate"], "properties": { "currency": { "type": "string", "enum": ["RON", "EUR", "USD"] }, "rate": { "type": "number", "format": "float", "minimum": 0 } } } } }
+        },
         "responses": { "200": { "description": "OK" } }
       }
     },
@@ -408,16 +585,25 @@
       "get": {
         "tags": ["Stats (Admin)"],
         "summary": "Dashboard statistics",
-        "security": [ { "AdminApiKey": [] } ],
-        "parameters": [ { "name": "from", "in": "query", "schema": { "type": "string", "format": "date" } }, { "name": "to", "in": "query", "schema": { "type": "string", "format": "date" } }, { "$ref": "#/components/parameters/CurrencyParam" } ],
-        "responses": { "200": { "description": "OK", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/StatsResponse" } } } } }
+        "security": [{ "AdminApiKey": [] }],
+        "parameters": [
+          { "name": "from", "in": "query", "schema": { "type": "string", "format": "date" } },
+          { "name": "to", "in": "query", "schema": { "type": "string", "format": "date" } },
+          { "$ref": "#/components/parameters/CurrencyParam" }
+        ],
+        "responses": {
+          "200": { "description": "OK", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/StatsResponse" } } } }
+        }
       }
     },
     "/api/webhooks/payment": {
       "post": {
         "tags": ["Webhooks"],
         "summary": "Payment gateway webhook (simulation)",
-        "requestBody": { "required": true, "content": { "application/json": { "schema": { "type": "object", "required": ["orderId","status"], "properties": { "orderId": { "type": "integer" }, "status": { "type": "string", "example": "captured" } } } } } },
+        "requestBody": {
+          "required": true,
+          "content": { "application/json": { "schema": { "type": "object", "required": ["orderId", "status"], "properties": { "orderId": { "type": "integer" }, "status": { "type": "string", "example": "captured" } } } } }
+        },
         "responses": { "200": { "description": "OK" } }
       }
     }
