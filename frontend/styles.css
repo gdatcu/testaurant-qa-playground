@@ -45,8 +45,8 @@
 /* Header logo image (replaces the old emoji box) */
 .brand .logo-img {
   display: inline-block;
-  width: 44px;
-  height: 44px;
+  width: 96px;
+  height: 96px;
   object-fit: contain;
   margin-right: 10px;
   border-radius: 6px; /* subtle rounding */
