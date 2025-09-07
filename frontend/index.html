@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Testaurant v3 • QualiAdept</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <div class="logo">🍕</div>
+      <div><h1>Testaurant</h1><small>QA Training • QualiAdept</small></div>
+    </div>
+    <div class="controls">
+      <select id="lang">
+        <option value="en">English</option>
+        <option value="ro">Română</option>
+      </select>
+      <select id="currencySel">
+        <option value="RON">RON</option>
+        <option value="EUR">EUR</option>
+        <option value="USD">USD</option>
+      </select>
+      <input id="apiBase" value="https://apps.qualiadept.eu/testaurant" />
+      <button id="btnHealth" class="btn">Ping</button>
+    </div>
+  </header>
+
+  <main class="layout">
+    <section class="menu-pane card">
+      <div class="pane-header">
+        <h2 data-i18n="menu_title">Menu</h2>
+        <div class="filters">
+          <input id="search" placeholder="Search..." data-ph="search">
+          <select id="category"><option value="">All</option></select>
+          <button id="btnLoadMenu" class="btn" data-i18n="refresh">Refresh</button>
+        </div>
+      </div>
+      <div id="menu" class="grid"></div>
+      <div class="pager">
+        <button id="prevPage" class="btn" data-i18n="prev">Prev</button>
+        <span id="pageInfo"></span>
+        <button id="nextPage" class="btn" data-i18n="next">Next</button>
+      </div>
+    </section>
+
+    <section class="cart-pane card">
+      <div class="pane-header"><h2 data-i18n="cart_title">Cart</h2></div>
+      <div id="cart" class="cart"></div>
+      <div class="cart-actions">
+        <select id="delivery">
+          <option value="pickup" data-i18n="pickup">Pickup</option>
+          <option value="delivery" data-i18n="delivery">Delivery</option>
+        </select>
+        <input id="coupon" placeholder="Coupon..." data-ph="coupon">
+        <button id="btnQuote" class="btn" data-i18n="update_totals">Update totals</button>
+      </div>
+      <div class="address" id="address">
+        <input id="addr1" placeholder="Address line 1" data-ph="addr1" />
+        <input id="city" placeholder="City" data-ph="city" />
+        <input id="postal" placeholder="Postal code" data-ph="postal" />
+      </div>
+      <div id="quote" class="quote"></div>
+      <div class="checkout">
+        <input id="custName" placeholder="Name" data-ph="name" />
+        <input id="custPhone" placeholder="Phone" data-ph="phone" />
+        <select id="payMethod">
+          <option value="card" data-i18n="card">Card</option>
+          <option value="cash" data-i18n="cash">Cash</option>
+        </select>
+        <input id="idem" placeholder="Idempotency-Key" data-ph="idem"/>
+        <button id="btnCheckout" class="btn primary" data-i18n="checkout">Checkout</button>
+        <div id="checkoutResult" class="muted"></div>
+      </div>
+    </section>
+
+    <section class="admin-pane card">
+      <div class="pane-header">
+        <h2 data-i18n="admin_title">Admin</h2>
+        <div class="admin-controls">
+          <input id="adminKey" placeholder="X-API-Key">
+          <button id="btnListOrders" class="btn" data-i18n="list_orders">List Orders</button>
+          <button id="btnLoadInventory" class="btn" data-i18n="load_inventory">Load Inventory</button>
+          <button id="btnLoadStats" class="btn" data-i18n="load_stats">Load Stats</button>
+        </div>
+      </div>
+      <div class="tabs">
+        <button class="tab active" data-tab="ordersTab" data-i18n="orders">Orders</button>
+        <button class="tab" data-tab="inventoryTab" data-i18n="inventory">Inventory</button>
+        <button class="tab" data-tab="statsTab" data-i18n="stats">Stats</button>
+      </div>
+      <div id="ordersTab" class="tab-panel">
+        <div id="orders"></div>
+      </div>
+      <div id="inventoryTab" class="tab-panel hidden">
+        <div id="inventory" class="grid"></div>
+      </div>
+      <div id="statsTab" class="tab-panel hidden">
+        <div id="stats"></div>
+      </div>
+    </section>
+  </main>
+
+  <div id="toaster" aria-live="polite" aria-atomic="true"></div>
+  <script src="app.js"></script>
+</body>
+</html>

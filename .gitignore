@@ -64,9 +64,6 @@ nyc_output/
 reports/
 newman/                 # Postman CLI (Newman) reports
 
-# ---- Postman/Collections (if you generate HTML reports) ----
-*.postman_dump.json
-*.html
 
 # ---- Misc binaries ----
 *.swp
