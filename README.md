@@ -1,7 +1,7 @@
 # 🍕 Testaurant QA Playground – PLUS (PHP + MySQL)
 
 A **demo application** for QA automation engineers to **learn and practice test automation**.  
-It simulates a restaurant ordering system with API + frontend.  
+It simulates a restaurant ordering system with API + frontend. 
 
 👉 Hosted at: [app.qualiadept.eu/testaurant](https://apps.qualiadept.eu/testaurant)
 
