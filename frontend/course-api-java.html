@@ -2,60 +2,177 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <title>Course: API Automation with Java & RestAssured – Testaurant</title>
+  <title>Masterclass: API Automation with Java & RestAssured – Testaurant</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <link rel="stylesheet" href="styles.css" />
   <style>
-    .container { max-width: 980px; margin: 0 auto; padding: 20px; }
-    h1,h2,h3 { margin: 10px 0; }
-    .grid { display:grid; gap:14px; grid-template-columns: 1fr; }
-    .card { padding:16px; border:1px solid #e5e7eb; border-radius:10px; background:#fff; }
-    pre { background:#0f172a; color:#e5e7eb; padding:12px; border-radius:8px; overflow:auto; }
+    :root{
+      --ink:#0f172a;--muted:#475569;--bg:#f8fafc;--card:#ffffff;--border:#e5e7eb;--accent:#1e3a8a;--accent2:#0ea5e9;
+      --ok:#059669;--bad:#dc2626;--warn:#d97706;
+    }
+    body{font-family: system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, "Helvetica Neue", Arial, "Apple Color Emoji", "Segoe UI Emoji"; background:var(--bg); color:var(--ink); line-height:1.55}
+    .container{max-width:1100px;margin:0 auto; padding:24px}
+    nav.toc{position:sticky;top:0;background:var(--accent);padding:10px;border-radius:12px;margin-bottom:18px;z-index:5}
+    nav.toc a{color:#fff;margin-right:14px;text-decoration:none;font-weight:700}
+    h1{margin:0 0 10px 0}
+    h2{margin:26px 0 10px}
+    h3{margin:20px 0 8px}
+    .card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:16px;margin:14px 0}
+    pre{background:#0b1020;color:#e5e7eb;padding:14px;border-radius:10px;overflow:auto}
+    code.inline{background:#eef2ff;border-radius:6px;padding:2px 6px}
+    .grid{display:grid;gap:14px}
+    .g2{grid-template-columns:1fr 1fr}
+    .g3{grid-template-columns: repeat(3, 1fr)}
+    .callout{background:#eff6ff;border-left:6px solid var(--accent2);padding:10px;border-radius:8px}
+    .checklist{list-style:none;padding:0;margin:0}
+    .checklist li{padding:6px 8px;border-left:4px solid var(--border);margin:6px 0;background:#fff;border-radius:8px}
+    .checklist li.ok{border-left-color:var(--ok);background:#ecfdf5}
+    .checklist li.warn{border-left-color:var(--warn);background:#fffbeb}
+    .checklist li.bad{border-left-color:var(--bad);background:#fef2f2}
+    table{width:100%;border-collapse:collapse}
+    th,td{border:1px solid var(--border);padding:8px;text-align:left}
+    .btn-row{display:flex;gap:10px;flex-wrap:wrap}
+    .btn{display:inline-block;background:var(--accent);color:#fff;padding:10px 14px;border-radius:10px;text-decoration:none;font-weight:700}
+    .badge{display:inline-block;background:#e2e8f0;color:#0f172a;padding:2px 8px;border-radius:999px;font-size:12px;margin-left:6px}
+    .muted{color:var(--muted)}
+    .ok{color:var(--ok);font-weight:700}
+    .bad{color:var(--bad);font-weight:700}
+    .warn{color:var(--warn);font-weight:700}
+    .mono{font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace}
+    .kbd{border:1px solid var(--border);background:#fff;border-bottom-width:3px;padding:0 6px;border-radius:6px;font-size:12px}
+    .pill{padding:4px 8px;border-radius:999px;border:1px solid var(--border);background:#fff}
+    .sep{height:1px;background:var(--border);margin:18px 0}
   </style>
 </head>
 <body>
-  <div class="container">
-    <h1>🧪 Course: API Automation with Java & RestAssured</h1>
-    <p>End-to-end training to master API testing using RestAssured, TestNG/JUnit, and Maven. You’ll build a maintainable suite against the Testaurant API.</p>
+<div class="container">
+  <h1>🧪 Masterclass: API Automation with Java & RestAssured</h1>
+  <p class="muted">A complete, end-to-end course using the <b>Testaurant API</b>. You’ll learn HTTP fundamentals, test design, robust automation patterns, data-driven tests, reporting, CI, environment handling, and advanced topics like idempotency, pagination, currency conversion, coupons, and chaos testing.</p>
 
-    <div class="grid">
-      <section class="card">
-        <h2>Prerequisites</h2>
+  <nav class="toc">
+    <a href="#overview">Overview</a>
+    <a href="#http-fundamentals">HTTP Fundamentals</a>
+    <a href="#project-skeleton">Project Skeleton (embedded)</a>
+    <a href="#env-mgmt">Environment & Config</a>
+    <a href="#restassured-basics">RestAssured Basics</a>
+    <a href="#fixtures-data">Fixtures & Data</a>
+    <a href="#test-suites">Test Suites (Core + Admin)</a>
+    <a href="#errors-chaos">Errors, Idempotency & Chaos</a>
+    <a href="#ddt-params">Data-Driven & Param Tests</a>
+    <a href="#contract-schema">Contract & Schema Checks</a>
+    <a href="#reporting-ci">Reporting & CI</a>
+    <a href="#exams">Capstone Exercises</a>
+    <a href="#checklist">Progress Checklist</a>
+  </nav>
+
+  <!-- OVERVIEW -->
+  <section id="overview">
+    <h2>1) Course Overview</h2>
+    <div class="grid g2">
+      <div class="card">
+        <h3>What you’ll build</h3>
         <ul>
-          <li>JDK 17+</li>
-          <li>Maven 3.8+</li>
-          <li>IDE: IntelliJ IDEA or VS Code + Java</li>
-          <li>Postman (optional) to explore endpoints</li>
+          <li>Reusable API test framework in Java 17 + Maven</li>
+          <li>Core suites for public endpoints (health, categories, menu, pricing, checkout)</li>
+          <li>Admin suites (orders, inventory, rates, stats), secured by <code class="inline">X-API-Key</code></li>
+          <li>Utilities for idempotency, pagination, currency, coupons</li>
+          <li>Reporting (Allure), CI pipeline (GitHub Actions), config profiles</li>
         </ul>
-      </section>
+      </div>
+      <div class="card">
+        <h3>Pre-reqs</h3>
+        <ul>
+          <li>JDK 17+, Maven 3.8+, Java basics</li>
+          <li>Familiarity with JSON, HTTP status codes</li>
+          <li>Optional: Postman to explore the API manually</li>
+        </ul>
+      </div>
+    </div>
+    <div class="callout"><b>Base URL:</b> <span class="mono">https://apps.qualiadept.eu/testaurant</span> — API root is <span class="mono">/api</span> (e.g. <span class="mono">/api/health</span>).</div>
+  </section>
 
-      <section class="card">
-        <h2>Project Structure</h2>
+  <!-- HTTP FUNDAMENTALS -->
+  <section id="http-fundamentals">
+    <h2>2) HTTP Fundamentals (recap)</h2>
+    <div class="card">
+      <ul>
+        <li><b>Methods:</b> GET (read), POST (create/action), PUT (replace), PATCH (partial), DELETE (remove).</li>
+        <li><b>Status:</b> 2xx success, 4xx client errors (422 validation, 409 conflict), 5xx server errors.</li>
+        <li><b>Headers:</b> Content-Type, Accept, X-API-Key (admin), Idempotency-Key (checkout).</li>
+        <li><b>Query:</b> pagination (<span class="mono">page</span>, <span class="mono">limit</span>), filters (<span class="mono">q</span>, <span class="mono">category</span>), currency.</li>
+        <li><b>Body:</b> JSON for POST/PUT; validate required fields & types.</li>
+      </ul>
+    </div>
+    <div class="grid g2">
+      <div class="card">
+        <h3>Happy-path pillars</h3>
+        <ul>
+          <li>Correct status codes</li>
+          <li>JSON shape/keys present</li>
+          <li>Numeric fields within tolerated ranges</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>Negative-path pillars</h3>
+        <ul>
+          <li>422 for missing/invalid fields</li>
+          <li>409 for stock conflicts</li>
+          <li>403 for missing/invalid admin key</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- PROJECT SKELETON -->
+  <section id="project-skeleton">
+    <h2>3) Starter Project Skeleton (copy/paste)</h2>
+    <p>Recreate this tree locally. All files are embedded below. Use them as your “ZIP in text”.</p>
+
+    <div class="card">
+      <h3>Folder tree</h3>
 <pre><code>.
 ├─ pom.xml
+├─ README.md
 ├─ src
 │  ├─ test
 │  │  ├─ java
 │  │  │  └─ qa.testaurant.api
-│  │  │     ├─ BaseTest.java
-│  │  │     ├─ HealthTests.java
-│  │  │     ├─ MenuTests.java
-│  │  │     ├─ CartPriceTests.java
-│  │  │     ├─ CheckoutTests.java
-│  │  │     ├─ OrdersAdminTests.java
-│  │  │     └─ TestData.java
+│  │  │     ├─ core
+│  │  │     │  ├─ BaseTest.java
+│  │  │     │  ├─ Endpoints.java
+│  │  │     │  ├─ Config.java
+│  │  │     │  ├─ Json.java
+│  │  │     │  └─ MatchersEx.java
+│  │  │     ├─ data
+│  │  │     │  ├─ TestData.java
+│  │  │     │  └─ Users.csv
+│  │  │     ├─ suites
+│  │  │     │  ├─ HealthTests.java
+│  │  │     │  ├─ CategoriesTests.java
+│  │  │     │  ├─ MenuTests.java
+│  │  │     │  ├─ CartPriceTests.java
+│  │  │     │  ├─ CheckoutTests.java
+│  │  │     │  ├─ OrdersAdminTests.java
+│  │  │     │  ├─ InventoryAdminTests.java
+│  │  │     │  ├─ RatesAdminTests.java
+│  │  │     │  └─ StatsAdminTests.java
+│  │  │     └─ util
+│  │  │        └─ Idem.java
 │  │  └─ resources
-│  │     └─ config.properties
-└─ README.md
+│  │     ├─ config.properties
+│  │     ├─ config.local.properties
+│  │     └─ logback-test.xml
+│  └─ site
+│     └─ allure.properties
+└─ .github
+   └─ workflows
+      └─ ci.yml
 </code></pre>
-      </section>
+    </div>
 
-      <section class="card">
-        <h2>Maven <code>pom.xml</code></h2>
-<pre><code class="language-xml">&lt;project xmlns="http://maven.apache.org/POM/4.0.0" 
-  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
-  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 
-  http://maven.apache.org/xsd/maven-4.0.0.xsd"&gt;
+    <div class="card">
+      <h3><span class="pill">pom.xml</span> (JUnit 5, RestAssured, Jackson, Allure)</h3>
+<pre><code class="language-xml">&lt;project xmlns="http://maven.apache.org/POM/4.0.0"&gt;
   &lt;modelVersion&gt;4.0.0&lt;/modelVersion&gt;
   &lt;groupId&gt;qa.testaurant&lt;/groupId&gt;
   &lt;artifactId&gt;api-automation&lt;/artifactId&gt;
@@ -66,6 +183,8 @@
     &lt;maven.compiler.target&gt;17&lt;/maven.compiler.target&gt;
     &lt;junit.jupiter.version&gt;5.10.2&lt;/junit.jupiter.version&gt;
     &lt;restassured.version&gt;5.4.0&lt;/restassured.version&gt;
+    &lt;allure.junit5.version&gt;2.24.0&lt;/allure.junit5.version&gt;
+    &lt;allure.maven.version&gt;2.12.0&lt;/allure.maven.version&gt;
   &lt;/properties&gt;
 
   &lt;dependencies&gt;
@@ -87,6 +206,12 @@
       &lt;version&gt;2.17.1&lt;/version&gt;
       &lt;scope&gt;test&lt;/scope&gt;
     &lt;/dependency&gt;
+    &lt;dependency&gt;
+      &lt;groupId&gt;io.qameta.allure&lt;/groupId&gt;
+      &lt;artifactId&gt;allure-junit5&lt;/artifactId&gt;
+      &lt;version&gt;${allure.junit5.version}&lt;/version&gt;
+      &lt;scope&gt;test&lt;/scope&gt;
+    &lt;/dependency&gt;
   &lt;/dependencies&gt;
 
   &lt;build&gt;
@@ -95,37 +220,254 @@
         &lt;groupId&gt;org.apache.maven.plugins&lt;/groupId&gt;
         &lt;artifactId&gt;maven-surefire-plugin&lt;/artifactId&gt;
         &lt;version&gt;3.2.5&lt;/version&gt;
+        &lt;configuration&gt;
+          &lt;systemPropertyVariables&gt;
+            baseUrl${'$'}{env.SUFFIX}&gt;${'$'}{baseUrl}&lt;/baseUrl${'$'}{env.SUFFIX}
+          &lt;/systemPropertyVariables&gt;
+        &lt;/configuration&gt;
+      &lt;/plugin&gt;
+
+      &lt;plugin&gt;
+        &lt;groupId&gt;io.qameta.allure&lt;/groupId&gt;
+        &lt;artifactId&gt;allure-maven&lt;/artifactId&gt;
+        &lt;version&gt;${allure.maven.version}&lt;/version&gt;
       &lt;/plugin&gt;
     &lt;/plugins&gt;
   &lt;/build&gt;
 &lt;/project&gt;
 </code></pre>
-      </section>
+    </div>
 
-      <section class="card">
-        <h2>BaseTest</h2>
-<pre><code class="language-java">package qa.testaurant.api;
+    <div class="card">
+      <h3><span class="pill">.github/workflows/ci.yml</span> (GitHub Actions)</h3>
+<pre><code class="language-yaml">name: CI
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+
+jobs:
+  api-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+      - name: Run tests
+        run: mvn -q -DbaseUrl="https://apps.qualiadept.eu/testaurant" -DadminKey="${{ secrets.ADMIN_KEY }}" test
+      - name: Allure report (artifact)
+        if: always()
+        run: |
+          mkdir -p target/site
+          cp -r target/surefire-reports target/site/ || true
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: surefire-reports
+          path: target/site
+</code></pre>
+      <p class="muted">Store your admin key in repo <span class="kbd">Settings → Secrets → Actions → ADMIN_KEY</span>.</p>
+    </div>
+  </section>
+
+  <!-- ENV MANAGEMENT -->
+  <section id="env-mgmt">
+    <h2>4) Environment & Config</h2>
+    <div class="grid g2">
+      <div class="card">
+        <h3>src/test/resources/config.properties</h3>
+<pre><code>baseUrl=https://apps.qualiadept.eu/testaurant
+adminKey=changeme-admin-key
+currency=RON
+timeoutMs=10000
+</code></pre>
+      </div>
+      <div class="card">
+        <h3>src/test/resources/config.local.properties</h3>
+<pre><code># override locally if needed
+baseUrl=http://localhost:8080
+adminKey=local-admin-key
+currency=EUR
+timeoutMs=15000
+</code></pre>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>core/Config.java</h3>
+<pre><code class="language-java">package qa.testaurant.api.core;
+
+import java.io.*;
+import java.util.Properties;
+
+public class Config {
+  private static final Properties P = new Properties();
+
+  static {
+    String base = "config.properties";
+    String local = "config.local.properties";
+    try (InputStream in = Config.class.getClassLoader().getResourceAsStream(base)) {
+      if (in != null) P.load(in);
+    } catch (IOException ignored) {}
+    try (InputStream in = Config.class.getClassLoader().getResourceAsStream(local)) {
+      if (in != null) P.load(in);
+    } catch (IOException ignored) {}
+    // system overrides
+    System.getProperties().forEach((k,v)-> P.setProperty(k.toString(), v.toString()));
+  }
+
+  public static String get(String key, String def){ return P.getProperty(key, def); }
+  public static String baseUrl(){ return get("baseUrl", "https://apps.qualiadept.eu/testaurant"); }
+  public static String adminKey(){ return get("adminKey", "changeme-admin-key"); }
+  public static String currency(){ return get("currency", "RON"); }
+  public static int timeoutMs(){ return Integer.parseInt(get("timeoutMs", "10000")); }
+}
+</code></pre>
+    </div>
+  </section>
+
+  <!-- RESTASSURED BASICS -->
+  <section id="restassured-basics">
+    <h2>5) RestAssured Basics</h2>
+
+    <div class="card">
+      <h3>core/BaseTest.java</h3>
+<pre><code class="language-java">package qa.testaurant.api.core;
 
 import io.restassured.RestAssured;
+import io.restassured.filter.log.LogDetail;
 import org.junit.jupiter.api.BeforeAll;
 
 public class BaseTest {
-  protected static String BASE_URL = System.getProperty("baseUrl",
-      "https://apps.qualiadept.eu/testaurant");
-  protected static String ADMIN_KEY = System.getProperty("adminKey", "changeme-admin-key");
-
   @BeforeAll
   static void setup() {
-    RestAssured.baseURI = BASE_URL;
+    RestAssured.baseURI = Config.baseUrl();
+    RestAssured.enableLoggingOfRequestAndResponseIfValidationFails(LogDetail.ALL);
   }
 }
 </code></pre>
-      </section>
+    </div>
 
-      <section class="card">
-        <h2>Sample tests</h2>
-<pre><code class="language-java">package qa.testaurant.api;
+    <div class="card">
+      <h3>core/Endpoints.java</h3>
+<pre><code class="language-java">package qa.testaurant.api.core;
 
+public class Endpoints {
+  public static final String HEALTH = "/api/health";
+  public static final String CATEGORIES = "/api/categories";
+  public static final String MENU = "/api/menu";
+  public static final String CART_PRICE = "/api/cart/price";
+  public static final String CHECKOUT = "/api/checkout";
+  public static final String ORDERS = "/api/orders";
+  public static String ORDER_ID(int id){ return "/api/orders/" + id; }
+  public static String ORDER_HISTORY(int id){ return "/api/orders/" + id + "/history"; }
+  public static final String INVENTORY = "/api/inventory";
+  public static String STOCK(int id){ return "/api/menuitems/" + id + "/stock"; }
+  public static String RESTOCK(int id){ return "/api/menuitems/" + id + "/restock"; }
+  public static String AVAIL(int id){ return "/api/menuitems/" + id + "/availability"; }
+  public static final String RATES = "/api/rates";
+  public static final String STATS = "/api/stats";
+}
+</code></pre>
+    </div>
+
+    <div class="grid g2">
+      <div class="card">
+        <h3>core/Json.java</h3>
+<pre><code class="language-java">package qa.testaurant.api.core;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+public class Json {
+  private static final ObjectMapper M = new ObjectMapper();
+  public static String stringify(Object o){
+    try{ return M.writeValueAsString(o); } catch(Exception e){ throw new RuntimeException(e); }
+  }
+}
+</code></pre>
+      </div>
+      <div class="card">
+        <h3>core/MatchersEx.java</h3>
+<pre><code class="language-java">package qa.testaurant.api.core;
+
+import org.hamcrest.Description;
+import org.hamcrest.TypeSafeMatcher;
+
+public class MatchersEx {
+  public static org.hamcrest.Matcher&lt;Number&gt; between(double min, double max){
+    return new TypeSafeMatcher&lt;&gt;() {
+      @Override public void describeTo(Description d){ d.appendText("between ").appendValue(min).appendText(" and ").appendValue(max); }
+      @Override protected boolean matchesSafely(Number n){ return n.doubleValue() >= min && n.doubleValue() <= max; }
+    };
+  }
+}
+</code></pre>
+      </div>
+    </div>
+  </section>
+
+  <!-- FIXTURES & DATA -->
+  <section id="fixtures-data">
+    <h2>6) Fixtures & Test Data</h2>
+
+    <div class="grid g2">
+      <div class="card">
+        <h3>data/TestData.java</h3>
+<pre><code class="language-java">package qa.testaurant.api.data;
+
+import java.util.Random;
+
+public class TestData {
+  private static final Random R = new Random();
+
+  public static String phone(){
+    return "+40" + (100000000 + R.nextInt(899999999));
+  }
+
+  public static String name(){
+    String[] first = {"Ana","Dan","Mara","Iulian","Daria","Andrei"};
+    String[] last  = {"Pop","Ionescu","Datcu","Vasilescu","Georgescu","Matei"};
+    return first[R.nextInt(first.length)] + " " + last[R.nextInt(last.length)];
+  }
+
+  public static int qty(int max){ return 1 + R.nextInt(Math.max(1,max)); }
+}
+</code></pre>
+      </div>
+
+      <div class="card">
+        <h3>data/Users.csv</h3>
+<pre><code>name,phone
+Ana QA,+40111111111
+Dan QA,+40222222222
+Mara QA,+40333333333
+</code></pre>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>util/Idem.java (idempotency helper)</h3>
+<pre><code class="language-java">package qa.testaurant.api.util;
+
+public class Idem {
+  public static String key(){ return "idem-" + System.currentTimeMillis() + "-" + (int)(Math.random()*10000); }
+}
+</code></pre>
+    </div>
+  </section>
+
+  <!-- TEST SUITES -->
+  <section id="test-suites">
+    <h2>7) Test Suites</h2>
+
+    <div class="grid g2">
+      <div class="card">
+        <h3>suites/HealthTests.java</h3>
+<pre><code class="language-java">package qa.testaurant.api.suites;
+
+import qa.testaurant.api.core.*;
 import org.junit.jupiter.api.Test;
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.*;
@@ -134,86 +476,448 @@ public class HealthTests extends BaseTest {
   @Test
   void health_ok() {
     given()
-      .when().get("/api/health")
+      .when().get(Endpoints.HEALTH)
       .then().statusCode(200)
-             .body("ok", equalTo(true));
-  }
-}
-
-class MenuTests extends BaseTest {
-  @Test
-  void menu_pagination_and_currency() {
-    given()
-      .queryParam("page", 1)
-      .queryParam("limit", 5)
-      .queryParam("currency", "EUR")
-      .when().get("/api/menu")
-      .then().statusCode(200)
-             .body("items.size()", greaterThan(0))
-             .body("items[0].price_converted", notNullValue());
-  }
-}
-
-class CheckoutTests extends BaseTest {
-  @Test
-  void checkout_idempotent() {
-    String idem = "demo-" + System.currentTimeMillis();
-    var body = """
-      {"customerName":"Jane QA","customerPhone":"+40123456789",
-       "items":[{"id":1,"qty":1}],
-       "paymentMethod":"card","deliveryMethod":"pickup"}""";
-
-    var first = given()
-      .header("Idempotency-Key", idem)
-      .contentType("application/json")
-      .body(body)
-      .when().post("/api/checkout")
-      .then().statusCode(200)
-             .extract().path("orderId");
-
-    var second = given()
-      .header("Idempotency-Key", idem)
-      .contentType("application/json")
-      .body(body)
-      .when().post("/api/checkout")
-      .then().statusCode(200)
-             .extract().path("orderId");
-
-    org.junit.jupiter.api.Assertions.assertEquals(first, second);
+             .body("ok", equalTo(true))
+             .body("time", notNullValue());
   }
 }
 </code></pre>
-      </section>
+      </div>
 
-      <section class="card">
-        <h2>Admin examples</h2>
-<pre><code class="language-java">package qa.testaurant.api;
+      <div class="card">
+        <h3>suites/CategoriesTests.java</h3>
+<pre><code class="language-java">package qa.testaurant.api.suites;
 
+import qa.testaurant.api.core.*;
+import org.junit.jupiter.api.Test;
+import static io.restassured.RestAssured.given;
+import static org.hamcrest.Matchers.*;
+
+public class CategoriesTests extends BaseTest {
+  @Test
+  void categories_list() {
+    given()
+      .when().get(Endpoints.CATEGORIES)
+      .then().statusCode(200)
+             .body("categories", not(empty()));
+  }
+}
+</code></pre>
+      </div>
+    </div>
+
+    <div class="grid g2">
+      <div class="card">
+        <h3>suites/MenuTests.java</h3>
+<pre><code class="language-java">package qa.testaurant.api.suites;
+
+import qa.testaurant.api.core.*;
+import org.junit.jupiter.api.Test;
+import static io.restassured.RestAssured.given;
+import static org.hamcrest.Matchers.*;
+
+public class MenuTests extends BaseTest {
+  @Test
+  void menu_pagination_currency_filtering() {
+    given()
+      .queryParam("page", 1)
+      .queryParam("limit", 5)
+      .queryParam("currency", Config.currency())
+      .queryParam("q", "pizza")
+      .when().get(Endpoints.MENU)
+      .then().statusCode(200)
+             .body("items.size()", greaterThan(0))
+             .body("page", equalTo(1))
+             .body("limit", equalTo(5));
+  }
+}
+</code></pre>
+      </div>
+
+      <div class="card">
+        <h3>suites/CartPriceTests.java</h3>
+<pre><code class="language-java">package qa.testaurant.api.suites;
+
+import qa.testaurant.api.core.*;
+import org.junit.jupiter.api.Test;
+import static io.restassured.RestAssured.given;
+import static org.hamcrest.Matchers.*;
+
+public class CartPriceTests extends BaseTest {
+  @Test
+  void price_ok_with_coupon_and_delivery() {
+    String body = """
+    {"items":[{"id":1,"qty":2},{"id":3,"qty":1}],
+     "couponCode":"SUMMER10",
+     "deliveryMethod":"delivery",
+     "currency":"EUR"}""";
+
+    given().contentType("application/json")
+      .body(body)
+      .when().post(Endpoints.CART_PRICE)
+      .then().statusCode(200)
+             .body("subtotal", greaterThan(0f))
+             .body("grandTotal", greaterThan(0f))
+             .body("currency", anyOf(equalTo("RON"),equalTo("EUR"),equalTo("USD")));
+  }
+}
+</code></pre>
+      </div>
+    </div>
+
+    <div class="grid g2">
+      <div class="card">
+        <h3>suites/CheckoutTests.java</h3>
+<pre><code class="language-java">package qa.testaurant.api.suites;
+
+import qa.testaurant.api.core.*;
+import qa.testaurant.api.data.TestData;
+import qa.testaurant.api.util.Idem;
+import org.junit.jupiter.api.Test;
+import static io.restassured.RestAssured.given;
+import static org.hamcrest.Matchers.*;
+
+public class CheckoutTests extends BaseTest {
+  @Test
+  void checkout_idempotent() {
+    String body = """
+      {"customerName":"%s","customerPhone":"%s",
+       "items":[{"id":1,"qty":1}],
+       "paymentMethod":"card","deliveryMethod":"pickup"}"""
+       .formatted(TestData.name(), TestData.phone());
+
+    String key = Idem.key();
+
+    var firstOrderId = given()
+      .header("Idempotency-Key", key)
+      .contentType("application/json")
+      .body(body)
+      .when().post(Endpoints.CHECKOUT)
+      .then().statusCode(200)
+             .extract().path("orderId");
+
+    var secondOrderId = given()
+      .header("Idempotency-Key", key)
+      .contentType("application/json")
+      .body(body)
+      .when().post(Endpoints.CHECKOUT)
+      .then().statusCode(200)
+             .extract().path("orderId");
+
+    org.junit.jupiter.api.Assertions.assertEquals(firstOrderId, secondOrderId);
+  }
+}
+</code></pre>
+      </div>
+
+      <div class="card">
+        <h3>suites/OrdersAdminTests.java</h3>
+<pre><code class="language-java">package qa.testaurant.api.suites;
+
+import qa.testaurant.api.core.*;
 import org.junit.jupiter.api.Test;
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.*;
 
 public class OrdersAdminTests extends BaseTest {
   @Test
-  void list_orders_admin() {
+  void list_orders_requires_key() {
     given()
-      .header("X-API-Key", ADMIN_KEY)
+      .when().get(Endpoints.ORDERS)
+      .then().statusCode(403);
+  }
+
+  @Test
+  void list_orders_ok_with_key() {
+    given().header("X-API-Key", Config.adminKey())
       .queryParam("page", 1)
       .queryParam("limit", 10)
-      .when().get("/api/orders")
+      .when().get(Endpoints.ORDERS)
       .then().statusCode(200)
              .body("orders", notNullValue());
   }
 }
 </code></pre>
-      </section>
-
-      <section class="card">
-        <h2>How to run</h2>
-        <p>From project root:</p>
-        <pre><code>mvn -DbaseUrl=https://apps.qualiadept.eu/testaurant -DadminKey=YOUR_KEY test</code></pre>
-      </section>
+      </div>
     </div>
+
+    <div class="grid g2">
+      <div class="card">
+        <h3>suites/InventoryAdminTests.java</h3>
+<pre><code class="language-java">package qa.testaurant.api.suites;
+
+import qa.testaurant.api.core.*;
+import org.junit.jupiter.api.Test;
+import static io.restassured.RestAssured.given;
+import static org.hamcrest.Matchers.*;
+
+public class InventoryAdminTests extends BaseTest {
+  @Test
+  void get_inventory_and_update_stock() {
+    var items = given().header("X-API-Key", Config.adminKey())
+      .when().get(Endpoints.INVENTORY)
+      .then().statusCode(200)
+             .extract().path("items");
+
+    // pick first id
+    int id = ((java.util.Map)((java.util.List)items).get(0)).get("id") instanceof Integer
+      ? (Integer)((java.util.Map)((java.util.List)items).get(0)).get("id")
+      : Integer.parseInt(((java.util.Map)((java.util.List)items).get(0)).get("id").toString());
+
+    // set stock to 7
+    given().header("X-API-Key", Config.adminKey())
+      .contentType("application/json")
+      .body("{\"stock\":7}")
+      .when().put(Endpoints.STOCK(id))
+      .then().statusCode(200)
+             .body("stock", equalTo(7));
+  }
+}
+</code></pre>
+      </div>
+
+      <div class="card">
+        <h3>suites/RatesAdminTests.java</h3>
+<pre><code class="language-java">package qa.testaurant.api.suites;
+
+import qa.testaurant.api.core.*;
+import org.junit.jupiter.api.Test;
+import static io.restassured.RestAssured.given;
+import static org.hamcrest.Matchers.*;
+
+public class RatesAdminTests extends BaseTest {
+  @Test
+  void upsert_rate_and_fetch() {
+    given().header("X-API-Key", Config.adminKey())
+      .contentType("application/json")
+      .body("{\"currency\":\"EUR\",\"rate\":0.2}")
+      .when().post(Endpoints.RATES)
+      .then().statusCode(200);
+
+    given().header("X-API-Key", Config.adminKey())
+      .when().get(Endpoints.RATES)
+      .then().statusCode(200)
+             .body("base", anyOf(equalTo("RON"),equalTo("EUR"),equalTo("USD")))
+             .body("rates.size()", greaterThan(0));
+  }
+}
+</code></pre>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>suites/StatsAdminTests.java</h3>
+<pre><code class="language-java">package qa.testaurant.api.suites;
+
+import qa.testaurant.api.core.*;
+import org.junit.jupiter.api.Test;
+import static io.restassured.RestAssured.given;
+import static org.hamcrest.Matchers.*;
+
+public class StatsAdminTests extends BaseTest {
+  @Test
+  void stats_range() {
+    given().header("X-API-Key", Config.adminKey())
+      .queryParam("from", "2025-01-01")
+      .queryParam("to", "2025-12-31")
+      .queryParam("currency", "EUR")
+      .when().get(Endpoints.STATS)
+      .then().statusCode(200)
+             .body("currency", equalTo("EUR"))
+             .body("orders_count", greaterThanOrEqualTo(0));
+  }
+}
+</code></pre>
+    </div>
+  </section>
+
+  <!-- ERRORS, IDEMPOTENCY & CHAOS -->
+  <section id="errors-chaos">
+    <h2>8) Errors, Idempotency, Chaos</h2>
+    <div class="grid g2">
+      <div class="card">
+        <h3>Validation & stock errors</h3>
+<pre><code class="language-java">package qa.testaurant.api.suites;
+
+import qa.testaurant.api.core.*;
+import org.junit.jupiter.api.Test;
+import static io.restassured.RestAssured.given;
+import static org.hamcrest.Matchers.*;
+
+public class NegativeTests extends BaseTest {
+  @Test
+  void checkout_missing_fields_422() {
+    given().contentType("application/json")
+      .body("{}")
+      .when().post(Endpoints.CHECKOUT)
+      .then().statusCode(422)
+             .body("error", containsString("Invalid input"));
+  }
+
+  @Test
+  void cart_price_insufficient_stock_409() {
+    String body = """
+    {"items":[{"id":1,"qty":9999}], "deliveryMethod":"pickup"}""";
+    given().contentType("application/json")
+      .body(body)
+      .when().post(Endpoints.CART_PRICE)
+      .then().statusCode(anyOf(is(409),is(422))); // price path validates stock; depends on setup
+  }
+}
+</code></pre>
+      </div>
+      <div class="card">
+        <h3>Chaos hooks & retry idea</h3>
+        <p>Append <code class="inline">?slow=1000</code> or <code class="inline">?chaos=1</code> to endpoints to simulate latency/errors.  
+        Implement client-side retries with exponential backoff where appropriate.</p>
+<pre><code class="language-java">/* Pseudo-retry (wrap your GET calls if you need resilience) */
+int attempts = 0; int max = 3; long wait = 250;
+io.restassured.response.Response resp = null;
+while(attempts++ &lt;= max){
+  resp = io.restassured.RestAssured
+    .given().when().get(qa.testaurant.api.core.Endpoints.HEALTH + "?chaos=1");
+  if(resp.statusCode() == 200) break;
+  try{ Thread.sleep(wait); }catch(Exception ignored){}
+  wait *= 2;
+}
+org.junit.jupiter.api.Assertions.assertEquals(200, resp.statusCode());
+</code></pre>
+      </div>
+    </div>
+  </section>
+
+  <!-- DATA-DRIVEN & PARAM TESTS -->
+  <section id="ddt-params">
+    <h2>9) Data-Driven & Parameterized Tests</h2>
+    <div class="card">
+      <h3>Using CSV data</h3>
+<pre><code class="language-java">package qa.testaurant.api.suites;
+
+import qa.testaurant.api.core.*;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvFileSource;
+import static io.restassured.RestAssured.given;
+import static org.hamcrest.Matchers.*;
+
+public class DdtCheckoutTests extends BaseTest {
+  @ParameterizedTest
+  @CsvFileSource(resources = "/qa/testaurant/api/data/Users.csv", numLinesToSkip = 1)
+  void checkout_multiple_users(String name, String phone){
+    String body = """
+      {"customerName":"%s","customerPhone":"%s",
+       "items":[{"id":1,"qty":1}],
+       "paymentMethod":"cash","deliveryMethod":"pickup"}""".formatted(name, phone);
+
+    given().contentType("application/json")
+      .body(body)
+      .when().post(Endpoints.CHECKOUT)
+      .then().statusCode(200)
+             .body("orderId", notNullValue());
+  }
+}
+</code></pre>
+    </div>
+  </section>
+
+  <!-- CONTRACT & SCHEMA -->
+  <section id="contract-schema">
+    <h2>10) Contract & Schema Validation (lightweight)</h2>
+    <div class="card">
+      <p>For a lightweight contract check, assert the presence & types of critical fields.  
+      For full JSON Schema, you can integrate a schema validator; here we show pragmatic checks:</p>
+<pre><code class="language-java">package qa.testaurant.api.suites;
+
+import qa.testaurant.api.core.*;
+import org.junit.jupiter.api.Test;
+import static io.restassured.RestAssured.given;
+import static org.hamcrest.Matchers.*;
+
+public class ContractTests extends BaseTest {
+  @Test
+  void menu_contract_minimal() {
+    given()
+      .queryParam("page",1).queryParam("limit",3)
+      .when().get(Endpoints.MENU)
+      .then().statusCode(200)
+             .body("items[0].id", notNullValue())
+             .body("items[0].name", instanceOf(String.class))
+             .body("items[0].price", instanceOf(Number.class));
+  }
+}
+</code></pre>
+    </div>
+  </section>
+
+  <!-- REPORTING & CI -->
+  <section id="reporting-ci">
+    <h2>11) Reporting & CI</h2>
+    <div class="grid g2">
+      <div class="card">
+        <h3>Allure basics</h3>
+        <p>Allure is wired via POM. After a test run: generate locally with:</p>
+        <pre><code>mvn test
+# optional if you have allure CLI installed:
+# allure serve target/allure-results</code></pre>
+        <p>If you don’t use Allure CLI, rely on surefire XMLs (already archived by CI).</p>
+      </div>
+      <div class="card">
+        <h3>Logback</h3>
+        <p>Minimal logging config to keep output readable:</p>
+<pre><code class="language-xml">&lt;configuration&gt;
+  &lt;root level="WARN"&gt;
+    &lt;appender-ref ref="STDOUT"/&gt;
+  &lt;/root&gt;
+&lt;/configuration&gt;
+</code></pre>
+      </div>
+    </div>
+  </section>
+
+  <!-- CAPSTONE -->
+  <section id="exams">
+    <h2>12) Capstone Exercises (with solution hints)</h2>
+    <div class="card">
+      <ol>
+        <li><b>Coupon boundary:</b> Generate a cart just below <span class="mono">minSubtotal</span>, expect <span class="bad">422</span>. Then just above → discount applied.  
+          <span class="muted">Hint:</span> call <span class="mono">/api/cart/price</span> twice varying quantities.</li>
+        <li><b>Concurrency & idempotency:</b> Fire 5 parallel <span class="mono">/api/checkout</span> requests with the same <span class="mono">Idempotency-Key</span>.  
+          Expect one order created; others return the same <span class="mono">orderId</span>.  
+          <span class="muted">Hint:</span> Use Java threads or JUnit parallel execution.</li>
+        <li><b>Pagination consistency:</b> Compare <span class="mono">page=1,limit=5</span> vs <span class="mono">page=2,limit=5</span>; ensure no overlap.  
+          <span class="muted">Hint:</span> capture first page IDs, assert disjoint with page 2.</li>
+        <li><b>Currency correctness:</b> Set EUR rate via admin, then call menu with <span class="mono">?currency=EUR</span> and verify <span class="mono">price_converted ≈ price * rate</span>.  
+          <span class="muted">Hint:</span> allow rounding tolerance ±0.01.</li>
+        <li><b>Stats integrity:</b> Place known orders, then query <span class="mono">/api/stats</span>; assert <span class="mono">orders_count</span> and revenue reflect your actions.  
+          <span class="muted">Hint:</span> time window must include “today”.</li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- CHECKLIST -->
+  <section id="checklist">
+    <h2>13) Progress Checklist</h2>
+    <ul class="checklist">
+      <li class="ok">Environment set (JDK/Maven/IDE)</li>
+      <li class="ok">Project skeleton recreated</li>
+      <li>Health, Categories, Menu tests green</li>
+      <li>Cart price test validates totals & currency</li>
+      <li>Checkout idempotency verified</li>
+      <li>Admin suites (orders, inventory, rates, stats) green with <span class="mono">X-API-Key</span></li>
+      <li>Negative tests (422, 403, 409) assert correct failures</li>
+      <li>Data-driven test reading CSV</li>
+      <li>Contract checks on key payloads</li>
+      <li>CI pipeline running on GitHub Actions</li>
+      <li>Reports available (Surefire / Allure)</li>
+    </ul>
+  </section>
+
+  <div class="sep"></div>
+  <div class="btn-row">
+    <a class="btn" href="index.html">← Back to Home</a>
+    <a class="btn" href="#project-skeleton">Jump to Skeleton</a>
   </div>
+  <p class="muted">End of course page.</p>
+</div>
 </body>
 </html>
