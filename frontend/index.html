@@ -4,55 +4,64 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Testaurant v3 • QualiAdept</title>
+  <link rel="icon" type="image/x-icon" href="http://apps.qualiadept.eu/testaurant/logo/testaurant_ico.ico">
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <header class="topbar">
+  <header class="topbar" role="banner" aria-label="Top bar">
     <div class="brand">
-      <div class="logo">🍕</div>
-      <div><h1>Testaurant</h1><small>QA Training • QualiAdept</small></div>
+      <!-- Replaced emoji with real logo -->
+      <img
+        class="logo-img"
+        src="http://apps.qualiadept.eu/testaurant/logo/testaurant_logo.png"
+        alt="Testaurant logo"
+        width="44" height="44"
+        decoding="async" />
+      <div>
+        <h1>Testaurant</h1>
+        <small>QA Training • QualiAdept</small>
+      </div>
     </div>
-    <div class="controls">
-      <select id="lang">
+    <div class="controls" role="group" aria-label="Global controls">
+      <select id="lang" aria-label="Language">
         <option value="en">English</option>
         <option value="ro">Română</option>
       </select>
-      <select id="currencySel">
+      <select id="currencySel" aria-label="Currency">
         <option value="RON">RON</option>
         <option value="EUR">EUR</option>
         <option value="USD">USD</option>
       </select>
-      <input id="apiBase" value="https://apps.qualiadept.eu/testaurant" />
+      <input id="apiBase" value="https://apps.qualiadept.eu/testaurant" aria-label="API base URL" />
       <button id="btnHealth" class="btn">Ping</button>
     </div>
   </header>
   
   <!-- Learning Hub -->
-<section class="card">
-  <h2>Learning Hub</h2>
-  <p>Practice plans, test ideas, and full automation courses.</p>
-  <div class="btn-row">
-    <a class="btn" href="instructions.html">📋 Instructions & Test Ideas</a>
-    <a class="btn" href="course-api-java.html">🧪 API Automation (Java + RestAssured)</a>
-    <a class="btn" href="course-ui-selenium.html">🧭 UI Automation (Selenium + Java)</a>
-  </div>
-</section>
-
+  <section class="card">
+    <h2>Learning Hub</h2>
+    <p>Practice plans, test ideas, and full automation courses.</p>
+    <div class="btn-row">
+      <a class="btn" href="instructions.html">📋 Instructions & Test Ideas</a>
+      <a class="btn" href="course-api-java.html">🧪 API Automation (Java + RestAssured)</a>
+      <a class="btn" href="course-ui-selenium.html">🧭 UI Automation (Selenium + Java)</a>
+    </div>
+  </section>
 
   <main class="layout">
     <section class="menu-pane card">
       <div class="pane-header">
         <h2 data-i18n="menu_title">Menu</h2>
         <div class="filters">
-          <input id="search" placeholder="Search..." data-ph="search">
-          <select id="category"><option value="">All</option></select>
+          <input id="search" placeholder="Search..." data-ph="search" aria-label="Search menu">
+          <select id="category" aria-label="Category filter"><option value="">All</option></select>
           <button id="btnLoadMenu" class="btn" data-i18n="refresh">Refresh</button>
         </div>
       </div>
       <div id="menu" class="grid"></div>
-      <div class="pager">
+      <div class="pager" role="navigation" aria-label="Menu pagination">
         <button id="prevPage" class="btn" data-i18n="prev">Prev</button>
-        <span id="pageInfo"></span>
+        <span id="pageInfo" aria-live="polite"></span>
         <button id="nextPage" class="btn" data-i18n="next">Next</button>
       </div>
     </section>
@@ -61,29 +70,29 @@
       <div class="pane-header"><h2 data-i18n="cart_title">Cart</h2></div>
       <div id="cart" class="cart"></div>
       <div class="cart-actions">
-        <select id="delivery">
+        <select id="delivery" aria-label="Delivery method">
           <option value="pickup" data-i18n="pickup">Pickup</option>
           <option value="delivery" data-i18n="delivery">Delivery</option>
         </select>
-        <input id="coupon" placeholder="Coupon..." data-ph="coupon">
+        <input id="coupon" placeholder="Coupon..." data-ph="coupon" aria-label="Coupon code">
         <button id="btnQuote" class="btn" data-i18n="update_totals">Update totals</button>
       </div>
       <div class="address" id="address">
-        <input id="addr1" placeholder="Address line 1" data-ph="addr1" />
-        <input id="city" placeholder="City" data-ph="city" />
-        <input id="postal" placeholder="Postal code" data-ph="postal" />
+        <input id="addr1" placeholder="Address line 1" data-ph="addr1" aria-label="Address line 1"/>
+        <input id="city" placeholder="City" data-ph="city" aria-label="City"/>
+        <input id="postal" placeholder="Postal code" data-ph="postal" aria-label="Postal code"/>
       </div>
-      <div id="quote" class="quote"></div>
+      <div id="quote" class="quote" aria-live="polite"></div>
       <div class="checkout">
-        <input id="custName" placeholder="Name" data-ph="name" />
-        <input id="custPhone" placeholder="Phone" data-ph="phone" />
-        <select id="payMethod">
+        <input id="custName" placeholder="Name" data-ph="name" aria-label="Customer name"/>
+        <input id="custPhone" placeholder="Phone" data-ph="phone" aria-label="Customer phone"/>
+        <select id="payMethod" aria-label="Payment method">
           <option value="card" data-i18n="card">Card</option>
           <option value="cash" data-i18n="cash">Cash</option>
         </select>
-        <input id="idem" placeholder="Idempotency-Key" data-ph="idem"/>
+        <input id="idem" placeholder="Idempotency-Key" data-ph="idem" aria-label="Idempotency key"/>
         <button id="btnCheckout" class="btn primary" data-i18n="checkout">Checkout</button>
-        <div id="checkoutResult" class="muted"></div>
+        <div id="checkoutResult" class="muted" aria-live="polite"></div>
       </div>
     </section>
 
@@ -91,28 +100,41 @@
       <div class="pane-header">
         <h2 data-i18n="admin_title">Admin</h2>
         <div class="admin-controls">
-          <input id="adminKey" placeholder="X-API-Key">
+          <input id="adminKey" placeholder="X-API-Key" aria-label="Admin API key">
           <button id="btnListOrders" class="btn" data-i18n="list_orders">List Orders</button>
           <button id="btnLoadInventory" class="btn" data-i18n="load_inventory">Load Inventory</button>
           <button id="btnLoadStats" class="btn" data-i18n="load_stats">Load Stats</button>
         </div>
       </div>
-      <div class="tabs">
-        <button class="tab active" data-tab="ordersTab" data-i18n="orders">Orders</button>
-        <button class="tab" data-tab="inventoryTab" data-i18n="inventory">Inventory</button>
-        <button class="tab" data-tab="statsTab" data-i18n="stats">Stats</button>
+      <div class="tabs" role="tablist" aria-label="Admin tabs">
+        <button class="tab active" data-tab="ordersTab" data-i18n="orders" role="tab" aria-selected="true">Orders</button>
+        <button class="tab" data-tab="inventoryTab" data-i18n="inventory" role="tab" aria-selected="false">Inventory</button>
+        <button class="tab" data-tab="statsTab" data-i18n="stats" role="tab" aria-selected="false">Stats</button>
       </div>
-      <div id="ordersTab" class="tab-panel">
+      <div id="ordersTab" class="tab-panel" role="tabpanel">
         <div id="orders"></div>
       </div>
-      <div id="inventoryTab" class="tab-panel hidden">
+      <div id="inventoryTab" class="tab-panel hidden" role="tabpanel" aria-hidden="true">
         <div id="inventory" class="grid"></div>
       </div>
-      <div id="statsTab" class="tab-panel hidden">
+      <div id="statsTab" class="tab-panel hidden" role="tabpanel" aria-hidden="true">
         <div id="stats"></div>
       </div>
     </section>
   </main>
+
+  <!-- New footer with QualiAdept logo -->
+  <footer class="site-footer" role="contentinfo" aria-label="Footer">
+    <div class="footer-inner">
+      <img
+        class="footer-logo"
+        src="http://apps.qualiadept.eu/testaurant/logo/qualiadept_logo.jpg"
+        alt="QualiAdept logo"
+        width="120" height="32"
+        decoding="async" />
+      <span class="footer-text">2025. Powered by QualiAdept.</span>
+    </div>
+  </footer>
 
   <div id="toaster" aria-live="polite" aria-atomic="true"></div>
   <script src="app.js"></script>
