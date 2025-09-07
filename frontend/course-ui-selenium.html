@@ -2,150 +2,255 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <title>Masterclass: UI Automation with Selenium & Java – Testaurant</title>
+  <title>Complete Course: UI Automation with Selenium & Java – Testaurant</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <link rel="stylesheet" href="styles.css" />
+  <meta name="theme-color" content="#0b5fff" />
+  <meta name="description" content="A comprehensive, hands-on course for UI testing with Java 17, Maven, JUnit 5, and Selenium WebDriver using the Testaurant web app." />
+
+  <!-- Modern, responsive, accessible base -->
   <style>
     :root{
-      --ink:#0f172a;--muted:#475569;--bg:#f8fafc;--card:#ffffff;--border:#e5e7eb;--accent:#1e3a8a;--accent2:#0ea5e9;
-      --ok:#059669;--bad:#dc2626;--warn:#d97706;
+      --bg: #0b0f19;
+      --card: #0f172a;
+      --muted: #94a3b8;
+      --text: #e2e8f0;
+      --accent: #0b5fff;
+      --accent-strong:#0047ff;
+      --ok:#10b981; --warn:#f59e0b; --err:#ef4444;
+      --border:#1f2a44;
+      --kbd-bg:#111827; --kbd-fg:#e5e7eb;
+      --focus:#ffd166;
     }
-    body{font-family: system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, "Helvetica Neue", Arial; background:var(--bg); color:var(--ink); line-height:1.55}
-    .container{max-width:1100px;margin:0 auto; padding:24px}
-    nav.toc{position:sticky;top:0;background:var(--accent);padding:10px;border-radius:12px;margin-bottom:18px;z-index:5}
-    nav.toc a{color:#fff;margin-right:14px;text-decoration:none;font-weight:700}
-    h1{margin:0 0 10px 0}
-    h2{margin:26px 0 10px}
-    h3{margin:20px 0 8px}
-    .card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:16px;margin:14px 0}
-    pre{background:#0b1020;color:#e5e7eb;padding:14px;border-radius:10px;overflow:auto}
-    code.inline{background:#eef2ff;border-radius:6px;padding:2px 6px}
-    .grid{display:grid;gap:14px}
-    .g2{grid-template-columns:1fr 1fr}
-    .g3{grid-template-columns: repeat(3, 1fr)}
-    .callout{background:#eff6ff;border-left:6px solid var(--accent2);padding:10px;border-radius:8px}
-    .checklist{list-style:none;padding:0;margin:0}
-    .checklist li{padding:6px 8px;border-left:4px solid var(--border);margin:6px 0;background:#fff;border-radius:8px}
-    .checklist li.ok{border-left-color:var(--ok);background:#ecfdf5}
-    .checklist li.warn{border-left-color:var(--warn);background:#fffbeb}
-    .checklist li.bad{border-left-color:var(--bad);background:#fef2f2}
-    table{width:100%;border-collapse:collapse}
-    th,td{border:1px solid var(--border);padding:8px;text-align:left}
-    .btn-row{display:flex;gap:10px;flex-wrap:wrap}
-    .btn{display:inline-block;background:var(--accent);color:#fff;padding:10px 14px;border-radius:10px;text-decoration:none;font-weight:700}
-    .muted{color:var(--muted)}
-    .kbd{border:1px solid var(--border);background:#fff;border-bottom-width:3px;padding:0 6px;border-radius:6px;font-size:12px}
-    .sep{height:1px;background:var(--border);margin:18px 0}
+    @media (prefers-color-scheme: light){
+      :root{
+        --bg:#f8fafc; --card:#ffffff; --text:#0f172a; --muted:#475569;
+        --border:#e2e8f0; --kbd-bg:#f1f5f9; --kbd-fg:#0f172a;
+      }
+    }
+    *{ box-sizing:border-box }
+    html,body{ height:100% }
+    body{
+      margin:0; font-family: system-ui, -apple-system, Segoe UI, Roboto, Inter, Arial, sans-serif;
+      background: var(--bg); color: var(--text); line-height:1.55;
+    }
+    a{ color: var(--accent); }
+    a:focus, button:focus, [href]:focus { outline: 3px solid var(--focus); outline-offset: 2px; border-radius:6px }
+    .skip-link{ position:absolute; left:-9999px; top:auto; width:1px; height:1px; overflow:hidden }
+    .skip-link:focus{ position:fixed; left:16px; top:16px; width:auto; height:auto; padding:10px 14px; background:#111; color:#fff; z-index:9999; border-radius:8px }
+    header{
+      position:sticky; top:0; z-index:100; backdrop-filter:saturate(140%) blur(8px);
+      background: color-mix(in srgb, var(--bg), transparent 20%);
+      border-bottom:1px solid var(--border);
+    }
+    .nav{
+      max-width:1100px; margin:0 auto; padding:12px 16px; display:flex; align-items:center; gap:12px; flex-wrap:wrap;
+    }
+    .brand{ font-weight:800; letter-spacing:.3px; }
+    .navlinks{ display:flex; gap:10px; flex-wrap:wrap }
+    .navlinks a{ text-decoration:none; padding:8px 10px; border-radius:8px; color: var(--text); }
+    .navlinks a:hover{ background: color-mix(in srgb, var(--accent) 12%, transparent) }
+    .cta-row{ margin-left:auto; display:flex; gap:8px; flex-wrap:wrap }
+    .btn{
+      appearance:none; border:none; cursor:pointer; text-decoration:none; font-weight:700;
+      padding:10px 14px; border-radius:10px; background:var(--accent); color:white; display:inline-flex; align-items:center; gap:8px;
+      transition: transform .06s ease, box-shadow .2s ease, background .2s ease;
+      box-shadow: 0 8px 20px rgba(11,95,255,.25);
+    }
+    .btn:hover{ background:var(--accent-strong); transform: translateY(-1px) }
+    .btn.secondary{ background:transparent; color:var(--accent); border:1px solid var(--accent); box-shadow:none }
+    .btn.secondary:hover{ background: color-mix(in srgb, var(--accent) 10%, transparent) }
+
+    main{ max-width:1100px; margin: 24px auto; padding: 0 16px }
+    h1{ font-size: clamp(1.6rem, 1.2rem + 1.4vw, 2.3rem); margin: 10px 0 6px }
+    h2{ font-size: clamp(1.2rem, 1rem + .9vw, 1.6rem); margin: 26px 0 10px }
+    h3{ font-size: clamp(1rem, .9rem + .5vw, 1.2rem); margin: 16px 0 8px }
+    .lead{ color: var(--muted); margin-bottom: 16px }
+
+    .grid{ display:grid; gap:16px; grid-template-columns: 1fr }
+    @media (min-width: 900px){ .grid{ grid-template-columns: 2fr 1fr } }
+
+    .card{
+      background: var(--card); border:1px solid var(--border); border-radius: 14px; padding:16px;
+      box-shadow: 0 10px 30px rgba(0,0,0,.08);
+    }
+    .badge{ display:inline-block; padding:3px 8px; border-radius: 999px; font-size:.8rem; background: color-mix(in srgb, var(--accent) 18%, transparent); color: white; }
+
+    pre{
+      background: #0b1020; color:#cbd5e1; padding:14px; border-radius:12px; overflow:auto; border:1px solid var(--border);
+      padding-top: 40px; /* space for copy button */
+    }
+    code, kbd{ background:var(--kbd-bg); color:var(--kbd-fg); padding:2px 6px; border-radius:6px }
+    kbd{ border:1px solid var(--border); box-shadow: inset 0 -1px 0 rgba(255,255,255,.05)}
+    table{ width:100%; border-collapse: collapse; overflow:hidden; border-radius:12px; border:1px solid var(--border) }
+    th,td{ padding:10px 12px; border-bottom:1px solid var(--border) }
+    th{ text-align:left; color:var(--muted); font-weight:700; letter-spacing:.2px }
+    tr:hover td{ background: color-mix(in srgb, var(--accent) 6%, transparent) }
+
+    .pill{ display:inline-block; padding:2px 8px; border-radius:999px; border:1px solid var(--border); color:var(--muted) }
+    .ok{ color: var(--ok); font-weight:700 }
+    .warn{ color: var(--warn); font-weight:700 }
+    .err{ color: var(--err); font-weight:700 }
+    .anchor-list{ display:flex; gap:8px; flex-wrap:wrap; margin:10px 0 2px }
+    .anchor-list a{ border:1px solid var(--border); padding:6px 10px; border-radius:999px; text-decoration:none; color:var(--text) }
+    .anchor-list a:hover{ background: color-mix(in srgb, var(--accent) 12%, transparent) }
+
+    .checklist{ list-style:none; padding:0; display:grid; gap:8px }
+    .checklist li{
+      display:flex; gap:10px; align-items: start; background: color-mix(in srgb, var(--accent) 6%, transparent);
+      border:1px dashed var(--border); border-radius:12px; padding:10px 12px;
+    }
+    .checklist input[type="checkbox"]{ transform: scale(1.2); margin-top:3px }
+    .note{ background: color-mix(in srgb, var(--warn) 12%, transparent); border:1px solid var(--border); border-left:4px solid var(--warn); padding:10px 12px; border-radius:10px }
+    .success{ background: color-mix(in srgb, var(--ok) 10%, transparent); border-left:4px solid var(--ok) }
+    footer{ margin: 40px 0 20px; color: var(--muted); font-size:.95rem }
+
+    /* Copy button for code blocks */
+    .pre-wrap { position: relative; }
+    .copy-btn {
+      position: absolute; top: 10px; right: 10px;
+      padding: 8px 10px; border-radius: 8px; border: 1px solid var(--border);
+      background: color-mix(in srgb, var(--accent) 10%, transparent);
+      color: var(--text); font-weight: 700; font-size: 12px;
+      cursor: pointer; line-height: 1; display: inline-flex; align-items: center; gap: 6px;
+    }
+    .copy-btn:hover { background: color-mix(in srgb, var(--accent) 18%, transparent); }
+    .copy-btn:focus { outline: 3px solid var(--focus); outline-offset: 2px; }
+    @media (prefers-color-scheme: light){
+      .copy-btn{ color:#0f172a; border-color:#e2e8f0; }
+    }
   </style>
 </head>
 <body>
-<div class="container">
-  <h1>🧭 Masterclass: UI Automation with Selenium & Java</h1>
-  <p class="muted">A complete, end-to-end course using the <b>Testaurant</b> web app. Learn reliable UI testing with Java 17, Maven, Selenium 4, WebDriverManager, Page Objects, robust waits, data-driven tests, parallelization, reporting, and CI.</p>
+  <a class="skip-link" href="#content">Skip to content</a>
 
-  <nav class="toc">
-    <a href="#overview">Overview</a>
-    <a href="#selectors">Stable Selectors & Testability</a>
-    <a href="#skeleton">Project Skeleton (embedded)</a>
-    <a href="#pom">Maven POM</a>
-    <a href="#base">Base Setup & Driver Lifecycle</a>
-    <a href="#pages">Page Objects</a>
-    <a href="#tests">UI Test Suites</a>
-    <a href="#waits">Resilient Waits & Flake Control</a>
-    <a href="#ddt">Data-Driven & Parallel</a>
-    <a href="#reporting">Reporting</a>
-    <a href="#ci">CI Pipeline</a>
-    <a href="#exercises">Capstone Exercises</a>
-    <a href="#checklist">Progress Checklist</a>
-  </nav>
-
-  <!-- OVERVIEW -->
-  <section id="overview">
-    <h2>1) Overview</h2>
-    <div class="grid g2">
-      <div class="card">
-        <h3>What you’ll build</h3>
-        <ul>
-          <li>Maintainable Selenium framework with Page Objects</li>
-          <li>Deterministic waits for dynamic UI (toasts, overlays, async data)</li>
-          <li>Actions: add to cart, open cart, apply coupon, switch currency, checkout</li>
-          <li>Admin flows (Inventory, Orders, Stats) if exposed in UI</li>
-          <li>Parallel runs, data-driven tests, screenshots on failure</li>
-        </ul>
-      </div>
-      <div class="card">
-        <h3>Requirements</h3>
-        <ul>
-          <li>JDK 17+, Maven 3.8+</li>
-          <li>IDE: IntelliJ IDEA recommended</li>
-          <li>Chrome/Firefox; we’ll use WebDriverManager to auto-manage drivers</li>
-        </ul>
+  <header role="banner" aria-label="Top Navigation">
+    <div class="nav">
+      <div class="brand" aria-label="Course title">Testaurant • UI Automation Course</div>
+      <nav class="navlinks" aria-label="Section navigation">
+        <a href="#intro">Intro</a>
+        <a href="#theory">Theory</a>
+        <a href="#setup">Setup</a>
+        <a href="#skeleton">Skeleton</a>
+        <a href="#poms">Page Objects</a>
+        <a href="#tests">Tests</a>
+        <a href="#adv">Advanced</a>
+        <a href="#checklist">Checklist</a>
+        <a href="#exercises">Exercises</a>
+      </nav>
+      <div class="cta-row" role="group" aria-label="Quick actions">
+        <a class="btn secondary" href="https://apps.qualiadept.eu/testaurant/frontend/index.html" aria-label="Return to Testaurant main page">⟵ Main Page</a>
+        <a class="btn" href="https://apps.qualiadept.eu/testaurant/api_specs/" aria-label="Open API specifications">📘 API Specs</a>
       </div>
     </div>
-    <div class="callout">
-      <b>Base URL (UI):</b>
-      <span class="mono">https://apps.qualiadept.eu/testaurant/frontend/index.html</span>
-      <div class="muted">If your index is elsewhere, adjust the <code class="inline">baseUrl</code> property below.</div>
-    </div>
-  </section>
+  </header>
 
-  <!-- SELECTORS -->
-  <section id="selectors">
-    <h2>2) Stable Selectors & Testability</h2>
-    <div class="card">
-      <p>UI tests need <b>stable, semantic selectors</b>. Add <code class="inline">data-test</code> attributes to interactive elements to avoid brittle CSS/XPath.</p>
-      <table>
-        <thead><tr><th>Element</th><th>Suggested selector</th></tr></thead>
-        <tbody>
-          <tr><td>Add to Cart button on a card</td><td><code>[data-test="add-to-cart"]</code></td></tr>
-          <tr><td>Open Cart icon/button</td><td><code>[data-test="open-cart"]</code></td></tr>
-          <tr><td>Checkout button (in cart panel)</td><td><code>[data-test="checkout"]</code></td></tr>
-          <tr><td>Currency dropdown</td><td><code>[data-test="currency"]</code></td></tr>
-          <tr><td>Toast container</td><td><code>[data-test="toast"]</code></td></tr>
-          <tr><td>Inventory menu link</td><td><code>[data-test="nav-inventory"]</code></td></tr>
-          <tr><td>Orders menu link</td><td><code>[data-test="nav-orders"]</code></td></tr>
-          <tr><td>Stats menu link</td><td><code>[data-test="nav-stats"]</code></td></tr>
-        </tbody>
-      </table>
-      <p class="muted">If these attributes aren’t in your HTML yet, add them — tests below assume these selectors.</p>
-    </div>
-  </section>
+  <main id="content" role="main">
+    <!-- Intro -->
+    <section id="intro" class="card" aria-labelledby="intro-h">
+      <h1 id="intro-h">🧭 Complete Course: UI Automation with Selenium & Java</h1>
+      <p class="lead">
+        Build a robust, maintainable UI test framework using <strong>Java 17</strong>, <strong>Maven</strong>, <strong>JUnit 5</strong>, and <strong>Selenium WebDriver</strong> for the Testaurant web app.
+      </p>
+      <div class="anchor-list" aria-label="Quick jumps">
+        <a href="#theory">Theory</a>
+        <a href="#skeleton">Starter Project</a>
+        <a href="#poms">Page Objects</a>
+        <a href="#tests">Core Tests</a>
+        <a href="#adv">Advanced</a>
+      </div>
+      <p class="note success" role="note">Tip: Use stable <code>data-test</code> attributes in the UI for reliable locators.</p>
+    </section>
 
-  <!-- SKELETON -->
-  <section id="skeleton">
-    <h2>3) Starter Project Skeleton</h2>
-    <p>Copy this structure locally. All files are embedded below as copy/paste blocks.</p>
+    <!-- Theory -->
+    <section id="theory" class="card" aria-labelledby="theory-h">
+      <h2 id="theory-h">1) Theory: Principles of UI Automation</h2>
+      <div class="grid">
+        <div>
+          <h3>1.1 What to Automate (and What Not)</h3>
+          <ul>
+            <li><strong>Automate:</strong> critical user flows, regression-prone paths, integration with backend</li>
+            <li><strong>Don’t Automate:</strong> constantly-changing visuals, trivial content, unstable experiments</li>
+            <li><strong>Layering:</strong> API tests for business logic; UI tests for end-to-end confidence</li>
+          </ul>
+
+          <h3>1.2 Reliable Locators</h3>
+          <ul>
+            <li>Prefer <code>[data-test="..."]</code> attributes (add them in your app)</li>
+            <li>Avoid brittle XPath tied to layout; prefer roles/labels/ids</li>
+            <li>Build Page Objects to encapsulate selectors and actions</li>
+          </ul>
+
+          <h3>1.3 Waits & Stability</h3>
+          <ul>
+            <li>Use <strong>explicit waits</strong> with conditions (visibility, clickability)</li>
+            <li>Avoid <code>Thread.sleep</code>; prefer WebDriverWait</li>
+            <li>Be mindful of async actions (toasts, spinners)</li>
+          </ul>
+
+          <h3>1.4 Accessibility Considerations</h3>
+          <ul>
+            <li>Elements should be keyboard reachable (<kbd>Tab</kbd>)</li>
+            <li>Use ARIA roles/labels for buttons, dialogs</li>
+            <li>Provide sufficient color contrast and focus outlines</li>
+          </ul>
+        </div>
+
+        <aside class="card" aria-label="Anti-patterns & heuristics">
+          <h3>Anti-patterns</h3>
+          <ul>
+            <li>Massive end-to-end tests that cover everything → fragile & slow</li>
+            <li>Mixing UI waits with API polls without purpose</li>
+            <li>Hard-coding sleeps and magic locators</li>
+          </ul>
+          <h3>Heuristics</h3>
+          <ul>
+            <li>Keep UI tests fast (parallelize where feasible)</li>
+            <li>Reset/seed data for deterministic states</li>
+            <li>Prefer “assert important things only”</li>
+          </ul>
+        </aside>
+      </div>
+    </section>
+
+    <!-- Setup -->
+    <section id="setup" class="card" aria-labelledby="setup-h">
+      <h2 id="setup-h">2) Local Setup</h2>
+      <ol>
+        <li>Install <strong>JDK 17+</strong>, <strong>Maven 3.8+</strong></li>
+        <li>IDE: IntelliJ IDEA (recommended) or VS Code</li>
+        <li>Chrome/Firefox installed (we’ll use WebDriverManager)</li>
+      </ol>
+      <pre><code>java -version
+mvn -v</code></pre>
+    </section>
+
+    <!-- Starter Project -->
+    <section id="skeleton" class="card" aria-labelledby="skeleton-h">
+      <h2 id="skeleton-h">3) Starter Project (Copy/Paste)</h2>
+      <p>Create a Maven project with this structure:</p>
 <pre><code>.
 ├─ pom.xml
-├─ README.md
 ├─ src/test/java/qa/testaurant/ui
 │  ├─ BaseUiTest.java
-│  ├─ support
-│  │  ├─ DriverFactory.java
-│  │  ├─ Waits.java
-│  │  ├─ Screens.java
-│  │  └─ Config.java
-│  ├─ pages
+│  ├─ util/Waits.java
+│  ├─ pages/
 │  │  ├─ HomePage.java
 │  │  ├─ MenuPage.java
 │  │  ├─ CartPanel.java
 │  │  └─ CheckoutPage.java
-│  └─ tests
+│  └─ tests/
 │     ├─ SmokeTests.java
-│     ├─ CartTests.java
-│     ├─ CheckoutTests.java
-│     └─ AdminNavTests.java
-└─ src/test/resources
-   ├─ config.properties
-   ├─ config.local.properties
-   └─ logback-test.xml
+│     ├─ CartCheckoutTests.java
+│     ├─ CurrencySwitchTests.java
+│     └─ StockBoundaryTests.java
+└─ src/test/resources/config.properties
 </code></pre>
-  </section>
 
-  <!-- POM -->
-  <section id="pom">
-    <h2>4) Maven POM (Selenium 4 + JUnit 5 + WebDriverManager)</h2>
-<pre><code class="language-xml">&lt;project xmlns="http://maven.apache.org/POM/4.0.0"&gt;
+      <h3>pom.xml</h3>
+<pre><code class="language-xml">&lt;project xmlns="http://maven.apache.org/POM/4.0.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
+  http://maven.apache.org/xsd/maven-4.0.0.xsd"&gt;
   &lt;modelVersion&gt;4.0.0&lt;/modelVersion&gt;
   &lt;groupId&gt;qa.testaurant&lt;/groupId&gt;
   &lt;artifactId&gt;ui-automation&lt;/artifactId&gt;
@@ -186,591 +291,497 @@
         &lt;groupId&gt;org.apache.maven.plugins&lt;/groupId&gt;
         &lt;artifactId&gt;maven-surefire-plugin&lt;/artifactId&gt;
         &lt;version&gt;3.2.5&lt;/version&gt;
-        &lt;configuration&gt;
-          &lt;forkCount&gt;2&lt;/forkCount&gt;
-          &lt;reuseForks&gt;true&lt;/reuseForks&gt;
-          &lt;systemPropertyVariables&gt;
-            baseUrl&gt;${baseUrl}&lt;/baseUrl
-            browser&gt;${browser}&lt;/browser
-            headless&gt;${headless}&lt;/headless
-            timeoutMs&gt;${timeoutMs}&lt;/timeoutMs
-          &lt;/systemPropertyVariables&gt;
-        &lt;/configuration&gt;
       &lt;/plugin&gt;
     &lt;/plugins&gt;
   &lt;/build&gt;
 &lt;/project&gt;
 </code></pre>
-  </section>
 
-  <!-- BASE & DRIVER -->
-  <section id="base">
-    <h2>5) Base Setup & Driver Lifecycle</h2>
-
-    <div class="grid g2">
-      <div class="card">
-        <h3>src/test/resources/config.properties</h3>
+      <h3>src/test/resources/config.properties</h3>
 <pre><code>baseUrl=https://apps.qualiadept.eu/testaurant/frontend/index.html
-browser=chrome
-headless=false
-timeoutMs=8000
-</code></pre>
-      </div>
-      <div class="card">
-        <h3>src/test/resources/config.local.properties</h3>
-<pre><code># local overrides (not committed if you add to .gitignore)
 headless=true
-timeoutMs=12000
 </code></pre>
-      </div>
-    </div>
 
-    <div class="card">
-      <h3>support/Config.java</h3>
-<pre><code class="language-java">package qa.testaurant.ui.support;
-
-import java.io.InputStream;
-import java.util.Properties;
-
-public class Config {
-  private static final Properties P = new Properties();
-  static {
-    try (InputStream in = Config.class.getClassLoader().getResourceAsStream("config.properties")) {
-      if (in != null) P.load(in);
-    } catch(Exception ignored){}
-    try (InputStream in = Config.class.getClassLoader().getResourceAsStream("config.local.properties")) {
-      if (in != null) P.load(in);
-    } catch(Exception ignored){}
-    System.getProperties().forEach((k,v) -> P.setProperty(k.toString(), v.toString()));
-  }
-  public static String get(String k, String d){ return P.getProperty(k, d); }
-  public static String baseUrl(){ return get("baseUrl", "http://localhost:8080"); }
-  public static String browser(){ return get("browser", "chrome"); }
-  public static boolean headless(){ return Boolean.parseBoolean(get("headless", "false")); }
-  public static int timeoutMs(){ return Integer.parseInt(get("timeoutMs", "8000")); }
-}
-</code></pre>
-    </div>
-
-    <div class="card">
-      <h3>support/DriverFactory.java</h3>
-<pre><code class="language-java">package qa.testaurant.ui.support;
+      <h3>BaseUiTest.java</h3>
+<pre><code class="language-java">package qa.testaurant.ui;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
+import org.junit.jupiter.api.*;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.firefox.FirefoxOptions;
-import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.chrome.ChromeOptions;
 
-public class DriverFactory {
-  public static WebDriver create(){
-    switch (Config.browser().toLowerCase()){
-      case "firefox":
-        WebDriverManager.firefoxdriver().setup();
-        FirefoxOptions fx = new FirefoxOptions();
-        if (Config.headless()) fx.addArguments("-headless");
-        return new FirefoxDriver(fx);
-      default:
-        WebDriverManager.chromedriver().setup();
-        ChromeOptions ch = new ChromeOptions();
-        if (Config.headless()) ch.addArguments("--headless=new","--disable-gpu");
-        ch.addArguments("--window-size=1366,900");
-        return new ChromeDriver(ch);
-    }
+import java.io.IOException;
+import java.util.Properties;
+import java.time.Duration;
+
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
+public class BaseUiTest {
+  protected WebDriver driver;
+  protected static String BASE_URL = "https://apps.qualiadept.eu/testaurant/frontend/index.html";
+  protected static boolean HEADLESS = true;
+
+  @BeforeAll
+  void setupClass() {
+    WebDriverManager.chromedriver().setup();
+
+    try {
+      Properties p = new Properties();
+      p.load(BaseUiTest.class.getClassLoader().getResourceAsStream("config.properties"));
+      BASE_URL = System.getProperty("baseUrl", p.getProperty("baseUrl", BASE_URL));
+      HEADLESS = Boolean.parseBoolean(System.getProperty("headless", p.getProperty("headless","true")));
+    } catch (IOException | NullPointerException ignored) {}
+  }
+
+  @BeforeEach
+  void open() {
+    ChromeOptions opts = new ChromeOptions();
+    if (HEADLESS) opts.addArguments("--headless=new");
+    opts.addArguments("--window-size=1366,900");
+    driver = new ChromeDriver(opts);
+    driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(0)); // we will use explicit waits
+    driver.get(BASE_URL);
+  }
+
+  @AfterEach
+  void cleanup() {
+    if (driver != null) driver.quit();
   }
 }
 </code></pre>
-    </div>
 
-    <div class="card">
-      <h3>support/Waits.java</h3>
-<pre><code class="language-java">package qa.testaurant.ui.support;
+      <h3>util/Waits.java</h3>
+<pre><code class="language-java">package qa.testaurant.ui.util;
 
 import org.openqa.selenium.*;
 import org.openqa.selenium.support.ui.*;
 
 public class Waits {
-  public static WebElement untilVisible(WebDriver d, By locator){
-    return new WebDriverWait(d, java.time.Duration.ofMillis(Config.timeoutMs()))
-      .until(ExpectedConditions.visibilityOfElementLocated(locator));
+  public static WebElement visible(WebDriver d, By by, long seconds){
+    return new WebDriverWait(d, java.time.Duration.ofSeconds(seconds))
+        .until(ExpectedConditions.visibilityOfElementLocated(by));
   }
-  public static void untilGone(WebDriver d, By locator){
-    new WebDriverWait(d, java.time.Duration.ofMillis(Config.timeoutMs()))
-      .until(ExpectedConditions.invisibilityOfElementLocated(locator));
-  }
-}
-</code></pre>
-    </div>
-
-    <div class="card">
-      <h3>support/Screens.java (screenshots on failure)</h3>
-<pre><code class="language-java">package qa.testaurant.ui.support;
-
-import org.openqa.selenium.*;
-import javax.imageio.ImageIO;
-import java.awt.image.BufferedImage;
-import java.io.File;
-
-public class Screens {
-  public static void shot(WebDriver d, String name){
-    try{
-      File src = ((TakesScreenshot)d).getScreenshotAs(OutputType.FILE);
-      File dest = new File("target/screens/" + name + ".png");
-      dest.getParentFile().mkdirs();
-      java.nio.file.Files.copy(src.toPath(), dest.toPath(), java.nio.file.StandardCopyOption.REPLACE_EXISTING);
-    } catch(Exception ignored){}
+  public static WebElement clickable(WebDriver d, By by, long seconds){
+    return new WebDriverWait(d, java.time.Duration.ofSeconds(seconds))
+        .until(ExpectedConditions.elementToBeClickable(by));
   }
 }
 </code></pre>
-    </div>
+    </section>
 
-    <div class="card">
-      <h3>BaseUiTest.java</h3>
-<pre><code class="language-java">package qa.testaurant.ui;
+    <!-- Page Objects -->
+    <section id="poms" class="card" aria-labelledby="poms-h">
+      <h2 id="poms-h">4) Page Objects</h2>
+      <p>These encapsulate locators and flows. Ensure your HTML has <code>data-test</code> attributes like below.</p>
 
-import qa.testaurant.ui.support.*;
-import org.junit.jupiter.api.*;
-import org.openqa.selenium.WebDriver;
-
-public class BaseUiTest {
-  protected WebDriver driver;
-
-  @BeforeEach
-  void open(){
-    driver = DriverFactory.create();
-    driver.get(Config.baseUrl());
-  }
-
-  @AfterEach
-  void cleanup(TestInfo info){
-    try{
-      boolean failed = info.getDisplayName().contains("✖"); // hint; JUnit doesn’t give result here
-      if (failed) Screens.shot(driver, info.getDisplayName());
-    } finally {
-      if (driver != null) driver.quit();
-    }
-  }
-}
-</code></pre>
-      <p class="muted">Note: To always screenshot on teardown, just call <code class="inline">Screens.shot(driver, &quot;end&quot;)</code> unconditionally.</p>
-    </div>
-  </section>
-
-  <!-- PAGE OBJECTS -->
-  <section id="pages">
-    <h2>6) Page Objects</h2>
-
-    <div class="grid g2">
-      <div class="card">
-        <h3>pages/HomePage.java</h3>
+      <h3>pages/HomePage.java</h3>
 <pre><code class="language-java">package qa.testaurant.ui.pages;
 
 import org.openqa.selenium.*;
-import qa.testaurant.ui.support.Waits;
 
 public class HomePage {
-  private final WebDriver d;
-  public HomePage(WebDriver d){ this.d = d; }
+  private final WebDriver driver;
+  public HomePage(WebDriver d){ this.driver = d; }
 
-  public MenuPage goToMenu(){
-    // assuming home loads menu directly; otherwise click "Menu" link
-    return new MenuPage(d);
+  public boolean isLoaded(){
+    return driver.getTitle().toLowerCase().contains("testaurant");
   }
 
-  public void openInventory(){
-    d.findElement(By.cssSelector("[data-test='nav-inventory']")).click();
+  public void goToInventory(){
+    driver.findElement(By.cssSelector("[data-test='nav-inventory']")).click();
   }
-  public void openOrders(){
-    d.findElement(By.cssSelector("[data-test='nav-orders']")).click();
+  public void goToOrders(){
+    driver.findElement(By.cssSelector("[data-test='nav-orders']")).click();
   }
-  public void openStats(){
-    d.findElement(By.cssSelector("[data-test='nav-stats']")).click();
+  public void goToStats(){
+    driver.findElement(By.cssSelector("[data-test='nav-stats']")).click();
   }
 }
 </code></pre>
-      </div>
 
-      <div class="card">
-        <h3>pages/MenuPage.java</h3>
+      <h3>pages/MenuPage.java</h3>
 <pre><code class="language-java">package qa.testaurant.ui.pages;
 
 import org.openqa.selenium.*;
 import org.openqa.selenium.support.ui.*;
-import qa.testaurant.ui.support.Waits;
-
-import java.util.List;
 
 public class MenuPage {
-  private final WebDriver d;
-  private final By ADD_TO_CART = By.cssSelector("[data-test='add-to-cart']");
-  private final By OPEN_CART   = By.cssSelector("[data-test='open-cart']");
-  private final By CURRENCY    = By.cssSelector("[data-test='currency']");
-  private final By TOAST       = By.cssSelector("[data-test='toast']");
+  private final WebDriver driver;
+  public MenuPage(WebDriver d){ this.driver=d; }
 
-  public MenuPage(WebDriver d){ this.d = d; }
-
-  public MenuPage addFirstItem(){
-    var addBtns = Waits.untilVisible(d, ADD_TO_CART).findElements(ADD_TO_CART);
-    if (addBtns.isEmpty()) addBtns = d.findElements(ADD_TO_CART);
+  public void addFirstItemToCart(){
+    var wait = new WebDriverWait(driver, java.time.Duration.ofSeconds(5));
+    var addBtns = wait.until(d -&gt; d.findElements(By.cssSelector("[data-test='add-to-cart']")));
     addBtns.get(0).click();
-    Waits.untilVisible(d, TOAST);
-    return this;
   }
-
-  public MenuPage changeCurrency(String target){
-    var sel = new Select(d.findElement(CURRENCY));
-    sel.selectByVisibleText(target);
-    Waits.untilVisible(d, TOAST); // assume a toast confirmation; otherwise brief sleep
-    return this;
+  public void openCart(){
+    driver.findElement(By.cssSelector("[data-test='open-cart']")).click();
   }
-
-  public CartPanel openCart(){
-    d.findElement(OPEN_CART).click();
-    return new CartPanel(d);
+  public void switchCurrency(String cur){
+    var sel = driver.findElement(By.cssSelector("[data-test='select-currency']"));
+    sel.click();
+    driver.findElement(By.cssSelector("[data-test='currency-"+cur+"']")).click();
   }
 }
 </code></pre>
-      </div>
-    </div>
 
-    <div class="grid g2">
-      <div class="card">
-        <h3>pages/CartPanel.java</h3>
+      <h3>pages/CartPanel.java</h3>
 <pre><code class="language-java">package qa.testaurant.ui.pages;
 
 import org.openqa.selenium.*;
-import qa.testaurant.ui.support.Waits;
+import org.openqa.selenium.support.ui.*;
 
 public class CartPanel {
-  private final WebDriver d;
-  private final By CHECKOUT = By.cssSelector("[data-test='checkout']");
-  private final By TOTAL    = By.cssSelector("[data-test='cart-total']");
-
-  public CartPanel(WebDriver d){ this.d = d; }
-
-  public boolean checkoutVisible(){
-    return d.findElement(CHECKOUT).isDisplayed();
-  }
+  private final WebDriver driver;
+  public CartPanel(WebDriver d){ this.driver=d; }
 
   public String totalText(){
-    return d.findElement(TOTAL).getText();
+    var wait = new WebDriverWait(driver, java.time.Duration.ofSeconds(5));
+    var el = wait.until(d -&gt; d.findElement(By.cssSelector("[data-test='cart-total']")));
+    return el.getText();
   }
 
-  public CheckoutPage proceed(){
-    d.findElement(CHECKOUT).click();
-    return new CheckoutPage(d);
+  public void checkout(){
+    driver.findElement(By.cssSelector("[data-test='checkout']")).click();
   }
 }
 </code></pre>
-      </div>
 
-      <div class="card">
-        <h3>pages/CheckoutPage.java</h3>
+      <h3>pages/CheckoutPage.java</h3>
 <pre><code class="language-java">package qa.testaurant.ui.pages;
 
 import org.openqa.selenium.*;
+import org.openqa.selenium.support.ui.*;
 
 public class CheckoutPage {
-  private final WebDriver d;
+  private final WebDriver driver;
+  public CheckoutPage(WebDriver d){ this.driver=d; }
 
-  private final By NAME  = By.cssSelector("[data-test='customer-name']");
-  private final By PHONE = By.cssSelector("[data-test='customer-phone']");
-  private final By PAY_CARD = By.cssSelector("[data-test='pay-card']");
-  private final By PAY_CASH = By.cssSelector("[data-test='pay-cash']");
-  private final By DELIVERY = By.cssSelector("[data-test='delivery-method']"); // radio / select
-  private final By SUBMIT   = By.cssSelector("[data-test='place-order']");
-  private final By RESULT   = By.cssSelector("[data-test='order-result']");
-
-  public CheckoutPage(WebDriver d){ this.d = d; }
-
-  public CheckoutPage fillCustomer(String name, String phone){
-    d.findElement(NAME).sendKeys(name);
-    d.findElement(PHONE).sendKeys(phone);
-    return this;
+  public void fillCustomer(String name, String phone){
+    driver.findElement(By.cssSelector("[data-test='customer-name']")).sendKeys(name);
+    driver.findElement(By.cssSelector("[data-test='customer-phone']")).sendKeys(phone);
   }
-
-  public CheckoutPage payment(String method){
-    if ("card".equalsIgnoreCase(method)) d.findElement(PAY_CARD).click();
-    else d.findElement(PAY_CASH).click();
-    return this;
+  public void selectPayment(String method){
+    driver.findElement(By.cssSelector("[data-test='pay-"+method+"']")).click(); // cash or card
   }
-
-  public CheckoutPage delivery(String method){
-    d.findElement(DELIVERY).click(); // or pick correct option if select
-    return this;
+  public void selectDelivery(String method){
+    driver.findElement(By.cssSelector("[data-test='delivery-"+method+"']")).click(); // pickup or delivery
   }
-
-  public CheckoutPage submit(){
-    d.findElement(SUBMIT).click();
-    return this;
+  public void placeOrder(){
+    driver.findElement(By.cssSelector("[data-test='place-order']")).click();
   }
-
-  public String resultText(){
-    return d.findElement(RESULT).getText();
+  public String toast(){
+    var wait = new WebDriverWait(driver, java.time.Duration.ofSeconds(6));
+    return wait.until(d -&gt; d.findElement(By.cssSelector("[role='status'], .toast"))).getText();
   }
 }
 </code></pre>
-      </div>
-    </div>
-  </section>
+    </section>
 
-  <!-- TEST SUITES -->
-  <section id="tests">
-    <h2>7) UI Test Suites</h2>
+    <!-- Tests -->
+    <section id="tests" class="card" aria-labelledby="tests-h">
+      <h2 id="tests-h">5) Core Tests</h2>
 
-    <div class="grid g2">
-      <div class="card">
-        <h3>tests/SmokeTests.java</h3>
+      <h3>tests/SmokeTests.java</h3>
 <pre><code class="language-java">package qa.testaurant.ui.tests;
 
-import qa.testaurant.ui.BaseUiTest;
-import qa.testaurant.ui.pages.*;
-
 import org.junit.jupiter.api.Test;
+import qa.testaurant.ui.BaseUiTest;
+import qa.testaurant.ui.pages.HomePage;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 public class SmokeTests extends BaseUiTest {
   @Test
-  void add_to_cart_and_see_checkout(){
-    MenuPage menu = new MenuPage(driver);
-    menu.addFirstItem();
-    CartPanel cart = menu.openCart();
-    assertTrue(cart.checkoutVisible(), "Checkout button should be visible");
+  void home_loads_and_nav_visible(){
+    HomePage home = new HomePage(driver);
+    assertTrue(home.isLoaded(), "Homepage title should contain Testaurant");
   }
 }
 </code></pre>
-      </div>
 
-      <div class="card">
-        <h3>tests/CartTests.java</h3>
+      <h3>tests/CartCheckoutTests.java</h3>
 <pre><code class="language-java">package qa.testaurant.ui.tests;
 
-import qa.testaurant.ui.BaseUiTest;
-import qa.testaurant.ui.pages.*;
 import org.junit.jupiter.api.Test;
+import qa.testaurant.ui.BaseUiTest;
+import qa.testaurant.ui.pages.MenuPage;
+import qa.testaurant.ui.pages.CartPanel;
+import qa.testaurant.ui.pages.CheckoutPage;
+
 import static org.junit.jupiter.api.Assertions.*;
 
-public class CartTests extends BaseUiTest {
+public class CartCheckoutTests extends BaseUiTest {
   @Test
-  void currency_switch_affects_totals(){
+  void add_to_cart_and_checkout_flow(){
     MenuPage menu = new MenuPage(driver);
-    menu.addFirstItem();
-    CartPanel cart = menu.openCart();
+    menu.addFirstItemToCart();
+    menu.openCart();
+
+    CartPanel cart = new CartPanel(driver);
+    String totalBefore = cart.totalText();
+    assertTrue(totalBefore.matches(".*\\d+.*"), "Total should contain digits");
+
+    cart.checkout();
+    CheckoutPage chk = new CheckoutPage(driver);
+    chk.fillCustomer("QA User", "+40123456789");
+    chk.selectPayment("card");
+    chk.selectDelivery("pickup");
+    chk.placeOrder();
+
+    String toast = chk.toast().toLowerCase();
+    assertTrue(toast.contains("order") || toast.contains("success") || toast.contains("created"),
+      "Should show success toast with order confirmation");
+  }
+}
+</code></pre>
+
+      <h3>tests/CurrencySwitchTests.java</h3>
+<pre><code class="language-java">package qa.testaurant.ui.tests;
+
+import org.junit.jupiter.api.Test;
+import qa.testaurant.ui.BaseUiTest;
+import qa.testaurant.ui.pages.MenuPage;
+import qa.testaurant.ui.pages.CartPanel;
+
+import static org.junit.jupiter.api.Assertions.*;
+
+public class CurrencySwitchTests extends BaseUiTest {
+  @Test
+  void switch_currency_updates_totals(){
+    MenuPage menu = new MenuPage(driver);
+    menu.addFirstItemToCart();
+    menu.openCart();
+    CartPanel cart = new CartPanel(driver);
     String ron = cart.totalText();
 
-    driver.navigate().back();
-    menu.changeCurrency("EUR").addFirstItem();
-    CartPanel cart2 = menu.openCart();
-    String eur = cart2.totalText();
+    menu.switchCurrency("EUR"); // requires data-test="select-currency" and options
+    String eur = cart.totalText();
 
-    assertNotEquals(ron, eur, "Totals should differ after currency change");
+    assertNotEquals(ron, eur, "Totals text should differ after currency change");
   }
 }
 </code></pre>
-      </div>
-    </div>
 
-    <div class="grid g2">
-      <div class="card">
-        <h3>tests/CheckoutTests.java</h3>
+      <h3>tests/StockBoundaryTests.java</h3>
 <pre><code class="language-java">package qa.testaurant.ui.tests;
 
-import qa.testaurant.ui.BaseUiTest;
-import qa.testaurant.ui.pages.*;
 import org.junit.jupiter.api.Test;
+import qa.testaurant.ui.BaseUiTest;
+import qa.testaurant.ui.pages.MenuPage;
+import qa.testaurant.ui.pages.CartPanel;
+import qa.testaurant.ui.pages.CheckoutPage;
+
 import static org.junit.jupiter.api.Assertions.*;
 
-public class CheckoutTests extends BaseUiTest {
+public class StockBoundaryTests extends BaseUiTest {
   @Test
-  void place_order_happy_path(){
-    MenuPage menu = new MenuPage(driver).addFirstItem();
-    CartPanel cart = menu.openCart();
-    CheckoutPage co = cart.proceed()
-        .fillCustomer("Jane QA", "+40123456789")
-        .payment("card")
-        .delivery("pickup")
-        .submit();
-    String result = co.resultText();
-    assertTrue(result.toLowerCase().contains("order") || result.matches(".*#\\d+.*"),
-               "Should show order confirmation");
+  void ordering_twice_with_stock_1_shows_failure_second_time(){
+    // Precondition: set stock=1 for a given item via admin API (can be done in a @BeforeAll of a separate suite)
+    MenuPage menu = new MenuPage(driver);
+    menu.addFirstItemToCart();
+    menu.openCart();
+    new CartPanel(driver).checkout();
+
+    CheckoutPage chk = new CheckoutPage(driver);
+    chk.fillCustomer("QA Boundary", "+40700123456");
+    chk.selectPayment("cash");
+    chk.selectDelivery("pickup");
+    chk.placeOrder();
+
+    // Try again (this relies on the same item being added again):
+    driver.get(BASE_URL);
+    menu.addFirstItemToCart();
+    menu.openCart();
+    new CartPanel(driver).checkout();
+    chk.fillCustomer("QA Boundary 2", "+40700123457");
+    chk.selectPayment("cash");
+    chk.selectDelivery("pickup");
+    chk.placeOrder();
+    String toast = chk.toast().toLowerCase();
+
+    // Expect a failure/insufficient stock message surfaced by the UI
+    boolean failed = toast.contains("insufficient") || toast.contains("out of stock") || toast.contains("error");
+    assertTrue(failed, "Second order should fail due to stock boundary");
   }
 }
 </code></pre>
-      </div>
+    </section>
 
-      <div class="card">
-        <h3>tests/AdminNavTests.java</h3>
+    <!-- Advanced -->
+    <section id="adv" class="card" aria-labelledby="adv-h">
+      <h2 id="adv-h">6) Advanced Topics</h2>
+      <div class="grid">
+        <div>
+          <h3>6.1 Headless & Parallel</h3>
+<pre><code class="language-java">// Headless is controlled by config or -Dheadless=true
+// For parallel, consider JUnit 5 parallel execution (junit-platform.properties) or surefire config.
+</code></pre>
+
+          <h3>6.2 Basic A11y Signals</h3>
 <pre><code class="language-java">package qa.testaurant.ui.tests;
 
-import qa.testaurant.ui.BaseUiTest;
-import qa.testaurant.ui.pages.*;
 import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.*;
-
-public class AdminNavTests extends BaseUiTest {
-  @Test
-  void admin_links_navigate(){
-    HomePage home = new HomePage(driver);
-    home.openInventory();
-    assertTrue(driver.getCurrentUrl().toLowerCase().contains("inventory") ||
-               driver.getPageSource().toLowerCase().contains("inventory"),
-               "Should land on Inventory page/section");
-
-    driver.navigate().back();
-    home.openOrders();
-    assertTrue(driver.getCurrentUrl().toLowerCase().contains("orders") ||
-               driver.getPageSource().toLowerCase().contains("orders"),
-               "Should land on Orders section");
-
-    driver.navigate().back();
-    home.openStats();
-    assertTrue(driver.getCurrentUrl().toLowerCase().contains("stats") ||
-               driver.getPageSource().toLowerCase().contains("stats"),
-               "Should land on Stats section");
-  }
-}
-</code></pre>
-      </div>
-    </div>
-  </section>
-
-  <!-- WAITS -->
-  <section id="waits">
-    <h2>8) Resilient Waits & Flake Control</h2>
-    <div class="card">
-      <ul>
-        <li>Wait for toast or for cart panel visibility before asserting totals</li>
-        <li>Use small <code class="inline">ExpectedConditions</code> helpers; avoid <code class="inline">Thread.sleep</code> where possible</li>
-        <li>Keep timeouts configurable (<code class="inline">timeoutMs</code>)</li>
-        <li>Prefer <code class="inline">data-test</code> to CSS classes that change with styling</li>
-      </ul>
-    </div>
-  </section>
-
-  <!-- DDT & PARALLEL -->
-  <section id="ddt">
-    <h2>9) Data-Driven & Parallel Execution</h2>
-
-    <div class="grid g2">
-      <div class="card">
-        <h3>Parameterized example (JUnit5)</h3>
-<pre><code class="language-java">package qa.testaurant.ui.tests;
-
 import qa.testaurant.ui.BaseUiTest;
-import qa.testaurant.ui.pages.*;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.ValueSource;
+import org.openqa.selenium.*;
+
 import static org.junit.jupiter.api.Assertions.*;
 
-public class DdtCurrencyTests extends BaseUiTest {
-  @ParameterizedTest
-  @ValueSource(strings = {"RON","EUR","USD"})
-  void totals_change_with_currency(String cur){
-    MenuPage menu = new MenuPage(driver).addFirstItem();
-    CartPanel cartRON = menu.openCart();
-    String total1 = cartRON.totalText();
-
-    driver.navigate().back();
-    menu.changeCurrency(cur).addFirstItem();
-    CartPanel cart2 = menu.openCart();
-    String total2 = cart2.totalText();
-
-    if (!"RON".equals(cur)) {
-      assertNotEquals(total1, total2, "Non-RON currency should display different total");
-    } else {
-      assertTrue(total2.contains("RON"));
+public class AccessibilitySignalsTests extends BaseUiTest {
+  @Test
+  void buttons_have_accessible_names(){
+    for (WebElement b : driver.findElements(By.cssSelector("button, [role='button'], a[role='button']"))) {
+      String name = b.getAttribute("aria-label");
+      if (name == null || name.isBlank()) name = b.getText();
+      assertFalse(name == null || name.isBlank(), "Button should have accessible name");
     }
   }
 }
 </code></pre>
-      </div>
 
-      <div class="card">
-        <h3>Parallel hints</h3>
-        <ul>
-          <li>We enabled 2 forks in Surefire; scale up cautiously</li>
-          <li>Keep tests independent: each opens its own browser</li>
-          <li>Don’t rely on shared UI state between tests</li>
-        </ul>
-      </div>
-    </div>
-  </section>
-
-  <!-- REPORTING -->
-  <section id="reporting">
-    <h2>10) Reporting</h2>
-    <div class="card">
-      <p>Basic reporting comes from Surefire XMLs. You can later integrate Allure or screenshots aggregation.  
-      Screenshots are written to <code class="inline">target/screens/</code> by <code class="inline">Screens.shot</code>.</p>
-      <pre><code>mvn -Dbrowser=chrome -Dheadless=true test</code></pre>
-    </div>
-  </section>
-
-  <!-- CI -->
-  <section id="ci">
-    <h2>11) CI Pipeline (GitHub Actions)</h2>
-    <div class="card">
-      <h3>.github/workflows/ui-ci.yml</h3>
-<pre><code class="language-yaml">name: UI CI
-on:
-  push: { branches: ["main"] }
-  pull_request:
-
-jobs:
-  ui-tests:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-java@v4
-        with: { distribution: 'temurin', java-version: '17' }
-      - name: Run headless UI tests (Chrome)
-        run: mvn -q -Dbrowser=chrome -Dheadless=true -DbaseUrl="https://apps.qualiadept.eu/testaurant/frontend/index.html" test
-      - name: Archive screenshots
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: screenshots
-          path: target/screens
+          <h3>6.3 Resilience: Toasts & Async</h3>
+<pre><code class="language-java">// Prefer explicit waits for toasts (role='status') or aria-live regions.
+// Avoid brittle sleeps; assert the important message only.
 </code></pre>
-      <p class="muted">On CI we use headless Chrome and upload screenshots on failure.</p>
-    </div>
-  </section>
 
-  <!-- EXERCISES -->
-  <section id="exercises">
-    <h2>12) Capstone Exercises</h2>
-    <div class="card">
+          <h3>6.4 Data Setup via API</h3>
+<pre><code class="language-java">// Use API calls to set stock or create orders before UI tests to ensure deterministic states.
+// (Reuse RestAssured helpers from API course in a shared module.)
+</code></pre>
+        </div>
+
+        <aside class="card" aria-label="CI & Reporting">
+          <h3>6.5 CI & Reporting</h3>
+          <ul>
+            <li>Run smoke UI tests on each PR; full suite nightly</li>
+            <li>Archive screenshots on failure (use TakesScreenshot)</li>
+            <li>Record browser/driver versions in logs</li>
+          </ul>
+
+          <h3>6.6 Debugging Tips</h3>
+          <ul>
+            <li>Disable headless for local debug</li>
+            <li>Use browser devtools logs when needed</li>
+            <li>Log selectors and pages under test</li>
+          </ul>
+        </aside>
+      </div>
+    </section>
+
+    <!-- Checklist -->
+    <section id="checklist" class="card" aria-labelledby="checklist-h">
+      <h2 id="checklist-h">7) Progress Checklist</h2>
+      <ul class="checklist" id="todo" role="list">
+        <li><input type="checkbox" data-key="jdk" id="c1"><label for="c1">Installed JDK, Maven, browsers</label></li>
+        <li><input type="checkbox" data-key="skeleton" id="c2"><label for="c2">Created project skeleton</label></li>
+        <li><input type="checkbox" data-key="smoke" id="c3"><label for="c3">Smoke test passes</label></li>
+        <li><input type="checkbox" data-key="cart" id="c4"><label for="c4">Cart + Checkout flow tested</label></li>
+        <li><input type="checkbox" data-key="currency" id="c5"><label for="c5">Currency switch covered</label></li>
+        <li><input type="checkbox" data-key="stock" id="c6"><label for="c6">Stock boundary scenario</label></li>
+        <li><input type="checkbox" data-key="a11y" id="c7"><label for="c7">Basic accessibility checks</label></li>
+        <li><input type="checkbox" data-key="adv" id="c8"><label for="c8">Advanced topics reviewed</label></li>
+      </ul>
+    </section>
+
+    <!-- Exercises -->
+    <section id="exercises" class="card" aria-labelledby="ex-h">
+      <h2 id="ex-h">8) Exercises & Milestones</h2>
       <ol>
-        <li><b>Toast reliability:</b> Add a wait helper that returns when a toast with text “Added” appears and disappears. Use it around “Add to cart”.</li>
-        <li><b>Negative checkout:</b> Leave phone empty → verify UI validation message and disabled submit, then fill and submit.</li>
-        <li><b>Stock boundary:</b> With API set stock=1 for an item. From UI, place 2 orders quickly. Verify second fails gracefully (message visible).</li>
-        <li><b>Admin Inventory:</b> From UI (if admin surface exists), change stock and confirm inventory grid reflects new value.</li>
-        <li><b>Visual checks (light):</b> Assert each card image has a non-empty <code class="inline">src</code> and naturalWidth &gt; 0 via JS execution.</li>
+        <li>Add missing <code>data-test</code> attributes in the UI and update Page Objects accordingly.</li>
+        <li>Implement screenshot-on-failure in a JUnit <code>@AfterEach</code> hook.</li>
+        <li>Create a parameterized test that tries several coupons via the UI and validates totals change.</li>
+        <li>Run the suite in headless and headed modes; compare flakiness.</li>
+        <li>Integrate a pre-test API step to set exchange rates, then verify UI totals for EUR/USD.</li>
       </ol>
-    </div>
-  </section>
 
-  <!-- CHECKLIST -->
-  <section id="checklist">
-    <h2>13) Progress Checklist</h2>
-    <ul class="checklist">
-      <li class="ok">Project skeleton created</li>
-      <li class="ok">Stable <code class="inline">data-test</code> selectors in UI</li>
-      <li>Smoke test passes headless and headed</li>
-      <li>Cart tests cover currency switch + totals</li>
-      <li>Checkout happy path & basic validation</li>
-      <li>Parallel execution stable (no cross-test interference)</li>
-      <li>CI green; screenshots archived on failure</li>
-    </ul>
-  </section>
+      <p class="note">Run tests (headless):</p>
+      <pre><code>mvn -DbaseUrl="https://apps.qualiadept.eu/testaurant/frontend/index.html" -Dheadless=true test</code></pre>
+      <p class="note">Run tests (headed locally):</p>
+      <pre><code>mvn -Dheadless=false test</code></pre>
+    </section>
 
-  <div class="sep"></div>
-  <div class="btn-row">
-    <a class="btn" href="index.html">← Back to Home</a>
-    <a class="btn" href="#skeleton">Jump to Skeleton</a>
-  </div>
-  <p class="muted">End of course page.</p>
-</div>
+    <footer role="contentinfo" aria-label="Footer">
+      <p>
+        Need the API contract to align UI with backend? Open <strong>API Specs</strong> here:
+        <a href="https://apps.qualiadept.eu/testaurant/api_specs/">https://apps.qualiadept.eu/testaurant/api_specs/</a>.
+        Return to <a href="https://apps.qualiadept.eu/testaurant/frontend/index.html">Main Page</a>.
+      </p>
+      <p class="pill" aria-label="Version">Course v1.0 • Designed for Testaurant QA Community</p>
+    </footer>
+  </main>
+
+  <!-- Accessible localStorage checklist persistence -->
+  <script>
+    (function(){
+      const list = document.getElementById('todo');
+      if(!list) return;
+      const KEY = 'testaurant_ui_course_checklist_v1';
+      const state = JSON.parse(localStorage.getItem(KEY) || '{}');
+      [...list.querySelectorAll('input[type="checkbox"][data-key]')].forEach(cb=>{
+        const k = cb.dataset.key;
+        cb.checked = !!state[k];
+        cb.addEventListener('change', ()=>{
+          state[k] = cb.checked;
+          localStorage.setItem(KEY, JSON.stringify(state));
+        });
+      });
+    })();
+  </script>
+
+  <!-- Copy button for every <pre><code> block -->
+  <script>
+    (function () {
+      const blocks = Array.from(document.querySelectorAll('pre'))
+        .filter(pre => !pre.matches('[data-no-copy]'));
+      blocks.forEach(pre => {
+        pre.classList.add('pre-wrap');
+        const btn = document.createElement('button');
+        btn.className = 'copy-btn';
+        btn.type = 'button';
+        btn.setAttribute('aria-label', 'Copy code to clipboard');
+        btn.setAttribute('title', 'Copy');
+        btn.textContent = 'Copy';
+        const live = document.createElement('span');
+        live.setAttribute('aria-live', 'polite');
+        live.style.position = 'absolute';
+        live.style.width = '1px';
+        live.style.height = '1px';
+        live.style.overflow = 'hidden';
+        live.style.clip = 'rect(1px,1px,1px,1px)';
+        live.style.clipPath = 'inset(50%)';
+        live.style.whiteSpace = 'nowrap';
+        btn.appendChild(live);
+        btn.addEventListener('click', async () => {
+          const code = pre.querySelector('code');
+          const text = code ? code.innerText : pre.innerText;
+          try {
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+              await navigator.clipboard.writeText(text);
+            } else {
+              const ta = document.createElement('textarea');
+              ta.value = text;
+              ta.setAttribute('readonly', '');
+              ta.style.position = 'fixed';
+              ta.style.top = '-1000px';
+              document.body.appendChild(ta);
+              ta.select();
+              document.execCommand('copy');
+              document.body.removeChild(ta);
+            }
+            const old = btn.textContent.replace(/\s*Copied!?$/, '');
+            btn.textContent = 'Copied!';
+            live.textContent = 'Copied to clipboard';
+            setTimeout(() => { btn.textContent = old || 'Copy'; live.textContent = ''; }, 1500);
+          } catch (e) {
+            const old = btn.textContent;
+            btn.textContent = 'Failed';
+            live.textContent = 'Copy failed';
+            setTimeout(() => { btn.textContent = old; live.textContent = ''; }, 1500);
+          }
+        });
+        pre.appendChild(btn);
+      });
+    })();
+  </script>
 </body>
 </html>
