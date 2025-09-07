@@ -2,19 +2,14 @@ openapi: 3.0.3
 info:
   title: Testaurant API
   version: "1.0.0"
-  description: |
+  description: >
     API for the Testaurant QA Automation Playground.
-    Features: menu, coupons, cart pricing, checkout with idempotency, inventory & stock, orders, exchange rates, stats, images (via image_url), chaos hooks.
+    Features: menu, coupons, cart pricing, checkout with idempotency, inventory & stock,
+    orders, exchange rates, stats, images (via image_url), chaos hooks.
 
 servers:
   - url: https://apps.qualiadept.eu/testaurant
     description: Production
-  - url: {baseUrl}
-    description: Custom (variable)
-    variables:
-      baseUrl:
-        default: https://apps.qualiadept.eu/testaurant
-        description: Base URL of the API (no trailing slash)
 
 tags:
   - name: Health
@@ -33,7 +28,7 @@ components:
       type: apiKey
       in: header
       name: X-API-Key
-      description: Admin API key from config.php
+
   parameters:
     CurrencyParam:
       name: currency
@@ -42,46 +37,72 @@ components:
       schema:
         type: string
         enum: [RON, EUR, USD]
-      description: Display currency (conversion done from base RON)
+      description: Display currency (conversion from base RON).
     PageParam:
       name: page
       in: query
-      schema: { type: integer, minimum: 1, default: 1 }
+      schema:
+        type: integer
+        minimum: 1
+        default: 1
     LimitParam:
       name: limit
       in: query
-      schema: { type: integer, minimum: 1, maximum: 100, default: 20 }
+      schema:
+        type: integer
+        minimum: 1
+        maximum: 100
+        default: 20
     ChaosParam:
       name: chaos
       in: query
-      schema: { type: string }
-      description: Enable chaos mode (random latency and occasional 503)
+      schema:
+        type: string
+      description: Random latency and occasional 503 for chaos testing.
     SlowParam:
       name: slow
       in: query
-      schema: { type: integer, minimum: 0 }
-      description: Add artificial delay in milliseconds
+      schema:
+        type: integer
+        minimum: 0
+      description: Artificial delay in milliseconds.
+
   headers:
     IdempotencyKey:
-      description: Idempotency key for checkout. If a request with the same key is replayed, the same orderId is returned.
-      schema: { type: string }
+      description: >
+        Idempotency key for checkout. If the same key is replayed,
+        the same orderId is returned.
+      schema:
+        type: string
+
   schemas:
     Error:
       type: object
       properties:
-        error: { type: string }
-        details: { type: string, nullable: true }
+        error:
+          type: string
+        details:
+          type: string
+          nullable: true
+
     Health:
       type: object
       properties:
-        ok: { type: boolean, example: true }
-        time: { type: string, format: date-time }
+        ok:
+          type: boolean
+          example: true
+        time:
+          type: string
+          format: date-time
+
     CategoryList:
       type: object
       properties:
         categories:
           type: array
-          items: { type: string }
+          items:
+            type: string
+
     MenuItem:
       type: object
       properties:
@@ -94,16 +115,26 @@ components:
         stock: { type: integer, example: 50 }
         image_url: { type: string, format: uri, nullable: true }
         available: { type: integer, example: 1, description: 1=available, 0=hidden }
-        price_converted: { type: number, format: float, nullable: true, description: Present if ?currency!=RON }
+        price_converted:
+          type: number
+          format: float
+          nullable: true
+          description: Present if ?currency!=RON
+
     MenuQuery:
       type: object
       properties:
         items:
           type: array
-          items: { $ref: '#/components/schemas/MenuItem' }
+          items:
+            $ref: '#/components/schemas/MenuItem'
         page: { type: integer }
         limit: { type: integer }
-        currency: { type: string, enum: [RON, EUR, USD], nullable: true }
+        currency:
+          type: string
+          enum: [RON, EUR, USD]
+          nullable: true
+
     MenuCreate:
       type: object
       required: [name, price, vat_rate, stock]
@@ -115,6 +146,7 @@ components:
         vat_rate: { type: number, format: float }
         stock: { type: integer }
         image_url: { type: string, format: uri, nullable: true }
+
     CouponValidation:
       type: object
       properties:
@@ -127,19 +159,22 @@ components:
             type: { type: string, enum: [percent, amount] }
             value: { type: number, format: float }
             minSubtotal: { type: number, format: float }
+
     CartItemIn:
       type: object
       required: [id, qty]
       properties:
         id: { type: integer }
         qty: { type: integer, minimum: 1 }
+
     CartPriceRequest:
       type: object
       required: [items]
       properties:
         items:
           type: array
-          items: { $ref: '#/components/schemas/CartItemIn' }
+          items:
+            $ref: '#/components/schemas/CartItemIn'
         deliveryMethod:
           type: string
           enum: [pickup, delivery]
@@ -151,6 +186,7 @@ components:
           type: string
           enum: [RON, EUR, USD]
           nullable: true
+
     CartPriceResponse:
       type: object
       properties:
@@ -166,6 +202,7 @@ components:
         vat_converted: { type: number, format: float, nullable: true }
         deliveryFee_converted: { type: number, format: float, nullable: true }
         grandTotal_converted: { type: number, format: float, nullable: true }
+
     CheckoutRequest:
       type: object
       required: [customerName, customerPhone, items, paymentMethod, deliveryMethod]
@@ -177,31 +214,42 @@ components:
         postalCode: { type: string, nullable: true }
         items:
           type: array
-          items: { $ref: '#/components/schemas/CartItemIn' }
+          items:
+            $ref: '#/components/schemas/CartItemIn'
         paymentMethod:
           type: string
           enum: [cash, card]
         deliveryMethod:
           type: string
           enum: [pickup, delivery]
-        couponCode:
-          type: string, nullable: true
+        couponCode: { type: string, nullable: true }
         currency:
-          type: string, enum: [RON, EUR, USD], nullable: true
+          type: string
+          enum: [RON, EUR, USD]
+          nullable: true
+
     PaymentInfo:
       type: object
       properties:
         status: { type: string, example: captured }
         transactionId: { type: string }
+
     CheckoutResponse:
       type: object
       properties:
         orderId: { type: integer }
         status: { type: string, example: created }
-        total: { type: number, format: float, description: Base currency (RON) }
-        currency: { type: string, enum: [RON, EUR, USD] }
+        total:
+          type: number
+          format: float
+          description: Base currency (RON)
+        currency:
+          type: string
+          enum: [RON, EUR, USD]
         displayTotal: { type: number, format: float }
-        payment: { $ref: '#/components/schemas/PaymentInfo' }
+        payment:
+          $ref: '#/components/schemas/PaymentInfo'
+
     OrderLine:
       type: object
       properties:
@@ -213,6 +261,7 @@ components:
         line_total: { type: number, format: float }
         unit_price_display: { type: number, format: float, nullable: true }
         line_total_display: { type: number, format: float, nullable: true }
+
     OrderSummary:
       type: object
       properties:
@@ -222,6 +271,7 @@ components:
         total_amount_display: { type: number, format: float, nullable: true }
         status: { type: string, example: created }
         created_at: { type: string, format: date-time }
+
     OrderDetail:
       type: object
       properties:
@@ -242,7 +292,8 @@ components:
         created_at: { type: string, format: date-time }
         items:
           type: array
-          items: { $ref: '#/components/schemas/OrderLine' }
+          items:
+            $ref: '#/components/schemas/OrderLine'
         payment:
           type: object
           nullable: true
@@ -251,15 +302,18 @@ components:
             status: { type: string }
             transaction_id: { type: string }
             created_at: { type: string, format: date-time }
+
     OrderList:
       type: object
       properties:
         orders:
           type: array
-          items: { $ref: '#/components/schemas/OrderSummary' }
+          items:
+            $ref: '#/components/schemas/OrderSummary'
         page: { type: integer }
         limit: { type: integer }
         currency: { type: string, enum: [RON, EUR, USD] }
+
     OrderHistory:
       type: object
       properties:
@@ -271,6 +325,7 @@ components:
               status: { type: string }
               note: { type: string, nullable: true }
               created_at: { type: string, format: date-time }
+
     StatsResponse:
       type: object
       properties:
@@ -278,7 +333,10 @@ components:
         to: { type: string, format: date }
         currency: { type: string, enum: [RON, EUR, USD] }
         orders_count: { type: integer }
-        revenue_sum: { type: number, format: float, description: Base currency }
+        revenue_sum:
+          type: number
+          format: float
+          description: Base currency
         revenue_display: { type: number, format: float }
         by_day:
           type: array
@@ -298,35 +356,50 @@ components:
               qty: { type: integer }
               revenue: { type: number, format: float }
               revenue_display: { type: number, format: float, nullable: true }
+
     ExchangeRate:
       type: object
       properties:
         base_currency: { type: string, example: RON }
         currency: { type: string, example: EUR }
         rate: { type: number, format: float, example: 0.2 }
+
     ExchangeRateList:
       type: object
       properties:
         base: { type: string }
         rates:
           type: array
-          items: { $ref: '#/components/schemas/ExchangeRate' }
+          items:
+            $ref: '#/components/schemas/ExchangeRate'
 
 paths:
   /api/health:
     get:
       tags: [Health]
       summary: Health check
-      parameters: [ { $ref: '#/components/parameters/ChaosParam' }, { $ref: '#/components/parameters/SlowParam' } ]
+      parameters:
+        - $ref: '#/components/parameters/ChaosParam'
+        - $ref: '#/components/parameters/SlowParam'
       responses:
-        '200': { description: OK, content: { application/json: { schema: { $ref: '#/components/schemas/Health' } } } }
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Health'
 
   /api/categories:
     get:
       tags: [Catalog]
       summary: List categories
       responses:
-        '200': { description: OK, content: { application/json: { schema: { $ref: '#/components/schemas/CategoryList' } } } }
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CategoryList'
 
   /api/menu:
     get:
@@ -343,7 +416,12 @@ paths:
           in: query
           schema: { type: string }
       responses:
-        '200': { description: OK, content: { application/json: { schema: { $ref: '#/components/schemas/MenuQuery' } } } }
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MenuQuery'
     post:
       tags: [Catalog]
       summary: Create menu item (admin)
@@ -352,10 +430,24 @@ paths:
         required: true
         content:
           application/json:
-            schema: { $ref: '#/components/schemas/MenuCreate' }
+            schema:
+              $ref: '#/components/schemas/MenuCreate'
       responses:
-        '201': { description: Created, content: { application/json: { schema: { type: object, properties: { ok: {type: boolean}, id: {type: integer} } } } } }
-        '403': { description: Forbidden, content: { application/json: { schema: { $ref: '#/components/schemas/Error' } } } }
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  ok: { type: boolean }
+                  id: { type: integer }
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
 
   /api/coupons/validate:
     get:
@@ -367,36 +459,73 @@ paths:
           required: true
           schema: { type: string }
       responses:
-        '200': { description: Coupon validation, content: { application/json: { schema: { $ref: '#/components/schemas/CouponValidation' } } } }
+        '200':
+          description: Coupon validation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CouponValidation'
 
   /api/cart/price:
     post:
       tags: [Cart & Checkout]
       summary: Calculate cart totals
-      parameters: [ { $ref: '#/components/parameters/CurrencyParam' } ]
+      parameters:
+        - $ref: '#/components/parameters/CurrencyParam'
       requestBody:
         required: true
         content:
           application/json:
-            schema: { $ref: '#/components/schemas/CartPriceRequest' }
+            schema:
+              $ref: '#/components/schemas/CartPriceRequest'
       responses:
-        '200': { description: OK, content: { application/json: { schema: { $ref: '#/components/schemas/CartPriceResponse' } } } }
-        '409': { description: Conflict (stock), content: { application/json: { schema: { $ref: '#/components/schemas/Error' } } } }
-        '422': { description: Validation error, content: { application/json: { schema: { $ref: '#/components/schemas/Error' } } } }
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CartPriceResponse'
+        '409':
+          description: Conflict (stock)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '422':
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
 
   /api/checkout:
     post:
       tags: [Cart & Checkout]
       summary: Create order (checkout)
-      parameters: [ { $ref: '#/components/parameters/CurrencyParam' } ]
+      parameters:
+        - $ref: '#/components/parameters/CurrencyParam'
       requestBody:
         required: true
         content:
           application/json:
-            schema: { $ref: '#/components/schemas/CheckoutRequest' }
+            schema:
+              $ref: '#/components/schemas/CheckoutRequest'
       responses:
-        '200': { description: Created, headers: { Idempotency-Key: { $ref: '#/components/headers/IdempotencyKey' } }, content: { application/json: { schema: { $ref: '#/components/schemas/CheckoutResponse' } } } }
-        '422': { description: Validation error, content: { application/json: { schema: { $ref: '#/components/schemas/Error' } } } }
+        '200':
+          description: Created
+          headers:
+            Idempotency-Key:
+              $ref: '#/components/headers/IdempotencyKey'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CheckoutResponse'
+        '422':
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
 
   /api/orders:
     get:
@@ -408,8 +537,18 @@ paths:
         - $ref: '#/components/parameters/LimitParam'
         - $ref: '#/components/parameters/CurrencyParam'
       responses:
-        '200': { description: OK, content: { application/json: { schema: { $ref: '#/components/schemas/OrderList' } } } }
-        '403': { description: Forbidden, content: { application/json: { schema: { $ref: '#/components/schemas/Error' } } } }
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrderList'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
 
   /api/orders/{id}:
     get:
@@ -423,8 +562,18 @@ paths:
           schema: { type: integer }
         - $ref: '#/components/parameters/CurrencyParam'
       responses:
-        '200': { description: OK, content: { application/json: { schema: { $ref: '#/components/schemas/OrderDetail' } } } }
-        '404': { description: Not Found, content: { application/json: { schema: { $ref: '#/components/schemas/Error' } } } }
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrderDetail'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
     post:
       tags: [Orders]
       summary: Update order status (admin)
@@ -445,10 +594,17 @@ paths:
                 status:
                   type: string
                   enum: [created, preparing, ready, delivered, cancelled]
-                note: { type: string, nullable: true }
+                note:
+                  type: string
+                  nullable: true
       responses:
         '200': { description: OK }
-        '422': { description: Invalid status, content: { application/json: { schema: { $ref: '#/components/schemas/Error' } } } }
+        '422':
+          description: Invalid status
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
 
   /api/orders/{id}/history:
     get:
@@ -461,7 +617,12 @@ paths:
           required: true
           schema: { type: integer }
       responses:
-        '200': { description: OK, content: { application/json: { schema: { $ref: '#/components/schemas/OrderHistory' } } } }
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrderHistory'
 
   /api/inventory:
     get:
@@ -507,7 +668,9 @@ paths:
               type: object
               required: [stock]
               properties:
-                stock: { type: integer, minimum: 0 }
+                stock:
+                  type: integer
+                  minimum: 0
       responses:
         '200': { description: OK }
 
@@ -529,7 +692,8 @@ paths:
               type: object
               required: [delta]
               properties:
-                delta: { type: integer }
+                delta:
+                  type: integer
       responses:
         '200': { description: OK }
 
@@ -551,7 +715,9 @@ paths:
               type: object
               required: [available]
               properties:
-                available: { type: integer, enum: [0,1] }
+                available:
+                  type: integer
+                  enum: [0, 1]
       responses:
         '200': { description: OK }
 
@@ -561,7 +727,12 @@ paths:
       summary: List exchange rates
       security: [ { AdminApiKey: [] } ]
       responses:
-        '200': { description: OK, content: { application/json: { schema: { $ref: '#/components/schemas/ExchangeRateList' } } } }
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExchangeRateList'
     post:
       tags: [Rates (Admin)]
       summary: Upsert exchange rate
@@ -574,8 +745,13 @@ paths:
               type: object
               required: [currency, rate]
               properties:
-                currency: { type: string, enum: [RON, EUR, USD] }
-                rate: { type: number, format: float, minimum: 0 }
+                currency:
+                  type: string
+                  enum: [RON, EUR, USD]
+                rate:
+                  type: number
+                  format: float
+                  minimum: 0
       responses:
         '200': { description: OK }
 
@@ -593,7 +769,12 @@ paths:
           schema: { type: string, format: date }
         - $ref: '#/components/parameters/CurrencyParam'
       responses:
-        '200': { description: OK, content: { application/json: { schema: { $ref: '#/components/schemas/StatsResponse' } } } }
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StatsResponse'
 
   /api/webhooks/payment:
     post:
