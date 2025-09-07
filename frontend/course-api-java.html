@@ -106,6 +106,25 @@
     .success{ background: color-mix(in srgb, var(--ok) 10%, transparent); border-left:4px solid var(--ok) }
 
     footer{ margin: 40px 0 20px; color: var(--muted); font-size:.95rem }
+	
+	/* copy buttons for code blocks */
+  .pre-wrap { position: relative; }
+  .copy-btn {
+    position: absolute; top: 10px; right: 10px;
+    padding: 8px 10px; border-radius: 8px; border: 1px solid var(--border, #334155);
+    background: color-mix(in srgb, var(--accent, #0b5fff) 10%, transparent);
+    color: var(--text, #e2e8f0); font-weight: 700; font-size: 12px;
+    cursor: pointer; line-height: 1; display: inline-flex; align-items: center; gap: 6px;
+  }
+  .copy-btn:hover { background: color-mix(in srgb, var(--accent, #0b5fff) 18%, transparent); }
+  .copy-btn:focus { outline: 3px solid var(--focus, #ffd166); outline-offset: 2px; }
+  .copy-btn[aria-live] { /* reserved for live region button variants */ }
+  @media (prefers-color-scheme: light){
+    .copy-btn{ color:#0f172a; border-color:#e2e8f0; }
+  }
+  /* space for the button so it doesn’t overlap text */
+  pre { padding-top: 40px; }
+  
   </style>
 </head>
 <body>
@@ -636,6 +655,72 @@ public class TestData {
         });
       });
     })();
+	
   </script>
+  <script>
+(function () {
+  // Find all <pre><code> blocks; skip those marked with data-no-copy
+  const blocks = Array.from(document.querySelectorAll('pre'))
+    .filter(pre => !pre.matches('[data-no-copy]'));
+
+  blocks.forEach(pre => {
+    // Wrap <pre> to allow absolute-positioned button
+    pre.classList.add('pre-wrap');
+
+    const btn = document.createElement('button');
+    btn.className = 'copy-btn';
+    btn.type = 'button';
+    btn.setAttribute('aria-label', 'Copy code to clipboard');
+    btn.setAttribute('title', 'Copy');
+    btn.textContent = 'Copy';
+
+    // Visually hidden live region for screen readers to announce status
+    const live = document.createElement('span');
+    live.setAttribute('aria-live', 'polite');
+    live.className = 'sr-only';
+    live.style.position = 'absolute';
+    live.style.width = '1px';
+    live.style.height = '1px';
+    live.style.overflow = 'hidden';
+    live.style.clip = 'rect(1px,1px,1px,1px)';
+    live.style.clipPath = 'inset(50%)';
+    live.style.whiteSpace = 'nowrap';
+    btn.appendChild(live);
+
+    btn.addEventListener('click', async () => {
+      const code = pre.querySelector('code');
+      const text = code ? code.innerText : pre.innerText; // preserve formatting
+      try {
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          await navigator.clipboard.writeText(text);
+        } else {
+          // Fallback for older browsers
+          const ta = document.createElement('textarea');
+          ta.value = text;
+          ta.setAttribute('readonly', '');
+          ta.style.position = 'fixed';
+          ta.style.top = '-1000px';
+          document.body.appendChild(ta);
+          ta.select();
+          document.execCommand('copy');
+          document.body.removeChild(ta);
+        }
+        const old = btn.textContent.replace(/\s*Copied!?$/, '');
+        btn.textContent = 'Copied!';
+        live.textContent = 'Copied to clipboard';
+        setTimeout(() => { btn.textContent = old || 'Copy'; live.textContent = ''; }, 1500);
+      } catch (e) {
+        const old = btn.textContent;
+        btn.textContent = 'Failed';
+        live.textContent = 'Copy failed';
+        setTimeout(() => { btn.textContent = old; live.textContent = ''; }, 1500);
+      }
+    });
+
+    pre.appendChild(btn);
+  });
+})();
+</script>
+
 </body>
 </html>
