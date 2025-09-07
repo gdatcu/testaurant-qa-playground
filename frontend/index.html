@@ -4,15 +4,17 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Testaurant • QualiAdept</title>
-  <link rel="icon" href="https://apps.qualiadept.eu/testaurant/logo/testaurant_ico.ico?v=2" sizes="any">
+  <!-- Use relative path to avoid mixed content and keep it portable -->
+  <link rel="icon" href="../logo/testaurant_ico.ico?v=2" sizes="any">
+  <link rel="stylesheet" href="styles.css">
 </head>
 <body>
   <header class="topbar" role="banner" aria-label="Top bar">
     <div class="brand">
-      <!-- Replaced emoji with real logo -->
+      <!-- Relative logo path (no mixed content) -->
       <img
         class="logo-img"
-        src="http://apps.qualiadept.eu/testaurant/logo/testaurant_logo.png"
+        src="../logo/testaurant_logo.png"
         alt="Testaurant logo"
         width="74" height="74"
         decoding="async" />
@@ -122,12 +124,12 @@
     </section>
   </main>
 
-  <!-- New footer with QualiAdept logo -->
+  <!-- Footer with QualiAdept logo (relative path) -->
   <footer class="site-footer" role="contentinfo" aria-label="Footer">
     <div class="footer-inner">
       <img
         class="footer-logo"
-        src="http://apps.qualiadept.eu/testaurant/logo/qualiadept_logo.jpg"
+        src="../logo/qualiadept_logo.jpg"
         alt="QualiAdept logo"
         width="120" height="32"
         decoding="async" />
