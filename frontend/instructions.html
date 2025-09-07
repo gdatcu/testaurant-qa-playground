@@ -2,494 +2,507 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <title>Testaurant – Testing Instructions & Playbooks (API + Web)</title>
+  <title>Instructions & Test Ideas – Testaurant QA Hub</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <link rel="stylesheet" href="styles.css" />
+  <meta name="theme-color" content="#0b5fff" />
+  <meta name="description" content="Comprehensive testing playbook for Testaurant: API and Web test ideas, expectations, negative cases, chaos, data seeding, accessibility, i18n, currency, and admin checks." />
+
+  <!-- Modern, responsive, accessible base -->
   <style>
     :root{
-      --ink:#0f172a;--muted:#475569;--bg:#f8fafc;--card:#ffffff;--border:#e5e7eb;--accent:#1e3a8a;--accent2:#0ea5e9;
-      --ok:#059669;--bad:#dc2626;--warn:#d97706;
+      --bg:#0b0f19; --card:#0f172a; --muted:#94a3b8; --text:#e2e8f0;
+      --accent:#0b5fff; --accent-strong:#0047ff;
+      --ok:#10b981; --warn:#f59e0b; --err:#ef4444;
+      --border:#1f2a44; --kbd-bg:#111827; --kbd-fg:#e5e7eb; --focus:#ffd166;
     }
-    body{font-family: system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, "Helvetica Neue", Arial; background:var(--bg); color:var(--ink); line-height:1.55}
-    .container{max-width:1100px;margin:0 auto; padding:24px}
-    nav.toc{position:sticky;top:0;background:var(--accent);padding:10px;border-radius:12px;margin-bottom:18px;z-index:5}
-    nav.toc a{color:#fff;margin-right:14px;text-decoration:none;font-weight:700}
-    h1{margin:0 0 10px 0}
-    h2{margin:26px 0 10px}
-    h3{margin:18px 0 8px}
-    .card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:16px;margin:14px 0}
-    .callout{background:#eff6ff;border-left:6px solid var(--accent2);padding:10px;border-radius:8px}
-    pre{background:#0b1020;color:#e5e7eb;padding:14px;border-radius:10px;overflow:auto}
-    code.inline{background:#eef2ff;border-radius:6px;padding:2px 6px}
-    table{width:100%;border-collapse:collapse}
-    th,td{border:1px solid var(--border);padding:8px;text-align:left;vertical-align:top}
-    .grid{display:grid;gap:14px}
-    .g2{grid-template-columns:1fr 1fr}
-    .g3{grid-template-columns: repeat(3, 1fr)}
-    .checklist{list-style:none;padding:0;margin:0}
-    .checklist li{padding:6px 8px;border-left:4px solid var(--border);margin:6px 0;background:#fff;border-radius:8px}
-    .checklist li.ok{border-left-color:var(--ok);background:#ecfdf5}
-    .checklist li.bad{border-left-color:var(--bad);background:#fef2f2}
-    .muted{color:var(--muted)}
-    .sep{height:1px;background:var(--border);margin:18px 0}
-    .btn-row{display:flex;gap:10px;flex-wrap:wrap}
-    .btn{display:inline-block;background:var(--accent);color:#fff;padding:10px 14px;border-radius:10px;text-decoration:none;font-weight:700}
+    @media (prefers-color-scheme: light){
+      :root{ --bg:#f8fafc; --card:#ffffff; --text:#0f172a; --muted:#475569; --border:#e2e8f0; --kbd-bg:#f1f5f9; --kbd-fg:#0f172a; }
+    }
+    *{ box-sizing:border-box }
+    html,body{ height:100% }
+    body{ margin:0; font-family: system-ui, -apple-system, Segoe UI, Inter, Roboto, Arial, sans-serif; background:var(--bg); color:var(--text); line-height:1.55 }
+    a{ color:var(--accent) }
+    a:focus, button:focus, [href]:focus{ outline:3px solid var(--focus); outline-offset:2px; border-radius:6px }
+    .skip-link{ position:absolute; left:-9999px; width:1px; height:1px; overflow:hidden }
+    .skip-link:focus{ position:fixed; left:16px; top:16px; width:auto; height:auto; padding:10px 14px; background:#111; color:#fff; z-index:9999; border-radius:8px }
+
+    header{ position:sticky; top:0; z-index:100; backdrop-filter:saturate(140%) blur(8px); background: color-mix(in srgb, var(--bg), transparent 20%); border-bottom:1px solid var(--border) }
+    .nav{ max-width:1100px; margin:0 auto; padding:12px 16px; display:flex; align-items:center; gap:12px; flex-wrap:wrap }
+    .brand{ font-weight:800; letter-spacing:.3px }
+    .navlinks{ display:flex; gap:10px; flex-wrap:wrap }
+    .navlinks a{ text-decoration:none; padding:8px 10px; border-radius:8px; color:var(--text) }
+    .navlinks a:hover{ background: color-mix(in srgb, var(--accent) 12%, transparent) }
+    .cta-row{ margin-left:auto; display:flex; gap:8px; flex-wrap:wrap }
+    .btn{ appearance:none; border:none; cursor:pointer; text-decoration:none; font-weight:700; padding:10px 14px; border-radius:10px; background:var(--accent); color:white; display:inline-flex; align-items:center; gap:8px; transition: transform .06s ease, box-shadow .2s ease, background .2s ease; box-shadow:0 8px 20px rgba(11,95,255,.25) }
+    .btn:hover{ background:var(--accent-strong); transform: translateY(-1px) }
+    .btn.secondary{ background:transparent; color:var(--accent); border:1px solid var(--accent); box-shadow:none }
+    .btn.secondary:hover{ background: color-mix(in srgb, var(--accent) 10%, transparent) }
+
+    main{ max-width:1100px; margin:24px auto; padding:0 16px }
+    h1{ font-size: clamp(1.6rem, 1.2rem + 1.4vw, 2.3rem); margin:10px 0 6px }
+    h2{ font-size: clamp(1.2rem, 1rem + .9vw, 1.6rem); margin:26px 0 10px }
+    h3{ font-size: clamp(1rem, .9rem + .5vw, 1.2rem); margin:16px 0 8px }
+    .lead{ color:var(--muted); margin-bottom:16px }
+
+    .grid{ display:grid; gap:16px; grid-template-columns:1fr }
+    @media (min-width: 960px){ .grid{ grid-template-columns: 2fr 1fr } }
+
+    .card{ background:var(--card); border:1px solid var(--border); border-radius:14px; padding:16px; box-shadow:0 10px 30px rgba(0,0,0,.08) }
+    .badge{ display:inline-block; padding:3px 8px; border-radius:999px; font-size:.8rem; background: color-mix(in srgb, var(--accent) 18%, transparent); color:white }
+
+    pre{ background:#0b1020; color:#cbd5e1; padding:14px; border-radius:12px; overflow:auto; border:1px solid var(--border); padding-top:40px }
+    code,kbd{ background:var(--kbd-bg); color:var(--kbd-fg); padding:2px 6px; border-radius:6px }
+    kbd{ border:1px solid var(--border); box-shadow: inset 0 -1px 0 rgba(255,255,255,.05) }
+
+    table{ width:100%; border-collapse: collapse; overflow:hidden; border-radius:12px; border:1px solid var(--border) }
+    th,td{ padding:10px 12px; border-bottom:1px solid var(--border) }
+    th{ text-align:left; color:var(--muted); font-weight:700; letter-spacing:.2px }
+    tr:hover td{ background: color-mix(in srgb, var(--accent) 6%, transparent) }
+
+    .ok{ color:var(--ok); font-weight:700 } .warn{ color:var(--warn); font-weight:700 } .err{ color:var(--err); font-weight:700 }
+    .anchor-list{ display:flex; gap:8px; flex-wrap:wrap; margin:10px 0 2px }
+    .anchor-list a{ border:1px solid var(--border); padding:6px 10px; border-radius:999px; text-decoration:none; color:var(--text) }
+    .anchor-list a:hover{ background: color-mix(in srgb, var(--accent) 12%, transparent) }
+
+    .checklist{ list-style:none; padding:0; display:grid; gap:8px }
+    .checklist li{ display:flex; gap:10px; align-items:start; background: color-mix(in srgb, var(--accent) 6%, transparent); border:1px dashed var(--border); border-radius:12px; padding:10px 12px }
+    .checklist input[type="checkbox"]{ transform: scale(1.2); margin-top:3px }
+
+    .note{ background: color-mix(in srgb, var(--warn) 12%, transparent); border:1px solid var(--border); border-left:4px solid var(--warn); padding:10px 12px; border-radius:10px }
+    .success{ background: color-mix(in srgb, var(--ok) 10%, transparent); border-left:4px solid var(--ok) }
+
+    footer{ margin:40px 0 20px; color:var(--muted); font-size:.95rem }
+
+    /* Copy button */
+    .pre-wrap{ position:relative }
+    .copy-btn{
+      position:absolute; top:10px; right:10px; padding:8px 10px; border-radius:8px;
+      border:1px solid var(--border); background: color-mix(in srgb, var(--accent) 10%, transparent);
+      color:var(--text); font-weight:700; font-size:12px; cursor:pointer; line-height:1; display:inline-flex; align-items:center; gap:6px
+    }
+    .copy-btn:hover{ background: color-mix(in srgb, var(--accent) 18%, transparent) }
+    .copy-btn:focus{ outline:3px solid var(--focus); outline-offset:2px }
+    @media (prefers-color-scheme: light){
+      .copy-btn{ color:#0f172a; border-color:#e2e8f0 }
+    }
   </style>
 </head>
 <body>
-<div class="container">
-  <h1>📋 Testaurant – Testing Instructions & Playbooks</h1>
-  <p class="muted">Everything you need to test the API and Web app: step-by-step smoke flows, exhaustive matrices, negative testing, chaos drills, and admin exercises — with expected results.</p>
+  <a class="skip-link" href="#content">Skip to content</a>
 
-  <nav class="toc">
-    <a href="#env">Environment & Base URLs</a>
-    <a href="#smoke-api">API Smoke</a>
-    <a href="#api-matrix">API Test Matrix</a>
-    <a href="#api-negative">API Negative & Edge</a>
-    <a href="#api-chaos">Chaos & Resilience</a>
-    <a href="#api-admin">Admin Endpoints</a>
-    <a href="#web-smoke">Web Smoke</a>
-    <a href="#web-matrix">Web Test Matrix</a>
-    <a href="#checklists">Progress Checklists</a>
-    <a href="#labs">Mini-Labs</a>
-  </nav>
-
-  <!-- ENV -->
-  <section id="env">
-    <h2>1) Environment & Base URLs</h2>
-    <div class="card">
-      <p><b>Site base:</b> <span class="code inline">https://apps.qualiadept.eu/testaurant</span></p>
-      <ul>
-        <li>API root: <span class="code inline">/api</span> (e.g., <span class="code inline">/api/health</span>)</li>
-        <li>Frontend entry: <span class="code inline">/frontend/index.html</span></li>
-      </ul>
-      <p><b>Admin header:</b> <span class="code inline">X-API-Key: &lt;your_admin_api_key&gt;</span> for protected endpoints.</p>
+  <header role="banner" aria-label="Top Navigation">
+    <div class="nav">
+      <div class="brand" aria-label="Page Title">Testaurant • Instructions & Test Ideas</div>
+      <nav class="navlinks" aria-label="Section navigation">
+        <a href="#overview">Overview</a>
+        <a href="#api-smoke">API Smoke</a>
+        <a href="#api-functional">API Functional</a>
+        <a href="#api-negative">API Negative</a>
+        <a href="#web-ui">Web/UI Matrix</a>
+        <a href="#admin">Admin</a>
+        <a href="#chaos">Chaos</a>
+        <a href="#data">Data</a>
+        <a href="#i18n-currency">i18n & Currency</a>
+        <a href="#accessibility">Accessibility</a>
+        <a href="#perf">Performance</a>
+        <a href="#checklist">Checklist</a>
+      </nav>
+      <div class="cta-row" role="group" aria-label="Quick actions">
+        <a class="btn secondary" href="https://apps.qualiadept.eu/testaurant/frontend/index.html" aria-label="Return to Testaurant main page">⟵ Main Page</a>
+        <a class="btn" href="https://apps.qualiadept.eu/testaurant/api_specs/" aria-label="Open API specifications">📘 API Specs</a>
+      </div>
     </div>
-  </section>
+  </header>
 
-  <!-- API SMOKE -->
-  <section id="smoke-api">
-    <h2>2) API Smoke Tests (happy path)</h2>
-    <div class="grid g2">
-      <div class="card">
-        <h3>2.1 Health</h3>
-        <pre><code># Expect: 200, {"ok": true}
-curl -s https://apps.qualiadept.eu/testaurant/api/health</code></pre>
-        <pre><code>{
-  "ok": true,
-  "time": "2025-09-07T16:18:27+03:00"
+  <main id="content" role="main">
+    <!-- Overview -->
+    <section id="overview" class="card" aria-labelledby="overview-h">
+      <h1 id="overview-h">📋 Instructions & Test Ideas Hub</h1>
+      <p class="lead">This hub provides hands-on test ideas and expectations for the <strong>Testaurant</strong> API and Web app. Use it to guide exploratory testing, build regression suites, and coach learners.</p>
+      <div class="anchor-list" aria-label="Quick jumps">
+        <a href="#api-smoke">API Smoke</a>
+        <a href="#api-functional">API Functional</a>
+        <a href="#web-ui">Web/UI Matrix</a>
+        <a href="#admin">Admin Scenarios</a>
+        <a href="#chaos">Chaos & Resilience</a>
+        <a href="#i18n-currency">i18n/Currency</a>
+      </div>
+      <p class="note success">Tip: Keep the API contract open: <code>/api_specs/</code>. Validate endpoints, shapes, and error formats against the spec while testing.</p>
+    </section>
+
+    <!-- API Smoke -->
+    <section id="api-smoke" class="card" aria-labelledby="smoke-h">
+      <h2 id="smoke-h">1) API Smoke Suite</h2>
+      <table role="table" aria-label="API smoke tests">
+        <thead><tr><th>Endpoint</th><th>Action</th><th>Expectation</th></tr></thead>
+        <tbody>
+          <tr><td><code>GET /api/health</code></td><td>Ping</td><td class="ok">200 &amp; <code>{"ok":true}</code></td></tr>
+          <tr><td><code>GET /api/categories</code></td><td>List</td><td class="ok">Array non-empty</td></tr>
+          <tr><td><code>GET /api/menu?page=1&amp;limit=8</code></td><td>Page 1</td><td class="ok">Contains items; pagination keys present</td></tr>
+          <tr><td><code>GET /api/coupons/validate?code=DEMO</code></td><td>Check</td><td class="ok">Returns <code>valid</code> boolean</td></tr>
+          <tr><td><code>POST /api/cart/price</code></td><td>Price 1–2 items</td><td class="ok">Totals computed; correct VAT</td></tr>
+          <tr><td><code>POST /api/checkout</code></td><td>Create order</td><td class="ok">Order created, payment info</td></tr>
+        </tbody>
+      </table>
+
+      <h3>Quick cURL Snippets</h3>
+      <pre><code># Health
+curl -s https://apps.qualiadept.eu/testaurant/api/health
+
+# Menu (EUR)
+curl -s "https://apps.qualiadept.eu/testaurant/api/menu?page=1&amp;limit=5&amp;currency=EUR"
+
+# Price cart
+curl -s -X POST https://apps.qualiadept.eu/testaurant/api/cart/price \
+  -H "Content-Type: application/json" \
+  -d '{"items":[{"id":1,"qty":1},{"id":2,"qty":1}],"deliveryMethod":"pickup"}'
+
+# Checkout (idempotent)
+IDEM="demo-$(date +%s)"
+curl -s -X POST https://apps.qualiadept.eu/testaurant/api/checkout \
+  -H "Content-Type: application/json" -H "Idempotency-Key: $IDEM" \
+  -d '{"customerName":"QA","customerPhone":"+40123456789","items":[{"id":1,"qty":1}],"paymentMethod":"card","deliveryMethod":"pickup"}'
+</code></pre>
+    </section>
+
+    <!-- API Functional -->
+    <section id="api-functional" class="card" aria-labelledby="api-func-h">
+      <h2 id="api-func-h">2) API Functional Scenarios</h2>
+      <div class="grid">
+        <div>
+          <h3>2.1 Catalog & Search</h3>
+          <table>
+            <thead><tr><th>Scenario</th><th>Steps</th><th>Expectation</th></tr></thead>
+            <tbody>
+              <tr><td>Search by text</td><td><code>?q=pizza</code></td><td>Only matching items returned</td></tr>
+              <tr><td>Filter by category</td><td><code>?category=Pizza</code></td><td>Only that category</td></tr>
+              <tr><td>Pagination</td><td><code>?page=2&amp;limit=1</code></td><td>Exactly 1 item; page=2</td></tr>
+              <tr><td>Availability</td><td>hide an item</td><td>Hidden item not listed</td></tr>
+            </tbody>
+          </table>
+
+          <h3>2.2 Pricing & Coupons</h3>
+          <table>
+            <thead><tr><th>Scenario</th><th>Steps</th><th>Expectation</th></tr></thead>
+            <tbody>
+              <tr><td>Coupon valid</td><td><code>POST /cart/price</code> with code</td><td>Discount applied, rounded</td></tr>
+              <tr><td>Coupon threshold</td><td>subtotal &lt; <code>minSubtotal</code></td><td class="err">422 error</td></tr>
+              <tr><td>VAT calc</td><td>mix 9% &amp; 19%</td><td>Accurate <code>vat</code> and <code>grandTotal</code></td></tr>
+            </tbody>
+          </table>
+
+          <h3>2.3 Currency</h3>
+          <table>
+            <thead><tr><th>Endpoint</th><th>Param</th><th>Expectation</th></tr></thead>
+            <tbody>
+              <tr><td><code>/api/menu</code></td><td><code>?currency=EUR</code></td><td>Each item has <code>price_converted</code></td></tr>
+              <tr><td><code>/api/orders</code> / <code>/{id}</code></td><td><code>?currency=USD</code></td><td><code>total_amount_display</code> populated</td></tr>
+              <tr><td><code>/api/stats</code></td><td><code>?currency=EUR</code></td><td><code>revenue_display</code> populated</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <aside class="card" aria-label="Useful payloads">
+          <h3>Useful Payloads</h3>
+          <pre><code>{
+  "items": [{"id":1,"qty":1},{"id":2,"qty":2}],
+  "deliveryMethod":"delivery",
+  "couponCode":"SUMMER10"
 }</code></pre>
+          <h3>Admin Header</h3>
+          <pre><code>X-API-Key: YOUR_ADMIN_KEY</code></pre>
+        </aside>
       </div>
-      <div class="card">
-        <h3>2.2 Categories</h3>
-        <pre><code># Expect: 200, categories non-empty
-curl -s https://apps.qualiadept.eu/testaurant/api/categories</code></pre>
-      </div>
-    </div>
+    </section>
 
-    <div class="grid g2">
-      <div class="card">
-        <h3>2.3 Menu (pagination + currency)</h3>
-        <pre><code># Expect: 200, items array, page/limit echoed
-curl -s "https://apps.qualiadept.eu/testaurant/api/menu?page=1&amp;limit=5&amp;currency=EUR"</code></pre>
-      </div>
-      <div class="card">
-        <h3>2.4 Cart price</h3>
-        <pre><code># Expect: 200, totals with/without coupon, optional currency conversions
-curl -s -X POST https://apps.qualiadept.eu/testaurant/api/cart/price \
-  -H "Content-Type: application/json" \
-  -d '{ "items":[{"id":1,"qty":1},{"id":3,"qty":1}], "deliveryMethod":"pickup", "couponCode":null, "currency":"RON" }'</code></pre>
-      </div>
-    </div>
-
-    <div class="grid g2">
-      <div class="card">
-        <h3>2.5 Checkout (idempotent)</h3>
-        <pre><code># Expect: 200, {orderId, payment, total}; replay with same Idempotency-Key returns same orderId
-curl -s -X POST https://apps.qualiadept.eu/testaurant/api/checkout \
-  -H "Content-Type: application/json" \
-  -H "Idempotency-Key: demo-12345" \
-  -d '{ "customerName":"Jane QA","customerPhone":"+40123456789",
-        "items":[{"id":1,"qty":1}],
-        "paymentMethod":"card","deliveryMethod":"pickup",
-        "currency":"RON" }'</code></pre>
-      </div>
-      <div class="card">
-        <h3>2.6 Orders (admin)</h3>
-        <pre><code># Expect: 200 with admin key; 403 without
-curl -s -H "X-API-Key: &lt;ADMIN_KEY&gt;" \
-  "https://apps.qualiadept.eu/testaurant/api/orders?page=1&amp;limit=10"</code></pre>
-      </div>
-    </div>
-  </section>
-
-  <!-- API MATRIX -->
-  <section id="api-matrix">
-    <h2>3) API Test Matrix (coverage table)</h2>
-    <div class="card">
+    <!-- API Negative -->
+    <section id="api-negative" class="card" aria-labelledby="api-neg-h">
+      <h2 id="api-neg-h">3) API Negative & Edge Cases</h2>
       <table>
-        <thead>
-          <tr>
-            <th>Area</th><th>Inputs</th><th>Expected</th><th>Notes</th>
-          </tr>
-        </thead>
+        <thead><tr><th>Area</th><th>Scenario</th><th>Expectation</th></tr></thead>
         <tbody>
-          <tr>
-            <td>Menu pagination</td>
-            <td>page=1..N, limit=1,5,20,100</td>
-            <td>200; items length ≤ limit; page &amp; limit echoed</td>
-            <td>limit &gt; 100 → capped at 100</td>
-          </tr>
-          <tr>
-            <td>Menu filters</td>
-            <td>q=pizza, category=Pizza</td>
-            <td>Only matching items</td>
-            <td>Case-insensitive LIKE</td>
-          </tr>
-          <tr>
-            <td>Currency</td>
-            <td>?currency=RON/EUR/USD</td>
-            <td>Converted fields present (price_converted / display totals)</td>
-            <td>Rates managed by /api/rates</td>
-          </tr>
-          <tr>
-            <td>Cart price</td>
-            <td>items=[{id,qty}], deliveryMethod pickup/delivery, couponCode optional</td>
-            <td>200; subtotal, vat, discount, deliveryFee, grandTotal</td>
-            <td>Coupon under minSubtotal → 422</td>
-          </tr>
-          <tr>
-            <td>Checkout</td>
-            <td>Valid customer + items + payment + delivery</td>
-            <td>200; orderId; payment authorized/captured; stock decremented</td>
-            <td>Repeat with same Idempotency-Key → same orderId</td>
-          </tr>
-          <tr>
-            <td>Orders list (admin)</td>
-            <td>X-API-Key</td>
-            <td>200; orders[]</td>
-            <td>Missing/invalid key → 403</td>
-          </tr>
-          <tr>
-            <td>Order detail</td>
-            <td>/api/orders/{id}?currency=EUR</td>
-            <td>200; items[], payment</td>
-            <td>Not found → 404</td>
-          </tr>
-          <tr>
-            <td>Inventory (admin)</td>
-            <td>GET /api/inventory; PUT /menuitems/{id}/stock</td>
-            <td>200; stock updated</td>
-            <td>Negative stock coerced to 0</td>
-          </tr>
-          <tr>
-            <td>Rates (admin)</td>
-            <td>POST /api/rates {EUR,USD}</td>
-            <td>200; GET /rates shows list</td>
-            <td>Rate &gt; 0</td>
-          </tr>
-          <tr>
-            <td>Stats (admin)</td>
-            <td>GET /api/stats?from=YYYY-MM-DD&amp;to=YYYY-MM-DD&amp;currency=USD</td>
-            <td>200; orders_count, revenue_sum, by_day[], top_items[]</td>
-            <td>Date boundaries inclusive</td>
-          </tr>
+          <tr><td>Validation</td><td>Missing name/phone</td><td class="err">422 with details</td></tr>
+          <tr><td>Payment</td><td>Unsupported method</td><td class="err">422 “Unsupported paymentMethod”</td></tr>
+          <tr><td>Delivery</td><td>Invalid delivery</td><td class="err">422</td></tr>
+          <tr><td>Stock</td><td>qty &gt; stock</td><td class="err">409 “Insufficient stock”</td></tr>
+          <tr><td>Idempotency</td><td>Replay key</td><td class="ok">Same orderId returned</td></tr>
+          <tr><td>Auth</td><td>Admin endpoint w/o key</td><td class="err">403</td></tr>
         </tbody>
       </table>
-    </div>
-  </section>
 
-  <!-- API NEGATIVE -->
-  <section id="api-negative">
-    <h2>4) API Negative & Edge Cases</h2>
-    <div class="grid g2">
-      <div class="card">
-        <h3>Validation failures</h3>
-        <pre><code># Missing required fields → 422
+      <h3>Sample Negative Calls</h3>
+      <pre><code># 422: invalid delivery
 curl -s -X POST https://apps.qualiadept.eu/testaurant/api/checkout \
- -H "Content-Type: application/json" -d '{}'</code></pre>
-        <pre><code># Coupon below minSubtotal → 422
-curl -s -X POST https://apps.qualiadept.eu/testaurant/api/cart/price \
- -H "Content-Type: application/json" \
- -d '{ "items":[{"id":1,"qty":1}], "couponCode":"SUMMER10" }'</code></pre>
-      </div>
-      <div class="card">
-        <h3>Stock conflicts</h3>
-        <pre><code># Excessive qty → 409 (or 422 depending on path)
-curl -s -X POST https://apps.qualiadept.eu/testaurant/api/cart/price \
- -H "Content-Type: application/json" \
- -d '{ "items":[{"id":1,"qty":9999}] }'</code></pre>
-      </div>
-    </div>
+  -H "Content-Type: application/json" \
+  -d '{"customerName":"A","customerPhone":"B","items":[{"id":1,"qty":1}],"paymentMethod":"cash","deliveryMethod":"teleport"}'
 
-    <div class="grid g2">
-      <div class="card">
-        <h3>Authorization</h3>
-        <pre><code># 403 without admin key
-curl -s https://apps.qualiadept.eu/testaurant/api/inventory</code></pre>
-      </div>
-      <div class="card">
-        <h3>Idempotency behavior</h3>
-        <pre><code># First call creates order; second call with same key returns same orderId
-curl -s -X POST https://apps.qualiadept.eu/testaurant/api/checkout \
- -H "Idempotency-Key: fixed-key-001" \
- -H "Content-Type: application/json" \
- -d '{ "customerName":"Ana QA","customerPhone":"+401111",
-       "items":[{"id":1,"qty":1}], "paymentMethod":"cash","deliveryMethod":"pickup" }'</code></pre>
-      </div>
-    </div>
-  </section>
+# 409: insufficient stock
+curl -s -X POST https://apps.qualiadept.eu/testaurant/api/cart/price \
+  -H "Content-Type: application/json" \
+  -d '{"items":[{"id":1,"qty":99999}],"deliveryMethod":"pickup"}'
+</code></pre>
+    </section>
 
-  <!-- CHAOS -->
-  <section id="api-chaos">
-    <h2>5) Chaos & Resilience Playbook</h2>
-    <div class="card">
-      <p>Use built-in chaos hooks to simulate latency and transient failures:</p>
-      <ul>
-        <li><span class="code inline">?slow=1000</span> → adds ~1s delay</li>
-        <li><span class="code inline">?chaos=1</span> → random 100–1200ms delays & occasional 503</li>
+    <!-- Web UI Matrix -->
+    <section id="web-ui" class="card" aria-labelledby="ui-h">
+      <h2 id="ui-h">4) Web/UI Test Matrix</h2>
+      <div class="grid">
+        <div>
+          <h3>4.1 User Journeys</h3>
+          <table>
+            <thead><tr><th>Journey</th><th>Steps</th><th>Expectation</th></tr></thead>
+            <tbody>
+              <tr><td>Add to cart</td><td>Click “Add” on a card</td><td class="ok">Toast “Added”, cart badge increments</td></tr>
+              <tr><td>Apply coupon</td><td>Open cart → enter code</td><td class="ok">Totals update</td></tr>
+              <tr><td>Checkout</td><td>Fill name/phone → place order</td><td class="ok">Success state, order ID visible/logged</td></tr>
+              <tr><td>Currency switch</td><td>RON→EUR</td><td class="ok">Prices/total re-rendered</td></tr>
+              <tr><td>Images</td><td>Cards render</td><td class="ok">Lazy-loaded images or fallback</td></tr>
+            </tbody>
+          </table>
+
+          <h3>4.2 Responsive checks</h3>
+          <table>
+            <thead><tr><th>Viewport</th><th>Expect</th></tr></thead>
+            <tbody>
+              <tr><td>390×844 (mobile)</td><td>Single-column cards; sticky cart is reachable with keyboard</td></tr>
+              <tr><td>834×1112 (tablet)</td><td>Two-column layout; buttons not clipped</td></tr>
+              <tr><td>1440×900 (desktop)</td><td>Grid of cards; content centered</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <aside class="card" aria-label="Stable selectors">
+          <h3>Stable Selectors (<code>data-test</code>)</h3>
+          <pre><code>&lt;button data-test="add-to-cart"&gt;Add&lt;/button&gt;
+&lt;button data-test="open-cart"&gt;Cart&lt;/button&gt;
+&lt;button data-test="checkout"&gt;Checkout&lt;/button&gt;
+&lt;input data-test="customer-name"&gt;
+&lt;input data-test="customer-phone"&gt;
+&lt;button data-test="place-order"&gt;Place order&lt;/button&gt;</code></pre>
+        </aside>
+      </div>
+    </section>
+
+    <!-- Admin -->
+    <section id="admin" class="card" aria-labelledby="admin-h">
+      <h2 id="admin-h">5) Admin & Backoffice Scenarios</h2>
+      <table>
+        <thead><tr><th>Endpoint</th><th>Action</th><th>Expectation</th></tr></thead>
+        <tbody>
+          <tr><td><code>GET /api/inventory</code></td><td>List inventory</td><td class="ok">Requires <code>X-API-Key</code></td></tr>
+          <tr><td><code>PUT /api/menuitems/{id}/stock</code></td><td>Set stock</td><td class="ok">Stock updated exactly</td></tr>
+          <tr><td><code>POST /api/menuitems/{id}/restock</code></td><td>Delta ±</td><td class="ok">Stock increased/decreased</td></tr>
+          <tr><td><code>GET /api/orders</code></td><td>List orders</td><td class="ok">Paged results</td></tr>
+          <tr><td><code>GET /api/stats</code></td><td>Dashboard</td><td class="ok">by_day + top_items</td></tr>
+          <tr><td><code>GET /api/rates</code></td><td>Exchange rates</td><td class="ok">Base vs target rates visible</td></tr>
+        </tbody>
+      </table>
+
+      <h3>Admin cURL</h3>
+      <pre><code>APIK=YOUR_ADMIN_KEY
+
+curl -s -H "X-API-Key: $APIK" https://apps.qualiadept.eu/testaurant/api/inventory
+
+curl -s -X PUT https://apps.qualiadept.eu/testaurant/api/menuitems/1/stock \
+  -H "X-API-Key: $APIK" -H "Content-Type: application/json" \
+  -d '{"stock":3}'
+</code></pre>
+    </section>
+
+    <!-- Chaos -->
+    <section id="chaos" class="card" aria-labelledby="chaos-h">
+      <h2 id="chaos-h">6) Chaos & Resilience</h2>
+      <p>Use built-in chaos hooks to validate retry/backoff in clients and graceful UI fallbacks.</p>
+      <table>
+        <thead><tr><th>Hook</th><th>Usage</th><th>Effect</th></tr></thead>
+        <tbody>
+          <tr><td><code>?slow=NNN</code></td><td><code>/api/menu?slow=1200</code></td><td class="warn">Adds latency (ms)</td></tr>
+          <tr><td><code>?chaos=1</code></td><td><code>/api/health?chaos=1</code></td><td class="warn">Random delay & occasional 503</td></tr>
+        </tbody>
+      </table>
+
+      <h3>Minimal Retry Loop (bash)</h3>
+      <pre><code>for i in 1 2 3; do
+  code=$(curl -s -o /dev/null -w "%{http_code}" "https://apps.qualiadept.eu/testaurant/api/health?chaos=1")
+  if [ "$code" = "200" ]; then echo OK; break; fi
+  sleep $((i*i/2))
+done</code></pre>
+    </section>
+
+    <!-- Data & Fixtures -->
+    <section id="data" class="card" aria-labelledby="data-h">
+      <h2 id="data-h">7) Data & Fixtures</h2>
+      <div class="grid">
+        <div>
+          <h3>7.1 Test Data Strategy</h3>
+          <ul>
+            <li>Use **read-only** calls on prod; do destructive flows on staging.</li>
+            <li>Prefer isolated data per test (unique phone/name).</li>
+            <li>Reset inventory via admin endpoints for stock boundary tests.</li>
+          </ul>
+
+          <h3>7.2 Sample Generators</h3>
+          <pre><code># Unique phone in bash
+echo "+40$(( RANDOM%900000000 + 700000000 ))"
+
+# Unique idempotency key
+echo "idem-$(date +%s)$RANDOM"</code></pre>
+        </div>
+
+        <aside class="card" aria-label="Seeding notes">
+          <h3>7.3 Seeding</h3>
+          <p>If you have <code>seed.sql</code> locally, re-seed before runs. On hosted env, prefer admin endpoints to tweak state (stock/rates).</p>
+          <h3>7.4 Logging</h3>
+          <p>Record <code>orderId</code>, idempotency keys, and timestamps in test logs for traceability.</p>
+        </aside>
+      </div>
+    </section>
+
+    <!-- i18n & Currency -->
+    <section id="i18n-currency" class="card" aria-labelledby="i18n-h">
+      <h2 id="i18n-h">8) Localization & Currency</h2>
+      <table>
+        <thead><tr><th>Area</th><th>Check</th><th>Expectation</th></tr></thead>
+        <tbody>
+          <tr><td>UI Language</td><td>RO/EN toggle</td><td class="ok">Labels, toasts, buttons translated</td></tr>
+          <tr><td>Currency</td><td>RON ↔ EUR ↔ USD</td><td class="ok">Converted fields appear; symbols and rounding correct</td></tr>
+          <tr><td>Formatting</td><td>Decimal separators</td><td class="ok">Consistent formatting per locale</td></tr>
+        </tbody>
+      </table>
+
+      <h3>Rates Admin</h3>
+      <pre><code># Set EUR rate (RON base)
+curl -s -X POST https://apps.qualiadept.eu/testaurant/api/rates \
+  -H "X-API-Key: $APIK" -H "Content-Type: application/json" \
+  -d '{"currency":"EUR","rate":0.2}'</code></pre>
+    </section>
+
+    <!-- Accessibility -->
+    <section id="accessibility" class="card" aria-labelledby="a11y-h">
+      <h2 id="a11y-h">9) Accessibility Checks</h2>
+      <table>
+        <thead><tr><th>Area</th><th>Check</th><th>Expectation</th></tr></thead>
+        <tbody>
+          <tr><td>Keyboard</td><td>Tab through controls</td><td class="ok">Visible focus ring; operable without mouse</td></tr>
+          <tr><td>Semantics</td><td>Buttons/labels</td><td class="ok">Use semantic elements & ARIA where needed</td></tr>
+          <tr><td>Contrast</td><td>Dark & light</td><td class="ok">Sufficient contrast, no color-only meaning</td></tr>
+          <tr><td>Toasts</td><td>Announcements</td><td class="ok">Polite live region for success/failure</td></tr>
+        </tbody>
+      </table>
+
+      <h3>Manual Keyboard Flow</h3>
+      <pre><code>1. Tab to menu card "Add" → Enter
+2. Open cart → Apply coupon (Tab)
+3. Go to checkout → Fill fields → Submit
+Expected: No traps, visible focus, success confirmation announced</code></pre>
+    </section>
+
+    <!-- Performance -->
+    <section id="perf" class="card" aria-labelledby="perf-h">
+      <h2 id="perf-h">10) Performance & SLIs</h2>
+      <table>
+        <thead><tr><th>Endpoint</th><th>Target</th><th>Notes</th></tr></thead>
+        <tbody>
+          <tr><td><code>/api/health</code></td><td>&lt; 150ms p95</td><td>Cold starts may be higher</td></tr>
+          <tr><td><code>/api/menu</code></td><td>&lt; 300ms p95</td><td>Pagination reduces payload</td></tr>
+          <tr><td><code>/api/checkout</code></td><td>&lt; 600ms p95</td><td>Includes DB writes & stock updates</td></tr>
+        </tbody>
+      </table>
+
+      <h3>Quick baseline (bash)</h3>
+      <pre><code>for i in {1..5}; do time curl -s https://apps.qualiadept.eu/testaurant/api/menu &gt;/dev/null; done</code></pre>
+    </section>
+
+    <!-- Checklist -->
+    <section id="checklist" class="card" aria-labelledby="checklist-h">
+      <h2 id="checklist-h">✅ Progress Checklist</h2>
+      <ul class="checklist" id="todo" role="list">
+        <li><input type="checkbox" data-key="smoke" id="c1"><label for="c1">API Smoke suite passes</label></li>
+        <li><input type="checkbox" data-key="func" id="c2"><label for="c2">Functional scenarios covered (search, pagination, coupons, VAT)</label></li>
+        <li><input type="checkbox" data-key="neg" id="c3"><label for="c3">Negative cases implemented (422/409/403)</label></li>
+        <li><input type="checkbox" data-key="ui" id="c4"><label for="c4">UI journeys automated (add→checkout, currency switch)</label></li>
+        <li><input type="checkbox" data-key="a11y" id="c5"><label for="c5">Accessibility checks completed</label></li>
+        <li><input type="checkbox" data-key="chaos" id="c6"><label for="c6">Chaos & resilience tests validated</label></li>
+        <li><input type="checkbox" data-key="admin" id="c7"><label for="c7">Admin inventory/rates/stats covered</label></li>
+        <li><input type="checkbox" data-key="perf" id="c8"><label for="c8">Baseline performance recorded</label></li>
       </ul>
-      <pre><code># Example: slow health
-curl -s "https://apps.qualiadept.eu/testaurant/api/health?slow=1000"</code></pre>
-      <div class="grid g2">
-        <div class="card">
-          <h3>Retry/backoff strategy</h3>
-          <ul>
-            <li>Limit retries (e.g., max 3)</li>
-            <li>Exponential backoff (250ms → 500ms → 1s)</li>
-            <li>Only retry idempotent GET/POST with Idempotency-Key</li>
-          </ul>
-        </div>
-        <div class="card">
-          <h3>Assertions under chaos</h3>
-          <ul>
-            <li>Allow timing variance, keep strict on status/payload</li>
-            <li>Record request/response timings to spot outliers</li>
-            <li>Use circuit breakers in client libs (advanced)</li>
-          </ul>
-        </div>
-      </div>
-    </div>
-  </section>
+    </section>
 
-  <!-- ADMIN -->
-  <section id="api-admin">
-    <h2>6) Admin Endpoints – Hands-on Drills</h2>
-    <div class="grid g2">
-      <div class="card">
-        <h3>Inventory view + stock update</h3>
-        <pre><code># Get list
-curl -s -H "X-API-Key: &lt;ADMIN_KEY&gt;" https://apps.qualiadept.eu/testaurant/api/inventory
+    <footer role="contentinfo" aria-label="Footer">
+      <p>
+        Need the API contract? Open <strong>API Specs</strong> here:
+        <a href="https://apps.qualiadept.eu/testaurant/api_specs/">https://apps.qualiadept.eu/testaurant/api_specs/</a>.
+        Return to <a href="https://apps.qualiadept.eu/testaurant/frontend/index.html">Main Page</a>.
+      </p>
+      <p class="badge" aria-label="Version">Instructions Hub v1.0 • Testaurant QA Community</p>
+    </footer>
+  </main>
 
-# Set absolute stock to 7
-curl -s -X PUT -H "X-API-Key: &lt;ADMIN_KEY&gt;" -H "Content-Type: application/json" \
- https://apps.qualiadept.eu/testaurant/api/menuitems/1/stock \
- -d '{ "stock": 7 }'</code></pre>
-      </div>
-      <div class="card">
-        <h3>Restock & availability</h3>
-        <pre><code># Increment stock by +5
-curl -s -X POST -H "X-API-Key: &lt;ADMIN_KEY&gt;" -H "Content-Type: application/json" \
- https://apps.qualiadept.eu/testaurant/api/menuitems/1/restock \
- -d '{ "delta": 5 }'
+  <!-- Copy-to-clipboard for all <pre><code> blocks (accessible, no libs) -->
+  <script>
+    (function () {
+      const blocks = Array.from(document.querySelectorAll('pre')).filter(pre => !pre.matches('[data-no-copy]'));
+      blocks.forEach(pre => {
+        pre.classList.add('pre-wrap');
+        const btn = document.createElement('button');
+        btn.className = 'copy-btn';
+        btn.type = 'button';
+        btn.setAttribute('aria-label', 'Copy code to clipboard');
+        btn.setAttribute('title', 'Copy');
+        btn.textContent = 'Copy';
 
-# Hide item (available = 0)
-curl -s -X POST -H "X-API-Key: &lt;ADMIN_KEY&gt;" -H "Content-Type: application/json" \
- https://apps.qualiadept.eu/testaurant/api/menuitems/1/availability \
- -d '{ "available": 0 }'</code></pre>
-      </div>
-    </div>
+        const live = document.createElement('span');
+        live.setAttribute('aria-live', 'polite');
+        live.style.position = 'absolute';
+        live.style.width = '1px';
+        live.style.height = '1px';
+        live.style.overflow = 'hidden';
+        live.style.clip = 'rect(1px,1px,1px,1px)';
+        live.style.clipPath = 'inset(50%)';
+        live.style.whiteSpace = 'nowrap';
+        btn.appendChild(live);
 
-    <div class="grid g2">
-      <div class="card">
-        <h3>Rates & currency checks</h3>
-        <pre><code># Upsert EUR rate
-curl -s -X POST -H "X-API-Key: &lt;ADMIN_KEY&gt;" -H "Content-Type: application/json" \
- https://apps.qualiadept.eu/testaurant/api/rates \
- -d '{ "currency":"EUR", "rate":0.2 }'
+        btn.addEventListener('click', async () => {
+          const code = pre.querySelector('code');
+          const text = code ? code.innerText : pre.innerText;
+          try {
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+              await navigator.clipboard.writeText(text);
+            } else {
+              const ta = document.createElement('textarea');
+              ta.value = text; ta.setAttribute('readonly','');
+              ta.style.position = 'fixed'; ta.style.top = '-1000px';
+              document.body.appendChild(ta); ta.select(); document.execCommand('copy');
+              document.body.removeChild(ta);
+            }
+            const old = btn.textContent.replace(/\s*Copied!?$/, '');
+            btn.textContent = 'Copied!';
+            live.textContent = 'Copied to clipboard';
+            setTimeout(() => { btn.textContent = old || 'Copy'; live.textContent = ''; }, 1500);
+          } catch (e) {
+            const old = btn.textContent;
+            btn.textContent = 'Failed';
+            live.textContent = 'Copy failed';
+            setTimeout(() => { btn.textContent = old; live.textContent = ''; }, 1500);
+          }
+        });
 
-# Verify via menu
-curl -s "https://apps.qualiadept.eu/testaurant/api/menu?currency=EUR&amp;page=1&amp;limit=3"</code></pre>
-      </div>
-      <div class="card">
-        <h3>Stats (dashboard)</h3>
-        <pre><code># Expect by_day & top_items
-curl -s -H "X-API-Key: &lt;ADMIN_KEY&gt;" \
- "https://apps.qualiadept.eu/testaurant/api/stats?from=2025-01-01&amp;to=2025-12-31&amp;currency=USD"</code></pre>
-      </div>
-    </div>
-  </section>
+        pre.appendChild(btn);
+      });
+    })();
+  </script>
 
-  <!-- WEB SMOKE -->
-  <section id="web-smoke">
-    <h2>7) Web/UI Smoke – What to verify manually</h2>
-    <div class="card">
-      <ol>
-        <li>Menu cards render with images, name, price, and <span class="code inline">Add</span> button.</li>
-        <li>Add 1–2 items → toast confirms and cart badge increments.</li>
-        <li>Open cart → line items, VAT & totals correct.</li>
-        <li>Switch currency in header → totals update consistently.</li>
-        <li>Apply coupon (if exposed in UI) → discount reflected.</li>
-        <li>Checkout form: valid inputs enable submit; placing an order shows confirmation.</li>
-        <li>Admin tabs (Inventory / Orders / Stats) reachable if enabled in UI.</li>
-      </ol>
-    </div>
-    <div class="grid g2">
-      <div class="card">
-        <h3>Accessibility quick scan</h3>
-        <ul>
-          <li>Images have <span class="code inline">alt</span>; focus outlines visible</li>
-          <li>Buttons announce role/label to screen readers</li>
-          <li>Color contrast meets WCAG AA (spot-check)</li>
-        </ul>
-      </div>
-      <div class="card">
-        <h3>Responsive checks</h3>
-        <ul>
-          <li>320px (mobile): grid collapses; no clipped CTAs</li>
-          <li>768–1024px (tablet): nav remains usable</li>
-          <li>≥1280px (desktop): content centered, readable</li>
-        </ul>
-      </div>
-    </div>
-  </section>
-
-  <!-- WEB MATRIX -->
-  <section id="web-matrix">
-    <h2>8) Web Test Matrix</h2>
-    <div class="card">
-      <table>
-        <thead>
-          <tr><th>Area</th><th>Scenario</th><th>Expected</th><th>Notes</th></tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>Cards</td>
-            <td>Image loads or fallback; Add button visible</td>
-            <td>No broken layout; hover states OK</td>
-            <td>Broken image → renders fallback</td>
-          </tr>
-          <tr>
-            <td>Cart</td>
-            <td>Add/remove items, change qty (if supported)</td>
-            <td>Totals recompute; VAT correct</td>
-            <td>Rounding: 2 decimals</td>
-          </tr>
-          <tr>
-            <td>Currency</td>
-            <td>Switch RON↔EUR↔USD</td>
-            <td>Prices/totals re-render; labels reflect currency</td>
-            <td>Stays consistent across pages</td>
-          </tr>
-          <tr>
-            <td>Checkout validation</td>
-            <td>Empty name/phone</td>
-            <td>Inline error; disabled submit</td>
-            <td>Phone pattern +4… accepted</td>
-          </tr>
-          <tr>
-            <td>Confirmations</td>
-            <td>Toast/banner after actions</td>
-            <td>Visible within 1s; auto-dismiss (if designed)</td>
-            <td>Screen-reader friendly (aria-live)</td>
-          </tr>
-          <tr>
-            <td>Inventory UI (admin)</td>
-            <td>Set stock, restock</td>
-            <td>Row reflects new stock immediately</td>
-            <td>API key requirement handled in UI</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-  </section>
-
-  <!-- CHECKLISTS -->
-  <section id="checklists">
-    <h2>9) Progress Checklists</h2>
-    <div class="grid g2">
-      <div class="card">
-        <h3>API Progress</h3>
-        <ul class="checklist">
-          <li>Health & Categories green</li>
-          <li>Menu pagination & filters validated</li>
-          <li>Currency conversions checked</li>
-          <li>Cart price (coupon / delivery) correct</li>
-          <li>Checkout idempotency verified</li>
-          <li>Orders list/detail (admin) working</li>
-          <li>Inventory stock/availability updates</li>
-          <li>Rates upsert & reflected in menu</li>
-          <li>Stats reflect recent orders</li>
-          <li>Chaos: retry/backoff working</li>
-        </ul>
-      </div>
-      <div class="card">
-        <h3>Web Progress</h3>
-        <ul class="checklist">
-          <li>Cards render with images and prices</li>
-          <li>Cart flows (add/remove) correct</li>
-          <li>Currency switch updates UI</li>
-          <li>Checkout validation & success</li>
-          <li>Toasts/confirmations visible</li>
-          <li>Responsive @ 320/768/1280 widths</li>
-          <li>Basic a11y checks pass</li>
-          <li>Admin UI (if present) operational</li>
-        </ul>
-      </div>
-    </div>
-  </section>
-
-  <!-- MINI LABS -->
-  <section id="labs">
-    <h2>10) Mini-Labs (guided practice)</h2>
-    <div class="grid g2">
-      <div class="card">
-        <h3>Lab A – Currency correctness</h3>
-        <ol>
-          <li>POST <span class="code inline">/api/rates</span> EUR=0.20 (admin).</li>
-          <li>GET <span class="code inline">/api/menu?currency=EUR&amp;limit=3</span>.</li>
-          <li>For each item: verify <span class="code inline">price_converted ≈ price × 0.20</span> (±0.01).</li>
-        </ol>
-        <p><b>Expected:</b> All three items match the conversion within rounding tolerance.</p>
-      </div>
-      <div class="card">
-        <h3>Lab B – Idempotent checkout</h3>
-        <ol>
-          <li>POST <span class="code inline">/api/checkout</span> with <span class="code inline">Idempotency-Key: lab-b-1</span>.</li>
-          <li>Repeat same request with the same key.</li>
-          <li>Compare <span class="code inline">orderId</span>s → must be equal.</li>
-        </ol>
-        <p><b>Expected:</b> Same <span class="code inline">orderId</span>; no stock double-decrement.</p>
-      </div>
-    </div>
-
-    <div class="grid g2">
-      <div class="card">
-        <h3>Lab C – Stock boundary</h3>
-        <ol>
-          <li>Set stock of item #1 to 1 via admin.</li>
-          <li>Place two checkouts in quick succession for the same item.</li>
-          <li>One should succeed; the other must fail (409) or be prevented by idempotency.</li>
-        </ol>
-        <p><b>Expected:</b> Inventory never goes negative; failure message explains.</p>
-      </div>
-      <div class="card">
-        <h3>Lab D – Chaos tolerance</h3>
-        <ol>
-          <li>Call <span class="code inline">/api/health?chaos=1</span> with a simple retry loop (max 3).</li>
-          <li>Record attempts and final status.</li>
-        </ol>
-        <p><b>Expected:</b> Eventually 200 OK (unless unlucky), no infinite retries.</p>
-      </div>
-    </div>
-  </section>
-
-  <div class="sep"></div>
-  <div class="btn-row">
-    <a class="btn" href="index.html">← Back to Home</a>
-    <a class="btn" href="#api-matrix">Jump to API Matrix</a>
-  </div>
-  <p class="muted">End of instructions page.</p>
-</div>
+  <!-- Persistent checklist state -->
+  <script>
+    (function(){
+      const list = document.getElementById('todo'); if(!list) return;
+      const KEY = 'testaurant_instructions_checklist_v1';
+      const state = JSON.parse(localStorage.getItem(KEY) || '{}');
+      [...list.querySelectorAll('input[type="checkbox"][data-key]')].forEach(cb=>{
+        const k = cb.dataset.key; cb.checked = !!state[k];
+        cb.addEventListener('change', ()=>{ state[k] = cb.checked; localStorage.setItem(KEY, JSON.stringify(state)); });
+      });
+    })();
+  </script>
 </body>
 </html>
