@@ -138,7 +138,7 @@
         <a href="#exercises">Exercises</a>
       </nav>
       <div class="cta-row" role="group" aria-label="Quick actions">
-        <a class="btn secondary" href="https://apps.qualiadept.eu/testaurant/frontend/index.html" aria-label="Return to Testaurant main page">⟵ Main Page</a>
+        <a class="btn secondary" href="https://apps.qualiadept.eu/testaurant/index.html" aria-label="Return to Testaurant main page">⟵ Main Page</a>
         <a class="btn" href="https://apps.qualiadept.eu/testaurant/api_specs/" aria-label="Open API specifications">📘 API Specs</a>
       </div>
     </div>
@@ -298,7 +298,7 @@ mvn -v</code></pre>
 </code></pre>
 
       <h3>src/test/resources/config.properties</h3>
-<pre><code>baseUrl=https://apps.qualiadept.eu/testaurant/frontend/index.html
+<pre><code>baseUrl=https://apps.qualiadept.eu/testaurant/index.html
 headless=true
 </code></pre>
 
@@ -318,7 +318,7 @@ import java.time.Duration;
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class BaseUiTest {
   protected WebDriver driver;
-  protected static String BASE_URL = "https://apps.qualiadept.eu/testaurant/frontend/index.html";
+  protected static String BASE_URL = "https://apps.qualiadept.eu/testaurant/index.html";
   protected static boolean HEADLESS = true;
 
   @BeforeAll
@@ -695,7 +695,7 @@ public class AccessibilitySignalsTests extends BaseUiTest {
       </ol>
 
       <p class="note">Run tests (headless):</p>
-      <pre><code>mvn -DbaseUrl="https://apps.qualiadept.eu/testaurant/frontend/index.html" -Dheadless=true test</code></pre>
+      <pre><code>mvn -DbaseUrl="https://apps.qualiadept.eu/testaurant/index.html" -Dheadless=true test</code></pre>
       <p class="note">Run tests (headed locally):</p>
       <pre><code>mvn -Dheadless=false test</code></pre>
     </section>
@@ -704,7 +704,7 @@ public class AccessibilitySignalsTests extends BaseUiTest {
       <p>
         Need the API contract to align UI with backend? Open <strong>API Specs</strong> here:
         <a href="https://apps.qualiadept.eu/testaurant/api_specs/">https://apps.qualiadept.eu/testaurant/api_specs/</a>.
-        Return to <a href="https://apps.qualiadept.eu/testaurant/frontend/index.html">Main Page</a>.
+        Return to <a href="https://apps.qualiadept.eu/testaurant/index.html">Main Page</a>.
       </p>
       <p class="pill" aria-label="Version">Course v1.0 • Designed for Testaurant QA Community</p>
     </footer>
