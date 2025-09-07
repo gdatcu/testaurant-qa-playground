@@ -1,0 +1,12 @@
+<?php
+return [
+  'db_host' => 'localhost',
+  'db_name' => 'CHANGEME_DB',
+  'db_user' => 'CHANGEME_USER',
+  'db_pass' => 'CHANGEME_PASS',
+  'admin_api_key' => 'CHANGEME-ADMIN-KEY',
+  'allow_origin'  => 'https://apps.qualiadept.eu',  // or '*'
+  'delivery_fee'  => 12.00,
+  'base_currency'        => 'RON',
+  'supported_currencies' => ['RON','EUR','USD'],
+];

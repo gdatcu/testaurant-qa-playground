@@ -1,0 +1,79 @@
+# ---- OS junk ----
+.DS_Store
+Thumbs.db
+
+# ---- IDE/editor ----
+.vscode/*
+!.vscode/extensions.json
+.idea/
+*.iml
+
+# ---- Node / front-end builds (in case you add tooling later) ----
+node_modules/
+dist/
+build/
+.cache/
+.parcel-cache/
+.vite/
+.next/
+out/
+*.map
+
+# ---- PHP / Composer (if you add composer later) ----
+/vendor/
+composer.phar
+# (commit composer.json + composer.lock if you use Composer)
+
+# ---- Environment & secrets ----
+*.env
+*.env.*
+.env.local
+/api/config.php             # real secrets live here on server only
+/api/config.local.php
+/config.php
+/config.local.php
+
+# ---- Uploads & generated assets ----
+/uploads/
+/api/../uploads/
+/frontend-v3/uploads/
+/public/uploads/
+/static/uploads/
+*.zip
+*.tar
+*.tar.gz
+
+# Keep folder structure without files
+uploads/.gitkeep
+
+# ---- Logs, caches, temp ----
+*.log
+logs/
+storage/
+tmp/
+cache/
+session/
+*.pid
+
+# ---- Test artifacts ----
+cypress/videos/
+cypress/screenshots/
+cypress/downloads/
+coverage/
+nyc_output/
+reports/
+newman/                 # Postman CLI (Newman) reports
+
+# ---- Postman/Collections (if you generate HTML reports) ----
+*.postman_dump.json
+*.htm
+*.html
+
+# ---- Misc binaries ----
+*.swp
+*.swo
+*.orig
+
+# ---- OS-specific ----
+ehthumbs.db
+Icon?

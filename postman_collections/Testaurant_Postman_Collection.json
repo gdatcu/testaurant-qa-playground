@@ -1,0 +1,283 @@
+{
+  "info": {
+    "name": "Testaurant Automation Playground",
+    "_postman_id": "f5a06d0a-1234-4a99-aaaa-111111111111",
+    "description": "QA practice collection for Testaurant API (health, menu, pricing, checkout, idempotency, inventory, orders, stats, rates).",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Public",
+      "item": [
+        {
+          "name": "Health",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/health"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status 200\", function () { pm.response.to.have.status(200); });",
+                  "pm.test(\"JSON\", function () { pm.response.to.be.json; });",
+                  "pm.test('ok true', ()=> pm.expect(pm.response.json().ok).to.eql(true));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Menu (pick 2 items)",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/menu?page=1&limit=8&currency={{currency}}"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status 200\", function () { pm.response.to.have.status(200); });",
+                  "pm.test(\"JSON\", function () { pm.response.to.be.json; });",
+                  "const data = pm.response.json();",
+                  "pm.test(\"items array\", ()=> pm.expect(data.items).to.be.an('array').that.is.not.empty);",
+                  "const id1 = data.items[0]?.id;",
+                  "const id2 = data.items[1]?.id || data.items[0]?.id;",
+                  "pm.environment.set(\"itemId1\", id1);",
+                  "pm.environment.set(\"itemId2\", id2);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Cart Price (pickup)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"items\":[{\"id\":\"{{itemId1}}\",\"qty\":1},{\"id\":\"{{itemId2}}\",\"qty\":1}],\"deliveryMethod\":\"pickup\",\"couponCode\":\"{{coupon}}\",\"currency\":\"{{currency}}\"}"
+            },
+            "url": "{{baseUrl}}/api/cart/price?currency={{currency}}"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status 200\", function () { pm.response.to.have.status(200); });",
+                  "pm.test(\"JSON\", function () { pm.response.to.be.json; });",
+                  "const data = pm.response.json();",
+                  "pm.test(\"grandTotal present\", ()=> pm.expect(data.grandTotal).to.be.a('number'));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Checkout (card, pickup)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Idempotency-Key", "value": "{{idemKey}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"customerName\":\"{{customerName}}\",\"customerPhone\":\"{{customerPhone}}\",\"items\":[{\"id\":\"{{itemId1}}\",\"qty\":1},{\"id\":\"{{itemId2}}\",\"qty\":1}],\"paymentMethod\":\"card\",\"deliveryMethod\":\"pickup\",\"currency\":\"{{currency}}\"}"
+            },
+            "url": "{{baseUrl}}/api/checkout?currency={{currency}}"
+          },
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "if (!pm.environment.get('idemKey')) {",
+                  "  pm.environment.set('idemKey', _.uniqueId('idem_'));",
+                  "}"
+                ]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status 200\", function () { pm.response.to.have.status(200); });",
+                  "pm.test(\"JSON\", function () { pm.response.to.be.json; });",
+                  "const data = pm.response.json();",
+                  "pm.test(\"orderId\", ()=> pm.expect(data.orderId).to.be.a('number'));",
+                  "pm.environment.set(\"orderId\", data.orderId);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Checkout REPLAY (same Idempotency-Key)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Idempotency-Key", "value": "{{idemKey}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"customerName\":\"{{customerName}}\",\"customerPhone\":\"{{customerPhone}}\",\"items\":[{\"id\":\"{{itemId1}}\",\"qty\":1},{\"id\":\"{{itemId2}}\",\"qty\":1}],\"paymentMethod\":\"card\",\"deliveryMethod\":\"pickup\",\"currency\":\"{{currency}}\"}"
+            },
+            "url": "{{baseUrl}}/api/checkout?currency={{currency}}"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status 200\", function () { pm.response.to.have.status(200); });",
+                  "pm.test(\"JSON\", function () { pm.response.to.be.json; });",
+                  "const data = pm.response.json();",
+                  "pm.test(\"same orderId (idempotent)\", ()=> pm.expect(data.orderId).to.eql(parseInt(pm.environment.get('orderId'))));"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Coupons",
+      "item": [
+        {
+          "name": "Validate Coupon",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/coupons/validate?code={{coupon}}"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status 200\", function () { pm.response.to.have.status(200); });",
+                  "pm.test(\"JSON\", function () { pm.response.to.be.json; });",
+                  "pm.test('has valid flag', ()=> pm.expect(pm.response.json()).to.have.property('valid'));"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Admin (X-API-Key required)",
+      "item": [
+        {
+          "name": "Inventory (list)",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "X-API-Key", "value": "{{adminApiKey}}" }],
+            "url": "{{baseUrl}}/api/inventory"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status 200\", function () { pm.response.to.have.status(200); });",
+                  "pm.test(\"JSON\", function () { pm.response.to.be.json; });",
+                  "const data = pm.response.json();",
+                  "pm.test(\"items array\", ()=> pm.expect(data.items).to.be.an('array'));",
+                  "if (data.items.length) pm.environment.set(\"inventoryItemId\", data.items[0].id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Set Stock -> 99",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "X-API-Key", "value": "{{adminApiKey}}" }
+            ],
+            "body": { "mode": "raw", "raw": "{\"stock\":99}" },
+            "url": "{{baseUrl}}/api/menuitems/{{inventoryItemId}}/stock"
+          }
+        },
+        {
+          "name": "Restock -1",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "X-API-Key", "value": "{{adminApiKey}}" }
+            ],
+            "body": { "mode": "raw", "raw": "{\"delta\":-1}" },
+            "url": "{{baseUrl}}/api/menuitems/{{inventoryItemId}}/restock"
+          }
+        },
+        {
+          "name": "Orders (list)",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "X-API-Key", "value": "{{adminApiKey}}" }],
+            "url": "{{baseUrl}}/api/orders?page=1&limit=20&currency={{currency}}"
+          }
+        },
+        {
+          "name": "Order Details",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "X-API-Key", "value": "{{adminApiKey}}" }],
+            "url": "{{baseUrl}}/api/orders/{{orderId}}?currency={{currency}}"
+          }
+        },
+        {
+          "name": "Order Status -> preparing",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "X-API-Key", "value": "{{adminApiKey}}" }
+            ],
+            "body": { "mode": "raw", "raw": "{\"status\":\"preparing\",\"note\":\"QA move to preparing\"}" },
+            "url": "{{baseUrl}}/api/orders/{{orderId}}/status"
+          }
+        },
+        {
+          "name": "Stats (from/to)",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "X-API-Key", "value": "{{adminApiKey}}" }],
+            "url": "{{baseUrl}}/api/stats?from={{from}}&to={{to}}&currency={{currency}}"
+          }
+        },
+        {
+          "name": "Rates (list)",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "X-API-Key", "value": "{{adminApiKey}}" }],
+            "url": "{{baseUrl}}/api/rates"
+          }
+        },
+        {
+          "name": "Rates Upsert EUR -> 0.2",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "X-API-Key", "value": "{{adminApiKey}}" }
+            ],
+            "body": { "mode": "raw", "raw": "{\"currency\":\"EUR\",\"rate\":0.2}" },
+            "url": "{{baseUrl}}/api/rates"
+          }
+        }
+      ]
+    }
+  ]
+}

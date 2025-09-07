@@ -1,0 +1,14 @@
+RewriteEngine On
+RewriteBase /testaurant/api/
+
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^.*$ api.php [QSA,L]
+
+<FilesMatch "^(config|db)\.php$">
+  Require all denied
+</FilesMatch>
+<IfModule !mod_authz_core.c>
+  Order allow,deny
+  Deny from all
+</IfModule>
