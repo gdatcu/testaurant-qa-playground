@@ -203,3 +203,16 @@
 .user-table tbody tr:nth-child(even) {
     background-color: #0c1433;
 }
+
+/* files.html styles */
+.file-upload-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-top: 16px;
+}
+
+#file-name {
+    font-style: italic;
+    color: #9fb0d0;
+}

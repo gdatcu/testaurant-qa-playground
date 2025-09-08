@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Testaurant • Files</title>
+  <link rel="icon" href="logo/testaurant_ico.ico?v=2" sizes="any">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="topbar" role="banner" aria-label="Top bar">
+    <div class="brand">
+      <img
+        class="logo-img"
+        src="logo/testaurant_logo.png"
+        alt="Testaurant logo"
+        width="74" height="74"
+        decoding="async" />
+      <div>
+        <h1>Testaurant</h1>
+        <small>QA Training • QualiAdept</small>
+      </div>
+    </div>
+    <a href="index.html" class="btn">Back to Home</a>
+  </header>
+
+  <main class="layout">
+    <section class="card">
+        <h2>File Upload</h2>
+        <p>Test your ability to interact with file input elements.</p>
+        <div class="file-upload-wrapper">
+            <label for="file-upload" class="btn">Choose a file</label>
+            <input type="file" id="file-upload" style="display: none;">
+            <span id="file-name">No file selected</span>
+        </div>
+        <div id="upload-message" class="message-display" style="display: none;" aria-live="polite"></div>
+    </section>
+
+    <section class="card">
+        <h2>File Download</h2>
+        <p>Test your ability to download files.</p>
+        <a href="sample.txt" download="sample.txt" class="btn">Download Sample File</a>
+    </section>
+  </main>
+
+  <footer class="site-footer" role="contentinfo" aria-label="Footer">
+    <div class="footer-inner">
+      <img
+        class="footer-logo"
+        src="logo/qualiadept_logo.jpg"
+        alt="QualiAdept logo"
+        width="120" height="32"
+        decoding="async" />
+      <span class="footer-text">2025. Powered by QualiAdept.</span>
+    </div>
+  </footer>
+  <script src="files.js"></script>
+</body>
+</html>
