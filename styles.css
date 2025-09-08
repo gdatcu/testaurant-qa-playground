@@ -335,3 +335,46 @@
     border-radius: 8px;
     margin-top: 12px;
 }
+
+/* hover.html styles */
+.hover-container {
+    display: flex;
+    justify-content: space-around;
+    padding: 40px 20px;
+    margin-top: 20px;
+}
+
+.hover-element {
+    position: relative;
+    padding: 15px 25px;
+    background-color: #16224a;
+    border-radius: 8px;
+    cursor: pointer;
+    border: 1px solid rgba(255, 255, 255, .08);
+}
+
+.hover-element::after {
+    content: attr(data-tooltip);
+    position: absolute;
+    bottom: 125%; /* Position the tooltip above the element */
+    left: 50%;
+    transform: translateX(-50%);
+    
+    background-color: #0b1330;
+    color: #e9eefb;
+    padding: 8px 12px;
+    border-radius: 6px;
+    border: 1px solid rgba(255, 255, 255, .1);
+    
+    white-space: nowrap;
+    z-index: 10;
+    
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.2s, visibility 0.2s;
+}
+
+.hover-element:hover::after {
+    opacity: 1;
+    visibility: visible;
+}

@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Testaurant • Hover</title>
+  <link rel="icon" href="logo/testaurant_ico.ico?v=2" sizes="any">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="topbar" role="banner" aria-label="Top bar">
+    <div class="brand">
+      <img
+        class="logo-img"
+        src="logo/testaurant_logo.png"
+        alt="Testaurant logo"
+        width="74" height="74"
+        decoding="async" />
+      <div>
+        <h1>Testaurant</h1>
+        <small>QA Training • QualiAdept</small>
+      </div>
+    </div>
+    <a href="index.html" class="btn">Back to Home</a>
+  </header>
+
+  <main class="layout">
+    <section class="card">
+        <h2>Hover Elements</h2>
+        <p>Test your script's ability to perform mouse-over actions to reveal hidden tooltips.</p>
+        <div class="hover-container">
+            <div class="hover-element" data-tooltip="This is the first tooltip!">
+                Hover over me
+            </div>
+            <div class="hover-element" data-tooltip="This is the second tooltip!">
+                Hover over me too
+            </div>
+            <div class="hover-element" data-tooltip="And this is the third one!">
+                And me!
+            </div>
+        </div>
+    </section>
+  </main>
+
+  <footer class="site-footer" role="contentinfo" aria-label="Footer">
+    <div class="footer-inner">
+      <img
+        class="footer-logo"
+        src="logo/qualiadept_logo.jpg"
+        alt="QualiAdept logo"
+        width="120" height="32"
+        decoding="async" />
+      <span class="footer-text">2025. Powered by QualiAdept.</span>
+    </div>
+  </footer>
+  <script src="hover.js"></script>
+</body>
+</html>
