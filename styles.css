@@ -170,3 +170,36 @@
     cursor: pointer;
     user-select: none;
 }
+
+
+/* elements.html styles */
+.link-group {
+    display: flex;
+    gap: 12px;
+    margin-top: 16px;
+}
+
+.btn-danger {
+    background: #ef4444;
+}
+
+.user-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 16px;
+}
+
+.user-table th, .user-table td {
+    padding: 12px 15px;
+    border: 1px solid rgba(255, 255, 255, .08);
+    text-align: left;
+}
+
+.user-table thead th {
+    background-color: #16224a;
+    font-weight: 600;
+}
+
+.user-table tbody tr:nth-child(even) {
+    background-color: #0c1433;
+}
