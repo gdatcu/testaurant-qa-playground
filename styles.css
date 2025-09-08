@@ -308,3 +308,13 @@
     border-radius: 10px;
     transition: width 0.1s linear;
 }
+
+/* dropdown.html styles */
+.custom-select {
+    background: #0b1330;
+    border: 1px solid rgba(255, 255, 255, .08);
+    border-radius: 10px;
+    color: #e9eefb;
+    padding: 10px 12px;
+    width: 100%;
+}
