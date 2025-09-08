@@ -469,3 +469,11 @@
     align-items: center;
     gap: 12px;
 }
+
+/* shadow-dom.html styles */
+.shadow-host {
+  padding: 20px;
+  border: 1px dashed rgba(255, 255, 255, .15);
+  border-radius: 12px;
+  margin-top: 16px;
+}
