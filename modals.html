@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Testaurant • Modals & Windows</title>
+  <link rel="icon" href="logo/testaurant_ico.ico?v=2" sizes="any">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="topbar" role="banner" aria-label="Top bar">
+    <div class="brand">
+      <img
+        class="logo-img"
+        src="logo/testaurant_logo.png"
+        alt="Testaurant logo"
+        width="74" height="74"
+        decoding="async" />
+      <div>
+        <h1>Testaurant</h1>
+        <small>QA Training • QualiAdept</small>
+      </div>
+    </div>
+    <a href="index.html" class="btn">Back to Home</a>
+  </header>
+
+  <main class="layout">
+    <section class="card">
+        <h2>JavaScript Alerts</h2>
+        <p>Test handling of browser alerts, confirms, and prompts.</p>
+        <div class="btn-row">
+            <button id="alert-btn" class="btn">Show Alert</button>
+            <button id="confirm-btn" class="btn">Show Confirm</button>
+            <button id="prompt-btn" class="btn">Show Prompt</button>
+        </div>
+        <p id="alert-result" class="result-text" aria-live="polite"></p>
+    </section>
+
+    <section class="card">
+        <h2>Browser Windows</h2>
+        <p>Test handling of multiple tabs and windows.</p>
+         <div class="btn-row">
+            <a href="simple-form.html" target="_blank" class="btn">Open New Tab</a>
+        </div>
+    </section>
+
+    <section class="card">
+        <h2>iFrame</h2>
+        <p>Test your ability to switch context and interact with elements inside an iFrame.</p>
+        <iframe id="sample-frame" src="iframe-content.html" class="sample-iframe" title="Sample iFrame"></iframe>
+    </section>
+  </main>
+
+  <footer class="site-footer" role="contentinfo" aria-label="Footer">
+    <div class="footer-inner">
+      <img
+        class="footer-logo"
+        src="logo/qualiadept_logo.jpg"
+        alt="QualiAdept logo"
+        width="120" height="32"
+        decoding="async" />
+      <span class="footer-text">2025. Powered by QualiAdept.</span>
+    </div>
+  </footer>
+  <script src="modals.js"></script>
+</body>
+</html>
