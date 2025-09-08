@@ -516,3 +516,40 @@
     transition: max-height 0.2s ease-out;
     border-radius: 0 0 8px 8px;
 }
+
+/* autocomplete.html styles */
+.autocomplete-container {
+    position: relative;
+    margin-top: 16px;
+}
+#autocomplete-input {
+    width: 100%;
+    padding: 10px 12px;
+    background: #0b1330;
+    border: 1px solid rgba(255, 255, 255, .08);
+    border-radius: 10px;
+    color: #e9eefb;
+}
+.autocomplete-results {
+    position: absolute;
+    border: 1px solid rgba(255, 255, 255, .08);
+    border-top: none;
+    z-index: 99;
+    top: 100%;
+    left: 0;
+    right: 0;
+    border-radius: 0 0 10px 10px;
+    overflow: hidden;
+}
+.autocomplete-results div {
+    padding: 10px;
+    cursor: pointer;
+    background-color: #0c1433;
+    border-bottom: 1px solid rgba(255, 255, 255, .08);
+}
+.autocomplete-results div:hover {
+    background-color: #16224a;
+}
+.autocomplete-results div:last-child {
+    border-bottom: none;
+}
