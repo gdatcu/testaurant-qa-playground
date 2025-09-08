@@ -318,3 +318,20 @@
     padding: 10px 12px;
     width: 100%;
 }
+
+/* dynamic-content.html styles */
+#content-area {
+    margin-top: 16px;
+    min-height: 100px;
+    transition: background-color 0.3s ease;
+}
+
+#content-area.loading {
+    background-color: rgba(90, 99, 122, 0.1);
+}
+
+.loaded-content img {
+    max-width: 100px;
+    border-radius: 8px;
+    margin-top: 12px;
+}
