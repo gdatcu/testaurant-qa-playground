@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Testaurant • Widgets</title>
+  <link rel="icon" href="logo/testaurant_ico.ico?v=2" sizes="any">
+  <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/pikaday/css/pikaday.css">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="topbar" role="banner" aria-label="Top bar">
+    <div class="brand">
+      <img
+        class="logo-img"
+        src="logo/testaurant_logo.png"
+        alt="Testaurant logo"
+        width="74" height="74"
+        decoding="async" />
+      <div>
+        <h1>Testaurant</h1>
+        <small>QA Training • QualiAdept</small>
+      </div>
+    </div>
+    <a href="index.html" class="btn">Back to Home</a>
+  </header>
+
+  <main class="layout">
+    <section class="card">
+        <h2>Date Picker</h2>
+        <p>Test selecting a date from a calendar widget.</p>
+        <div class="form-group">
+            <label for="datepicker">Select a date:</label>
+            <input type="text" id="datepicker" aria-label="Date Picker Input" readonly>
+        </div>
+    </section>
+
+    <section class="card">
+        <h2>Slider</h2>
+        <p>Test interacting with a range slider.</p>
+        <div class="slider-container">
+            <input type="range" min="0" max="100" value="50" class="slider" id="myRange">
+            <p class="result-text">Value: <span id="sliderValue">50</span></p>
+        </div>
+    </section>
+    
+    <section class="card">
+        <h2>Progress Bar</h2>
+        <p>Test waiting for a dynamic element to reach a certain state.</p>
+        <div class="progress-bar-container">
+            <div id="myProgressBar" class="progress-bar">
+                <div id="myBar" class="progress-bar-fill">0%</div>
+            </div>
+        </div>
+        <button id="startStopBtn" class="btn">Start</button>
+    </section>
+  </main>
+
+  <footer class="site-footer" role="contentinfo" aria-label="Footer">
+    <div class="footer-inner">
+      <img
+        class="footer-logo"
+        src="logo/qualiadept_logo.jpg"
+        alt="QualiAdept logo"
+        width="120" height="32"
+        decoding="async" />
+      <span class="footer-text">2025. Powered by QualiAdept.</span>
+    </div>
+  </footer>
+  
+  <script src="https://cdn.jsdelivr.net/npm/moment/moment.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/pikaday/pikaday.js"></script>
+  <script src="widgets.js"></script>
+</body>
+</html>
