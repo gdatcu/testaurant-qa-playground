@@ -553,3 +553,26 @@
 .autocomplete-results div:last-child {
     border-bottom: none;
 }
+
+/* infinite-scroll.html styles */
+.scroll-container {
+    height: 400px;
+    overflow-y: scroll;
+    border: 1px solid rgba(255, 255, 255, .1);
+    border-radius: 10px;
+    background-color: #0e1224;
+    padding: 10px;
+}
+.scroll-item {
+    padding: 15px;
+    background-color: #0c1433;
+    border: 1px solid rgba(255, 255, 255, .08);
+    border-radius: 8px;
+    margin-bottom: 10px;
+}
+.loading-indicator {
+    text-align: center;
+    padding: 15px;
+    font-style: italic;
+    color: #9fb0d0;
+}
