@@ -420,3 +420,52 @@
 .drag-item:active {
     cursor: grabbing;
 }
+
+/* dynamic-table.html styles */
+.table-controls {
+    margin-bottom: 16px;
+}
+#table-search {
+    width: 100%;
+    padding: 10px 12px;
+    background: #0b1330;
+    border: 1px solid rgba(255, 255, 255, .08);
+    border-radius: 10px;
+    color: #e9eefb;
+}
+
+.dynamic-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.dynamic-table th, .dynamic-table td {
+    padding: 12px 15px;
+    border: 1px solid rgba(255, 255, 255, .08);
+    text-align: left;
+}
+
+.dynamic-table thead th {
+    background-color: #16224a;
+    font-weight: 600;
+    cursor: pointer;
+    user-select: none;
+}
+.dynamic-table thead th:hover {
+    background-color: #1a285a;
+}
+
+.dynamic-table tbody tr:nth-child(even) {
+    background-color: #0c1433;
+}
+.dynamic-table tbody tr:hover {
+    background-color: #111c42;
+}
+
+.table-pagination {
+    margin-top: 16px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 12px;
+}
