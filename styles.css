@@ -633,3 +633,23 @@
 .double-click-box.clicked {
     background-color: #3b82f6;
 }
+
+/* complex-form.html styles */
+.form-group-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 16px;
+    margin-bottom: 16px;
+}
+.error-message {
+    color: #ef4444;
+    font-size: 12px;
+    min-height: 18px;
+    padding-top: 4px;
+}
+.form-group input.invalid, .form-group select.invalid {
+    border-color: #ef4444;
+}
+.form-group input.valid, .form-group select.valid {
+    border-color: #22c55e;
+}
