@@ -615,3 +615,21 @@
 .context-menu-item:hover {
     background-color: #16224a;
 }
+
+/* double-click.html styles */
+.double-click-box {
+    height: 200px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #16224a;
+    border: 2px solid rgba(255, 255, 255, .08);
+    border-radius: 12px;
+    margin-top: 16px;
+    user-select: none;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+.double-click-box.clicked {
+    background-color: #3b82f6;
+}
