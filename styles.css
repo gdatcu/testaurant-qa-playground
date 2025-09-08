@@ -81,3 +81,37 @@
   font-size: 14px;
   opacity: .9;
 }
+
+/* simple-form.html styles */
+.form-group {
+    margin-top: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.form-group label {
+    font-weight: 600;
+}
+
+.form-group input[type="text"] {
+    background: #0b1330;
+    border: 1px solid rgba(255, 255, 255, .08);
+    border-radius: 10px;
+    color: #e9eefb;
+    padding: 10px 12px;
+    width: 100%;
+}
+
+.message-display {
+    margin-top: 16px;
+    padding: 12px;
+    background: #0a1230;
+    border: 1px dashed rgba(255, 255, 255, .15);
+    border-radius: 10px;
+}
+
+#displayed-message {
+    font-weight: 600;
+    color: #6aa5ff;
+}

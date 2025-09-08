@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Testaurant • Simple Form</title>
+  <link rel="icon" href="logo/testaurant_ico.ico?v=2" sizes="any">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="topbar" role="banner" aria-label="Top bar">
+    <div class="brand">
+      <img
+        class="logo-img"
+        src="logo/testaurant_logo.png"
+        alt="Testaurant logo"
+        width="74" height="74"
+        decoding="async" />
+      <div>
+        <h1>Testaurant</h1>
+        <small>QA Training • QualiAdept</small>
+      </div>
+    </div>
+    <a href="index.html" class="btn">Back to Home</a>
+  </header>
+
+  <main class="layout">
+    <section class="card">
+        <h2>Simple Form</h2>
+        <p>Practice with a basic input field and button.</p>
+        <div class="form-group">
+            <label for="message-input">Enter a message</label>
+            <input type="text" id="message-input" placeholder="Your message here..." aria-label="Message Input">
+            <button id="submit-btn" class="btn">Show Message</button>
+        </div>
+        <div class="message-display">
+            <p>Your message will appear here:</p>
+            <span id="displayed-message" aria-live="polite"></span>
+        </div>
+    </section>
+  </main>
+
+  <footer class="site-footer" role="contentinfo" aria-label="Footer">
+    <div class="footer-inner">
+      <img
+        class="footer-logo"
+        src="logo/qualiadept_logo.jpg"
+        alt="QualiAdept logo"
+        width="120" height="32"
+        decoding="async" />
+      <span class="footer-text">2025. Powered by QualiAdept.</span>
+    </div>
+  </footer>
+  <script src="simple-form.js"></script>
+</body>
+</html>
