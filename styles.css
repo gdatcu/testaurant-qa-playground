@@ -731,3 +731,17 @@
     font-weight: 600;
     color: #6aa5ff;
 }
+
+/* ab-testing.html styles */
+.ab-container {
+    padding: 20px;
+    margin-top: 16px;
+    border: 1px dashed rgba(255, 255, 255, .1);
+    border-radius: 12px;
+    text-align: center;
+}
+.version-a-header { color: #6aa5ff; }
+.version-b-header { color: #22c55e; }
+
+.version-a-btn { background-color: #3b82f6; }
+.version-b-btn { background-color: #22c55e; }
