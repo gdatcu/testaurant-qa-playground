@@ -1,13 +1,27 @@
+````markdown
 # 🍕 Testaurant QA Playground – PLUS (PHP + MySQL)
 
-A **demo application** for QA automation engineers to **learn and practice test automation**.  
-It simulates a restaurant ordering system with API + frontend. 
+A **demo application** for QA automation engineers to **learn and practice test automation**.
+It simulates a restaurant ordering system with a full frontend, a complete set of UI testing challenges, and a backend API.
 
-👉 Hosted at: [app.qualiadept.eu/testaurant](https://apps.qualiadept.eu/testaurant)
+👉 Hosted at: [apps.qualiadept.eu/testaurant](https://apps.qualiadept.eu/testaurant)
 
 ---
 
-## ✨ Features
+## 🧭 UI Test Automation Playground
+
+This project includes a comprehensive set of dedicated pages for practicing UI automation. It covers a wide range of scenarios, from basic element interactions to advanced, modern web challenges.
+
+➡️ **[Launch the UI Playground](https://apps.qualiadept.eu/testaurant/navigation.html)**
+
+### Test Categories Available:
+* **Basic Form Elements:** Practice with standard inputs, logins, checkboxes, radio buttons, dropdowns, file uploads, and complex forms.
+* **User Interactions:** Test skills with links, static & dynamic tables, hover actions, drag and drop, keyboard events, and various mouse clicks.
+* **Advanced Scenarios:** Tackle challenges like browser alerts, frames, widgets, dynamic content, slow-loading elements, accordions, Shadow DOM, SVG, and A/B testing.
+
+---
+
+## 🧪 API Features
 - 📝 **Menu filtering & search:** `GET /api/menu?category=&q=&page=&limit=`
 - 🍔 **Categories endpoint:** `GET /api/categories`
 - 📦 **Inventory & VAT:** each item has `stock`, `vat_rate`, `image_url`
@@ -22,7 +36,7 @@ It simulates a restaurant ordering system with API + frontend.
 
 ---
 
-## 🚀 Quick Start
+## 🚀 API Quick Start
 
 ### 1. Database
 ```sql
@@ -30,58 +44,51 @@ CREATE DATABASE testaurant CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 CREATE USER 'testaurant_user'@'%' IDENTIFIED BY 'qa_pass_123';
 GRANT ALL PRIVILEGES ON testaurant.* TO 'testaurant_user'@'%';
 FLUSH PRIVILEGES;
-```
+````
+
 ```bash
-mysql -u testaurant_user -p testaurant < api/seed.sql
+# Then import the seed file
+mysql -u testaurant_user -pqa_pass_123 testaurant < api/seed.sql
 ```
 
-### 2. Configuration
-Copy template and edit secrets:
-```bash
-cp api/config.php.example api/config.php
-```
+### 2\. API Config
 
-### 3. Run API
-```bash
-cd api
-php -S 0.0.0.0:8080 api.php
-```
+Copy `api/config.php.example` to `api/config.php` and fill in your database credentials.
 
-### 4. Open Frontend
-```bash
-open frontend-v3/index.html
-```
-Set **API Base URL** in top-right if different (e.g. `/testaurant/api`).
+### 3\. Web Server
 
----
+Point your web server (Apache/Nginx) document root to the project's root directory. Ensure `mod_rewrite` is enabled for clean URLs.
 
-## 📡 Endpoints (overview)
+-----
 
-- `GET /api/health`
-- `GET /api/categories`
-- `GET /api/menu?category=&q=&page=&limit=`
-- `GET /api/coupons/validate?code=SUMMER10`
-- `POST /api/cart/price`
-- `POST /api/checkout`
-- `GET /api/orders?page=1&limit=20` (admin)
-- `GET /api/orders/{id}/history`
-- `POST /api/orders/{id}/status` (admin)
-- `POST /api/menu` (admin)
-- `PUT /api/menuitems/{id}` (admin)
-- `POST /api/menuitems/{id}/availability` (admin)
-- `PUT /api/menuitems/{id}/stock` (admin)
-- `POST /api/menuitems/{id}/restock` (admin)
-- `POST /api/coupons` (admin)
-- `GET /api/rates` (admin)
-- `POST /api/rates` (admin)
-- `GET /api/stats?from=YYYY-MM-DD&to=YYYY-MM-DD&currency=EUR` (admin)
-- `POST /api/webhooks/payment`
+## 📄 API Documentation
 
-👉 Full OpenAPI specs: [`docs/Testaurant_API_OpenAPI3.yaml`](docs/Testaurant_API_OpenAPI3.yaml) & [`docs/Testaurant_API_OpenAPI3.json`](docs/Testaurant_API_OpenAPI3.json)
+  - `GET /api/health`
+  - `GET /api/menu`
+  - `GET /api/menu/{id}`
+  - `GET /api/categories`
+  - `POST /api/quote`
+  - `POST /api/orders`
+  - `GET /api/orders/{id}`
+  - `GET /api/orders` (admin)
+  - `PUT /api/orders/{id}/status` (admin)
+  - `POST /api/menuitems` (admin)
+  - `PUT /api/menuitems/{id}` (admin)
+  - `PUT /api/menuitems/{id}/availability` (admin)
+  - `PUT /api/menuitems/{id}/stock` (admin)
+  - `POST /api/menuitems/{id}/restock` (admin)
+  - `POST /api/coupons` (admin)
+  - `GET /api/rates` (admin)
+  - `POST /api/rates` (admin)
+  - `GET /api/stats?from=YYYY-MM-DD&to=YYYY-MM-DD&currency=EUR` (admin)
+  - `POST /api/webhooks/payment`
 
----
+👉 Full OpenAPI specs: [`api_specs/Testaurant_API_OpenAPI3.yaml`](https://www.google.com/search?q=api_specs/Testaurant_API_OpenAPI3.yaml) & [`api_specs/Testaurant_API_OpenAPI3.json`](https://www.google.com/search?q=api_specs/Testaurant_API_OpenAPI3.json)
+
+-----
 
 ## 📦 Example Checkout Request
+
 ```json
 {
   "customerName": "John Tester",
@@ -98,36 +105,18 @@ Set **API Base URL** in top-right if different (e.g. `/testaurant/api`).
   "couponCode": "SUMMER10"
 }
 ```
-Optional header:  
+
+Optional header:
+
 ```
 Idempotency-Key: any-unique-string
 ```
 
----
+-----
 
 ## 🔑 Admin Access
-All **admin endpoints** require a header:
+
+All **admin endpoints** require an `X-API-Key` header. The default key is `qa-squad`.
+
 ```
-X-API-Key: YOUR_ADMIN_KEY
 ```
-Set this in `api/config.php`.
-
----
-
-## 🧪 QA Automation Playground
-- Ready Postman collection + environment in `/docs/`
-- OpenAPI 3.0 specs for Swagger/Redoc
-- Chaos hooks for resilience testing
-- Perfect for **API, UI, and load test automation practice**
-
----
-
-## ⚠️ Security
-- Never commit your real `api/config.php` (use `.gitignore`)
-- Rotate secrets if leaked
-- Use HTTPS in production
-
----
-
-## 📄 License
-© 2025 [QualiAdept](https://qualiadept.eu). For educational & QA automation practice.  
