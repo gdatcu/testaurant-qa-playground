@@ -1,7 +1,7 @@
 ````markdown
 # 🍕 Testaurant QA Playground – PLUS (PHP + MySQL)
 
-A **demo application** for QA automation engineers to **learn and practice test automation**.
+A **demo application** for QA automation engineers to **learn and practice test automation**.  
 It simulates a restaurant ordering system with a full frontend, a complete set of UI testing challenges, and a backend API.
 
 👉 Hosted at: [apps.qualiadept.eu/testaurant](https://apps.qualiadept.eu/testaurant)
@@ -51,41 +51,42 @@ FLUSH PRIVILEGES;
 mysql -u testaurant_user -pqa_pass_123 testaurant < api/seed.sql
 ```
 
-### 2\. API Config
+### 2. API Config
 
 Copy `api/config.php.example` to `api/config.php` and fill in your database credentials.
 
-### 3\. Web Server
+### 3. Web Server
 
-Point your web server (Apache/Nginx) document root to the project's root directory. Ensure `mod_rewrite` is enabled for clean URLs.
+Point your web server (Apache/Nginx) document root to the project's root directory.
+Ensure `mod_rewrite` is enabled for clean URLs.
 
------
+---
 
 ## 📄 API Documentation
 
-  - `GET /api/health`
-  - `GET /api/menu`
-  - `GET /api/menu/{id}`
-  - `GET /api/categories`
-  - `POST /api/quote`
-  - `POST /api/orders`
-  - `GET /api/orders/{id}`
-  - `GET /api/orders` (admin)
-  - `PUT /api/orders/{id}/status` (admin)
-  - `POST /api/menuitems` (admin)
-  - `PUT /api/menuitems/{id}` (admin)
-  - `PUT /api/menuitems/{id}/availability` (admin)
-  - `PUT /api/menuitems/{id}/stock` (admin)
-  - `POST /api/menuitems/{id}/restock` (admin)
-  - `POST /api/coupons` (admin)
-  - `GET /api/rates` (admin)
-  - `POST /api/rates` (admin)
-  - `GET /api/stats?from=YYYY-MM-DD&to=YYYY-MM-DD&currency=EUR` (admin)
-  - `POST /api/webhooks/payment`
+* `GET /api/health`
+* `GET /api/menu`
+* `GET /api/menu/{id}`
+* `GET /api/categories`
+* `POST /api/quote`
+* `POST /api/orders`
+* `GET /api/orders/{id}`
+* `GET /api/orders` (admin)
+* `PUT /api/orders/{id}/status` (admin)
+* `POST /api/menuitems` (admin)
+* `PUT /api/menuitems/{id}` (admin)
+* `PUT /api/menuitems/{id}/availability` (admin)
+* `PUT /api/menuitems/{id}/stock` (admin)
+* `POST /api/menuitems/{id}/restock` (admin)
+* `POST /api/coupons` (admin)
+* `GET /api/rates` (admin)
+* `POST /api/rates` (admin)
+* `GET /api/stats?from=YYYY-MM-DD&to=YYYY-MM-DD&currency=EUR` (admin)
+* `POST /api/webhooks/payment`
 
 👉 Full OpenAPI specs: [`api_specs/Testaurant_API_OpenAPI3.yaml`](https://www.google.com/search?q=api_specs/Testaurant_API_OpenAPI3.yaml) & [`api_specs/Testaurant_API_OpenAPI3.json`](https://www.google.com/search?q=api_specs/Testaurant_API_OpenAPI3.json)
 
------
+---
 
 ## 📦 Example Checkout Request
 
@@ -112,11 +113,15 @@ Optional header:
 Idempotency-Key: any-unique-string
 ```
 
------
+---
 
 ## 🔑 Admin Access
 
-All **admin endpoints** require an `X-API-Key` header. The default key is `qa-squad`.
+All **admin endpoints** require an `X-API-Key` header.
+The default key is:
 
 ```
+qa-squad
 ```
+
+`````
