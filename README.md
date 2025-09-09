@@ -1,11 +1,7 @@
 # 🍕 Testaurant QA Playground – PLUS (PHP + MySQL)
 
 A **demo application** for QA automation engineers to **learn and practice test automation**.  
-<<<<<<< HEAD
 It simulates a restaurant ordering system with **frontend + backend API**.
-=======
-It simulates a restaurant ordering system with a full frontend, a complete set of UI testing challenges, and a backend API.
->>>>>>> d0acc127ab35fa178bf68a4d9fd03584f41a1b06
 
 👉 Hosted at: [apps.qualiadept.eu/testaurant](https://apps.qualiadept.eu/testaurant)
 
@@ -39,15 +35,11 @@ FLUSH PRIVILEGES;
 mysql -u testaurant_user -pqa_pass_123 testaurant < api/seed.sql
 ```
 
-<<<<<<< HEAD
 ### 2. Configuration
 ```bash
 cp api/config.php.example api/config.php
 ```
 Edit with your DB credentials and secrets.
-=======
-### 2. API Config
->>>>>>> d0acc127ab35fa178bf68a4d9fd03584f41a1b06
 
 ### 3. Run API
 ```bash
@@ -55,7 +47,6 @@ cd api
 php -S 0.0.0.0:8080 api.php
 ```
 
-<<<<<<< HEAD
 ### 4. Open Frontend
 ```bash
 open frontend-v3/index.html
@@ -65,14 +56,6 @@ Set **API Base URL** (top-right) if not default (e.g. `/testaurant/api`).
 ---
 
 ## 📡 Endpoints (overview)
-=======
-### 3. Web Server
-
-Point your web server (Apache/Nginx) document root to the project's root directory.
-Ensure `mod_rewrite` is enabled for clean URLs.
-
----
->>>>>>> d0acc127ab35fa178bf68a4d9fd03584f41a1b06
 
 - `GET /api/health`
 - `GET /api/categories`
@@ -93,33 +76,8 @@ Ensure `mod_rewrite` is enabled for clean URLs.
 - `GET /api/stats?from=YYYY-MM-DD&to=YYYY-MM-DD&currency=EUR` (admin)
 - `POST /api/webhooks/payment`
 
-<<<<<<< HEAD
 👉 Full OpenAPI specs: [`docs/Testaurant_API_OpenAPI3.yaml`](docs/Testaurant_API_OpenAPI3.yaml) & [`docs/Testaurant_API_OpenAPI3.json`](docs/Testaurant_API_OpenAPI3.json)
 
-=======
-* `GET /api/health`
-* `GET /api/menu`
-* `GET /api/menu/{id}`
-* `GET /api/categories`
-* `POST /api/quote`
-* `POST /api/orders`
-* `GET /api/orders/{id}`
-* `GET /api/orders` (admin)
-* `PUT /api/orders/{id}/status` (admin)
-* `POST /api/menuitems` (admin)
-* `PUT /api/menuitems/{id}` (admin)
-* `PUT /api/menuitems/{id}/availability` (admin)
-* `PUT /api/menuitems/{id}/stock` (admin)
-* `POST /api/menuitems/{id}/restock` (admin)
-* `POST /api/coupons` (admin)
-* `GET /api/rates` (admin)
-* `POST /api/rates` (admin)
-* `GET /api/stats?from=YYYY-MM-DD&to=YYYY-MM-DD&currency=EUR` (admin)
-* `POST /api/webhooks/payment`
-
-👉 Full OpenAPI specs: [`api_specs/Testaurant_API_OpenAPI3.yaml`](https://www.google.com/search?q=api_specs/Testaurant_API_OpenAPI3.yaml) & [`api_specs/Testaurant_API_OpenAPI3.json`](https://www.google.com/search?q=api_specs/Testaurant_API_OpenAPI3.json)
-
->>>>>>> d0acc127ab35fa178bf68a4d9fd03584f41a1b06
 ---
 
 ## 📦 Example Checkout Request
@@ -147,7 +105,6 @@ Idempotency-Key: any-unique-string
 ---
 
 ## 🔑 Admin Access
-<<<<<<< HEAD
 All **admin endpoints** require:
 ```
 X-API-Key: qa-squad
@@ -174,14 +131,3 @@ You can change this in `api/config.php`.
 
 ## 📄 License
 © 2025 [QualiAdept](https://qualiadept.eu). For educational & QA automation practice.  
-=======
-
-All **admin endpoints** require an `X-API-Key` header.
-The default key is:
-
-```
-qa-squad
-```
-
-`````
->>>>>>> d0acc127ab35fa178bf68a4d9fd03584f41a1b06
