@@ -1,4 +1,4 @@
-# 🍕 Testaurant QA Playground – PLUS (PHP + MySQL)
+# 🍕 Testaurant QA Playground (PHP + MySQL)
 
 A **demo application** for QA automation engineers to **learn and practice test automation**.  
 It simulates a restaurant ordering system with **frontend + backend API**.
@@ -107,7 +107,7 @@ Idempotency-Key: any-unique-string
 ## 🔑 Admin Access
 All **admin endpoints** require:
 ```
-X-API-Key: qa-squad
+X-API-Key: changeme-admin-key
 ```
 You can change this in `api/config.php`.
 
